@@ -20,8 +20,8 @@ const Hero = () => {
         </div>
 
         <div className="pb-16">
-          <div className="mt-4">
-            <div className="rounded-lg overflow-hidden shadow-lg">
+          <div className="-mt-2">
+            <div className="rounded-lg overflow-hidden shadow-lg h-[calc(100vh-300px)]">
               <img
                 src={headerph}
                 alt="Speed Coffee mobile van with chalkboard sign"
