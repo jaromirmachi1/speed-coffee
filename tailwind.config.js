@@ -22,17 +22,20 @@ export default {
         },
       },
       fontFamily: {
-        manuka: ["Manuka", "sans-serif"],
+        manuka: ['"Manuka"', "sans-serif"],
         display: ["Playfair Display", "serif"],
         sans: ["Open Sans", "sans-serif"],
       },
       spacing: {
         18: "4.5rem",
         88: "22rem",
+        100: "100px",
+      },
+      fontSize: {
+        hero: "clamp(120px, 20vw, 330px)",
       },
       container: {
         center: true,
-        padding: "100px",
       },
     },
   },

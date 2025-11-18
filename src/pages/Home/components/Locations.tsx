@@ -1,16 +1,11 @@
+import Container from "../../../components/Container";
+import { locations } from "../utils/locations";
+
 const Locations = () => {
-  const locations = [
-    "CENTRUM ZELNÝ TRH, BRNO",
-    "FIREMNÍ EVENTY",
-    "SVATBY",
-    "MĚSTSKÉ SLAVNOSTI",
-    "SOUKROMÉ AKCE",
-    "SPORTOVNÍ A ZÁŽITKOVÉ DNY",
-  ];
 
   return (
-    <section id="events" className="py-16 bg-[#EAE1CF]">
-      <div className="container mx-auto">
+    <section id="events" className="py-16 bg-beige">
+      <Container>
         <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-center">
           <div className="relative">
             <div className="rounded-lg overflow-hidden shadow-lg">
@@ -32,10 +27,10 @@ const Locations = () => {
           </div>
 
           <div className="text-right md:text-left">
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-display font-bold text-[#222222] mb-6">
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-display font-bold text-dark mb-6">
               WHERE CAN YOU FIND US?
             </h2>
-            <ul className="space-y-3 font-sans text-base md:text-lg text-[#222222]">
+            <ul className="space-y-3 font-sans text-base md:text-lg text-dark">
               {locations.map((location, index) => (
                 <li
                   key={index}
@@ -48,7 +43,7 @@ const Locations = () => {
             </ul>
           </div>
         </div>
-      </div>
+      </Container>
     </section>
   );
 };
