@@ -1,7 +1,61 @@
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import Container from "../Container";
-import MenuButton from "./MenuButton";
-import NavLink from "./NavLink";
+
+interface NavLinkProps {
+  href: string;
+  children: ReactNode;
+  onClick?: () => void;
+  isMobile?: boolean;
+}
+
+const NavLink = ({
+  href,
+  children,
+  onClick,
+  isMobile = false,
+}: NavLinkProps) => {
+  const baseClasses = isMobile
+    ? "text-dark font-manuka font-normal uppercase hover:text-accent transition-colors block text-xl md:text-2xl"
+    : "text-dark font-manuka font-normal uppercase hover:text-accent transition-colors text-2xl md:text-3xl lg:text-4xl";
+
+  return (
+    <a href={href} onClick={onClick} className={baseClasses}>
+      {children}
+    </a>
+  );
+};
+
+interface MenuButtonProps {
+  isOpen: boolean;
+  onClick: () => void;
+}
+
+const MenuButton = ({ isOpen, onClick }: MenuButtonProps) => {
+  return (
+    <button
+      onClick={onClick}
+      className="p-2 focus:outline-none focus:ring-2 focus:ring-accent rounded"
+      aria-label="Toggle menu"
+      aria-expanded={isOpen}
+    >
+      <svg
+        className="w-8 h-8 text-dark"
+        fill="none"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="2"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        {isOpen ? (
+          <path d="M6 18L18 6M6 6l12 12" />
+        ) : (
+          <path d="M4 6h16M4 12h16M4 18h16" />
+        )}
+      </svg>
+    </button>
+  );
+};
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -56,4 +110,3 @@ const Header = () => {
 };
 
 export default Header;
-
