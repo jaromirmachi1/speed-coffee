@@ -32,33 +32,110 @@ const TextRevealLines = ({
 
       if (existingLineContainers.length === 0) {
         const createLines = () => {
-          const text = element.textContent || "";
-          const words = text.split(/\s+/);
           const containerWidth = element.offsetWidth;
+          if (!containerWidth) return [];
+
+          const lineSpans: HTMLElement[] = [];
+
+          type Segment = { text: string; classes: string };
+          const segments: Segment[] = [];
+
+          // Collect text segments with their active inline classes (e.g. spans)
+          const collectSegments = (
+            node: Node,
+            activeClasses: string[] = []
+          ): void => {
+            if (node.nodeType === Node.TEXT_NODE) {
+              const text = node.textContent || "";
+              if (text) {
+                segments.push({
+                  text,
+                  classes: activeClasses.join(" "),
+                });
+              }
+            } else if (node.nodeType === Node.ELEMENT_NODE) {
+              const el = node as HTMLElement;
+              const newActive = [...activeClasses];
+
+              // Treat common inline tags as style carriers
+              if (
+                el.tagName === "SPAN" ||
+                el.tagName === "STRONG" ||
+                el.tagName === "EM" ||
+                el.tagName === "B" ||
+                el.tagName === "I"
+              ) {
+                if (el.className) {
+                  newActive.push(el.className);
+                }
+              }
+
+              Array.from(el.childNodes).forEach((child) =>
+                collectSegments(child, newActive)
+              );
+            }
+          };
+
+          Array.from(element.childNodes).forEach((child) =>
+            collectSegments(child)
+          );
+
+          type Unit = { text: string; classes: string };
+          const units: Unit[] = [];
+
+          // Split segments into word/space units so we can rebuild lines with styling
+          segments.forEach((seg) => {
+            const parts = seg.text.split(/(\s+)/);
+            parts.forEach((part) => {
+              if (!part) return;
+              units.push({
+                text: part,
+                classes: seg.classes,
+              });
+            });
+          });
 
           const tempDiv = document.createElement("div");
+          const computed = window.getComputedStyle(element);
           tempDiv.style.cssText = `
             position: absolute;
             visibility: hidden;
             white-space: nowrap;
-            font-size: ${window.getComputedStyle(element).fontSize};
-            font-family: ${window.getComputedStyle(element).fontFamily};
-            font-weight: ${window.getComputedStyle(element).fontWeight};
-            letter-spacing: ${window.getComputedStyle(element).letterSpacing};
+            font-size: ${computed.fontSize};
+            font-family: ${computed.fontFamily};
+            font-weight: ${computed.fontWeight};
+            letter-spacing: ${computed.letterSpacing};
           `;
           document.body.appendChild(tempDiv);
 
-          const lineSpans: HTMLElement[] = [];
-          let currentLine = "";
+          const buildHTML = (lineUnits: Unit[]): string =>
+            lineUnits
+              .map((unit) => {
+                if (unit.text.trim() === "") {
+                  // Preserve whitespace as-is
+                  return unit.text;
+                }
+                const escaped = unit.text
+                  .replace(/&/g, "&amp;")
+                  .replace(/</g, "&lt;")
+                  .replace(/>/g, "&gt;");
+                if (unit.classes) {
+                  return `<span class="${unit.classes}">${escaped}</span>`;
+                }
+                return escaped;
+              })
+              .join("");
 
           element.innerHTML = "";
 
-          words.forEach((word, index) => {
-            const testText = currentLine ? `${currentLine} ${word}` : word;
-            tempDiv.textContent = testText;
+          let currentUnits: Unit[] = [];
+
+          units.forEach((unit, index) => {
+            const testUnits = [...currentUnits, unit];
+            tempDiv.innerHTML = buildHTML(testUnits);
             const testWidth = tempDiv.offsetWidth;
 
-            if (testWidth > containerWidth && currentLine) {
+            if (testWidth > containerWidth && currentUnits.length > 0) {
               const lineContainer = document.createElement("span");
               lineContainer.className = "line";
               lineContainer.style.display = "block";
@@ -66,17 +143,17 @@ const TextRevealLines = ({
 
               const lineInner = document.createElement("span");
               lineInner.style.display = "block";
-              lineInner.textContent = currentLine;
+              lineInner.innerHTML = buildHTML(currentUnits);
               lineContainer.appendChild(lineInner);
 
               element.appendChild(lineContainer);
               lineSpans.push(lineInner);
-              currentLine = word;
+              currentUnits = [unit];
             } else {
-              currentLine = testText;
+              currentUnits = testUnits;
             }
 
-            if (index === words.length - 1 && currentLine) {
+            if (index === units.length - 1 && currentUnits.length > 0) {
               const lineContainer = document.createElement("span");
               lineContainer.className = "line";
               lineContainer.style.display = "block";
@@ -84,7 +161,7 @@ const TextRevealLines = ({
 
               const lineInner = document.createElement("span");
               lineInner.style.display = "block";
-              lineInner.textContent = currentLine;
+              lineInner.innerHTML = buildHTML(currentUnits);
               lineContainer.appendChild(lineInner);
 
               element.appendChild(lineContainer);
@@ -151,4 +228,3 @@ const TextRevealLines = ({
 };
 
 export default TextRevealLines;
-
