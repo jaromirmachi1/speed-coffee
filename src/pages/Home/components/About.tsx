@@ -1,5 +1,6 @@
 import TextRevealLines from "../../../lib/TextRevealLines";
 import Container from "../../../components/Container";
+import aboutImg from "../../../assets/Img1.png";
 
 const About = () => {
   return (
@@ -25,7 +26,7 @@ const About = () => {
 
           <div className="rounded-lg overflow-hidden shadow-lg">
             <img
-              src="/placeholder.svg"
+              src={aboutImg}
               alt="Barista holding coffee cups and pastries"
               className="w-full h-auto object-cover"
               loading="lazy"

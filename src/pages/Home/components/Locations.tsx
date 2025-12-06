@@ -1,29 +1,19 @@
 import Container from "../../../components/Container";
 import { locations } from "../utils/locations";
+import Img2and3 from "../../../assets/Img2and3.png";
 
 const Locations = () => {
-
   return (
     <section id="events" className="py-16 bg-beige">
       <Container>
         <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-center">
-          <div className="relative">
-            <div className="rounded-lg overflow-hidden shadow-lg">
-              <img
-                src="/placeholder.svg"
-                alt="Chalkboard sign with coffee quote"
-                className="w-full h-auto object-cover"
-                loading="lazy"
-              />
-            </div>
-            <div className="rounded-lg overflow-hidden shadow-lg -mt-8 md:-mt-12 ml-8 md:ml-12 relative z-10">
-              <img
-                src="/placeholder.svg"
-                alt="Coffee van interior with drinks"
-                className="w-full h-auto object-cover"
-                loading="lazy"
-              />
-            </div>
+          <div className="relative max-w-xl md:max-w-2xl mx-auto md:mx-0">
+            <img
+              src={Img2and3}
+              alt="Speed Coffee sign and drinks"
+              className="w-full h-auto object-cover"
+              loading="lazy"
+            />
           </div>
 
           <div className="text-right md:text-left">
