@@ -53,3 +53,22 @@
   font-display: swap;
 }
 
+/* Manuka Condensed */
+@font-face {
+  font-family: "Manuka Condensed";
+  src: url("../assets/manuka-font-family-1749104552-0/TestManukaCondensed-Bold-BF663c33db0536a.otf")
+    format("opentype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Agright */
+@font-face {
+  font-family: "Agright";
+  src: url("../assets/agright/agright regular.otf") format("opentype"),
+    url("../assets/agright/agright regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}

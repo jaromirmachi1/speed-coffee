@@ -15,15 +15,16 @@
 
   body {
     @apply bg-beige text-dark;
-    font-family: "Open Sans", sans-serif;
+    font-family: "Manuka Condensed", sans-serif;
+    font-weight: 700;
+    line-height: 0.85;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
 
-  /* Global 20px side padding for entire app */
+  /* Global side padding (gutter) for entire app */
   #root {
-    padding-left: 100px;
-    padding-right: 100px;
+    @apply px-4 sm:px-6 lg:px-8;
   }
 
   @media (prefers-reduced-motion: reduce) {

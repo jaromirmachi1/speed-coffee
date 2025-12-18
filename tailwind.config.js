@@ -22,9 +22,10 @@ export default {
         },
       },
       fontFamily: {
-        manuka: ['"Manuka"', "sans-serif"],
-        display: ["Playfair Display", "serif"],
-        sans: ["Open Sans", "sans-serif"],
+        manuka: ['"Manuka Condensed"', "sans-serif"],
+        display: ['"Manuka Condensed"', "sans-serif"],
+        sans: ['"Manuka Condensed"', "sans-serif"],
+        agright: ['"Agright"', "sans-serif"],
       },
       spacing: {
         18: "4.5rem",
