@@ -26,6 +26,18 @@
     -moz-osx-font-smoothing: grayscale;
   }
 
+  /* Hide vertical scrollbar (keep scrolling enabled) */
+  html,
+  body {
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE/old Edge */
+  }
+
+  html::-webkit-scrollbar,
+  body::-webkit-scrollbar {
+    display: none; /* Chrome/Safari */
+  }
+
   /* Global side padding (gutter) for entire app */
   #root {
     @apply px-4 sm:px-6 lg:px-8;

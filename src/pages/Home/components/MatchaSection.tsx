@@ -40,13 +40,14 @@ const MatchaSection = () => {
       // Background image parallax: moves bottom -> top while the section background color stays static.
       // No opacity changes; subtle motion only.
       // Start lower, then travel upward (per request).
-      const bgTranslateY = lerp(vh * 0.45, -vh * 0.15, easeOut(p));
+      const bgTranslateY = lerp(vh * 0.75, -vh * 0.15, easeOut(p));
       bgImage.style.transform = `translate3d(-50%, calc(-50% + ${bgTranslateY.toFixed(
         2
       )}px), 0)`;
 
       // 4️⃣ TEXT APPEARANCE: only after scroll begins.
-      const textT = clamp01((p - 0.05) / 0.25);
+      // Show sooner: start essentially immediately as the user begins to scroll this section.
+      const textT = clamp01((p - 0.0) / 0.18);
       const textOpacity = lerp(0, 1, easeOut(textT));
       const textY = lerp(20, 0, easeOut(textT));
 
@@ -106,7 +107,8 @@ const MatchaSection = () => {
       className="py-16 bg-matcha"
       // Provide scroll room for the "scene" without global CSS or extra wrappers.
       style={{
-        minHeight: "200vh",
+        // More runway so you can add another image underneath and keep the scroll feeling long/smooth.
+        minHeight: "260vh",
       }}
     >
       <Container
@@ -135,8 +137,10 @@ const MatchaSection = () => {
             width: "min(400px, 95vw)",
             height: "auto",
             transform: "translate3d(-50%, -50%, 0)",
+            borderRadius: "20px",
+            boxShadow: "0 10px 30px rgba(0, 0, 0, 0.12)",
             willChange: "transform",
-            zIndex: 0,
+            zIndex: 2,
             pointerEvents: "none",
             userSelect: "none",
           }}
@@ -154,6 +158,7 @@ const MatchaSection = () => {
             opacity: 0,
             display: "flex",
             flexDirection: "column",
+            gap: 0,
             alignItems: "center",
             justifyContent: "center",
             textAlign: "center",
@@ -170,7 +175,7 @@ const MatchaSection = () => {
               fontWeight: 400,
               fontSize: "min(6vw, 60px)",
               lineHeight: 1,
-              marginBottom: "-0.15em",
+              marginBottom: "-0.65em",
             }}
           >
             Fallen for
@@ -192,7 +197,7 @@ const MatchaSection = () => {
               fontWeight: 400,
               fontSize: "min(6vw, 60px)",
               lineHeight: 1,
-              marginTop: "-0.25em",
+              marginTop: "-0.35em",
             }}
           >
             yet?
