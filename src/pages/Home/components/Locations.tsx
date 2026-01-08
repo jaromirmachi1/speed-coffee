@@ -1,6 +1,7 @@
 import Container from "../../../components/Container";
 import { locations } from "../utils/locations";
 import Img2and3 from "../../../assets/Img2and3.png";
+import TextRevealLines from "../../../lib/TextRevealLines";
 
 const Locations = () => {
   return (
@@ -32,13 +33,12 @@ const Locations = () => {
               }}
             >
               {locations.map((location, index) => (
-                <li
-                  key={index}
-                  className="flex items-center justify-end md:justify-start"
-                >
-                  <span className="mr-2">•</span>
-                  {location}
-                </li>
+                <TextRevealLines key={index} delay={index * 0.06}>
+                  <li className="flex items-center justify-end md:justify-start">
+                    <span className="mr-2">•</span>
+                    {location}
+                  </li>
+                </TextRevealLines>
               ))}
             </ul>
           </div>
