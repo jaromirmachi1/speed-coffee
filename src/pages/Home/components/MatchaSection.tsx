@@ -1,17 +1,32 @@
 import { useEffect, useRef } from "react";
 import Container from "../../../components/Container";
 import matchaSc from "../../../assets/matchaSc.webp";
+import coffeeVan from "../../../assets/coffeeVan.webp";
 
 const MatchaSection = () => {
   const sectionRef = useRef<HTMLElement | null>(null);
   const bgImageRef = useRef<HTMLImageElement | null>(null);
   const textRef = useRef<HTMLHeadingElement | null>(null);
+  const stage2BgRef = useRef<HTMLDivElement | null>(null);
+  const stage2ImageRef = useRef<HTMLImageElement | null>(null);
+  const stage2TextRef = useRef<HTMLHeadingElement | null>(null);
 
   useEffect(() => {
     const section = sectionRef.current;
     const bgImage = bgImageRef.current;
     const text = textRef.current;
-    if (!section || !bgImage || !text) return;
+    const stage2Bg = stage2BgRef.current;
+    const stage2Image = stage2ImageRef.current;
+    const stage2Text = stage2TextRef.current;
+    if (
+      !section ||
+      !bgImage ||
+      !text ||
+      !stage2Bg ||
+      !stage2Image ||
+      !stage2Text
+    )
+      return;
 
     let rafId = 0;
 
@@ -40,7 +55,8 @@ const MatchaSection = () => {
       // Background image parallax: moves bottom -> top while the section background color stays static.
       // No opacity changes; subtle motion only.
       // Start lower, then travel upward (per request).
-      const bgTranslateY = lerp(vh * 0.75, -vh * 0.15, easeOut(p));
+      // Travel far enough that the image fully exits the top of the viewport.
+      const bgTranslateY = lerp(vh * 0.9, -vh * 1.25, easeOut(p));
       bgImage.style.transform = `translate3d(-50%, calc(-50% + ${bgTranslateY.toFixed(
         2
       )}px), 0)`;
@@ -48,14 +64,59 @@ const MatchaSection = () => {
       // 4️⃣ TEXT APPEARANCE: only after scroll begins.
       // Show sooner: start essentially immediately as the user begins to scroll this section.
       const textT = clamp01((p - 0.0) / 0.18);
-      const textOpacity = lerp(0, 1, easeOut(textT));
+      const textOpacityIn = lerp(0, 1, easeOut(textT));
       const textY = lerp(20, 0, easeOut(textT));
 
-      text.style.opacity = String(textOpacity);
+      // Fade OUT once the image is out of sight (top). We use the image's actual rect (post-transform).
+      // Starts fading when the image bottom reaches ~40px above the viewport, ends by ~160px above.
+      const imgRect = bgImage.getBoundingClientRect();
+      const outT = clamp01((-40 - imgRect.bottom) / 120);
+      const textOpacityOut = 1 - easeOut(outT);
+
+      text.style.opacity = String(textOpacityIn * textOpacityOut);
       // Keep the heading centered (base -50%) while animating only the extra Y offset.
       text.style.transform = `translate3d(-50%, calc(-50% + ${textY.toFixed(
         2
       )}px), 0)`;
+
+      /**
+       * Stage 2 (COFFEE) — duplicate of Matcha behavior:
+       * - starts ONLY after Matcha heading is fully faded out
+       * - same easing/timing patterns (image motion + heading in/out)
+       * - different background color + different image + different text
+       */
+      // Stage 2 start: after Matcha fade-out window completes (imgRect.bottom <= -160).
+      const stage2Start = -200; // px threshold (below -160 so Matcha is fully gone)
+      const stage2Range = vh * 1.8; // scroll distance over which stage2 plays
+      const stage2P = clamp01((stage2Start - imgRect.bottom) / stage2Range);
+      const stage2Ease = easeOut(stage2P);
+
+      // Stage 2 background: slide in to cover the full viewport (no partial height).
+      stage2Bg.style.transform = `translate3d(0, ${
+        (1 - stage2Ease) * 100
+      }%, 0)`;
+
+      // Stage 2 image motion (same as Matcha: bottom -> top, enough to exit)
+      const coffeeTranslateY = lerp(vh * 0.9, -vh * 1.25, stage2Ease);
+      stage2Image.style.transform = `translate3d(-50%, calc(-50% + ${coffeeTranslateY.toFixed(
+        2
+      )}px), 0)`;
+      stage2Image.style.opacity = String(stage2Ease);
+
+      // Stage 2 text: fade in ONLY after the background has fully slid in.
+      const coffeeTextIn = clamp01((stage2Ease - 0.9) / 0.1);
+      const coffeeOpacityIn = easeOut(coffeeTextIn);
+
+      const coffeeRect = stage2Image.getBoundingClientRect();
+      const coffeeOutT = clamp01((-40 - coffeeRect.bottom) / 120);
+      const coffeeOpacityOut = 1 - easeOut(coffeeOutT);
+
+      stage2Text.style.opacity = String(coffeeOpacityIn * coffeeOpacityOut);
+      stage2Text.style.transform = `translate3d(-50%, calc(-50% + ${lerp(
+        20,
+        0,
+        coffeeOpacityIn
+      ).toFixed(2)}px), 0)`;
 
       rafId = 0;
     };
@@ -108,7 +169,7 @@ const MatchaSection = () => {
       // Provide scroll room for the "scene" without global CSS or extra wrappers.
       style={{
         // More runway so you can add another image underneath and keep the scroll feeling long/smooth.
-        minHeight: "260vh",
+        minHeight: "360vh",
       }}
     >
       <Container
@@ -201,6 +262,86 @@ const MatchaSection = () => {
             }}
           >
             yet?
+          </span>
+        </h2>
+
+        {/* Stage 2 (COFFEE): same scene structure as Matcha, but with a different background + image + text */}
+        <div
+          ref={stage2BgRef}
+          aria-hidden="true"
+          style={{
+            position: "fixed",
+            inset: 0,
+            backgroundColor: "#3b2a1f",
+            transform: "translate3d(0, 100%, 0)",
+            willChange: "transform",
+            zIndex: 30,
+            pointerEvents: "none",
+          }}
+        />
+        <img
+          ref={stage2ImageRef}
+          src={coffeeVan}
+          alt=""
+          aria-hidden="true"
+          style={{
+            position: "fixed",
+            left: "50%",
+            top: "50%",
+            width: "min(420px, 95vw)",
+            height: "auto",
+            transform: "translate3d(-50%, -50%, 0)",
+            borderRadius: "20px",
+            boxShadow: "0 10px 30px rgba(0, 0, 0, 0.18)",
+            opacity: 0,
+            willChange: "transform, opacity",
+            zIndex: 31,
+            pointerEvents: "none",
+            userSelect: "none",
+          }}
+        />
+        <h2
+          ref={stage2TextRef}
+          style={{
+            position: "fixed",
+            left: "50%",
+            top: "50%",
+            transform: "translate3d(-50%, calc(-50% + 20px), 0)",
+            opacity: 0,
+            display: "flex",
+            flexDirection: "column",
+            gap: 0,
+            alignItems: "center",
+            justifyContent: "center",
+            textAlign: "center",
+            zIndex: 32,
+            pointerEvents: "none",
+            whiteSpace: "nowrap",
+            willChange: "transform, opacity",
+          }}
+        >
+          <span
+            className="font-sans font-black"
+            style={{
+              fontSize: "min(22vw, 360px)",
+              lineHeight: 0.9,
+              letterSpacing: "0.02em",
+              color: "#EAE1CF",
+            }}
+          >
+            COFFEE
+          </span>
+          <span
+            style={{
+              fontFamily: "Agright, sans-serif",
+              fontWeight: 400,
+              fontSize: "min(6vw, 60px)",
+              lineHeight: 1,
+              marginTop: "-0.35em",
+              color: "#EAE1CF",
+            }}
+          >
+            Or sticking with
           </span>
         </h2>
       </Container>
