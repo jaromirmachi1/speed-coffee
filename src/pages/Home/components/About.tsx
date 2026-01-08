@@ -15,11 +15,11 @@ const About = () => {
               className="text-3xl md:text-4xl  lg:text-[64px] !font-['Agright'] font-normal text-dark leading-[1] mb-6"
               style={{ lineHeight: 1 }}
             >
-              ABOUT OUR COFFEE TRUCK
+              ABOUT OUR COFFEE HOUSE
             </h2>
             <TextRevealLines>
               <p
-                className="text-base md:text-lg lg:text-[24px] !font-['Manrope'] text-dark leading-relaxed"
+                className="text-base md:text-lg lg:text-[24px] text-dark leading-relaxed "
                 style={{
                   fontFamily: "Manrope, sans-serif",
                   fontWeight: 400,

@@ -59,21 +59,43 @@ const MatchaSection = () => {
       rafId = 0;
     };
 
-    const onScrollOrResize = () => {
+    // Full-bleed WITHOUT viewport units:
+    // Instead of width:100vw/dvw (which can cause 1–2px overflow), we “cancel out”
+    // the global `#root` padding by applying equal negative margins on this section.
+    const syncFullBleedToRootPadding = () => {
+      const rootEl = document.getElementById("root");
+      if (!rootEl) return;
+      const cs = window.getComputedStyle(rootEl);
+      const pl = Number.parseFloat(cs.paddingLeft) || 0;
+      const pr = Number.parseFloat(cs.paddingRight) || 0;
+      section.style.marginLeft = `${-pl}px`;
+      section.style.marginRight = `${-pr}px`;
+    };
+
+    const onScroll = () => {
       if (rafId) return;
       rafId = window.requestAnimationFrame(update);
     };
 
-    // Initial paint: keep product centered and text hidden before scrolling starts.
+    const onResize = () => {
+      syncFullBleedToRootPadding();
+      onScroll();
+    };
+
+    // Initial paint
+    syncFullBleedToRootPadding();
     update();
 
-    window.addEventListener("scroll", onScrollOrResize, { passive: true });
-    window.addEventListener("resize", onScrollOrResize);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onResize);
 
     return () => {
-      window.removeEventListener("scroll", onScrollOrResize);
-      window.removeEventListener("resize", onScrollOrResize);
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onResize);
       if (rafId) window.cancelAnimationFrame(rafId);
+      // Cleanup inline margins
+      section.style.marginLeft = "";
+      section.style.marginRight = "";
     };
   }, []);
 
@@ -83,16 +105,8 @@ const MatchaSection = () => {
       ref={sectionRef}
       className="py-16 bg-matcha"
       // Provide scroll room for the "scene" without global CSS or extra wrappers.
-      // Full-bleed: escape the global `#root` horizontal padding for this section only.
       style={{
         minHeight: "200vh",
-        // Use dvw to avoid the classic 100vw horizontal overflow caused by scrollbar width.
-        width: "100dvw",
-        marginLeft: "calc(50% - 50dvw)",
-        marginRight: "calc(50% - 50dvw)",
-        // Prevent any tiny horizontal overflow (e.g., sub-pixel math / large absolute text) from
-        // creating a page-level horizontal scrollbar.
-        overflowX: "hidden",
       }}
     >
       <Container
@@ -131,24 +145,58 @@ const MatchaSection = () => {
         {/* 4️⃣ TEXT: big MATCHA heading sits behind the product and fades/slides in after scroll begins */}
         <h2
           ref={textRef}
-          className="font-sans font-black text-beige"
+          className="text-beige"
           style={{
             position: "absolute",
             left: "50%",
             top: "50%",
             transform: "translate3d(-50%, calc(-50% + 20px), 0)",
             opacity: 0,
-            // Big “back” heading
-            fontSize: "min(26vw, 280px)",
-            lineHeight: 1,
-            letterSpacing: "0.02em",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            textAlign: "center",
             zIndex: 1,
             pointerEvents: "none",
+            // Keep typography tight and stable (no wrapping)
             whiteSpace: "nowrap",
             willChange: "transform, opacity",
           }}
         >
-          MATCHA
+          <span
+            style={{
+              fontFamily: "Agright, sans-serif",
+              fontWeight: 400,
+              fontSize: "min(6vw, 60px)",
+              lineHeight: 1,
+              marginBottom: "-0.15em",
+            }}
+          >
+            Fallen for
+          </span>
+          <span
+            className="font-sans font-black"
+            style={{
+              // Keep the big MATCHA exactly as the main visual
+              fontSize: "min(26vw, 420px)",
+              lineHeight: 0.9,
+              letterSpacing: "0.02em",
+            }}
+          >
+            MATCHA
+          </span>
+          <span
+            style={{
+              fontFamily: "Agright, sans-serif",
+              fontWeight: 400,
+              fontSize: "min(6vw, 60px)",
+              lineHeight: 1,
+              marginTop: "-0.25em",
+            }}
+          >
+            yet?
+          </span>
         </h2>
       </Container>
     </section>
