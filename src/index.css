@@ -9,6 +9,10 @@
 
 /* Base styles */
 @layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
   * {
     transition: color 0.2s;
   }
@@ -28,11 +32,17 @@
   }
 
   @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+
     *,
     *::before,
     *::after {
       animation: none !important;
       transition: none !important;
+      transition-duration: 0.001ms !important;
+      animation-duration: 0.001ms !important;
     }
   }
 }

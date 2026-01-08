@@ -1,4 +1,4 @@
-import headerph from "../../../assets/headerph.png";
+import headerph from "../../../assets/speedHero.png";
 import TextReveal from "../../../lib/TextReveal";
 import Container from "../../../components/Container";
 import { useImageReveal } from "../hooks/useImageReveal";

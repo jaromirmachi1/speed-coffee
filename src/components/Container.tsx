@@ -1,12 +1,18 @@
-import type { ReactNode } from "react";
+import type { CSSProperties, ReactNode } from "react";
 
 interface ContainerProps {
   children: ReactNode;
   className?: string;
   maxWidth?: "sm" | "md" | "lg" | "xl" | "2xl" | "7xl" | "full";
+  style?: CSSProperties;
 }
 
-const Container = ({ children, className = "", maxWidth = "full" }: ContainerProps) => {
+const Container = ({
+  children,
+  className = "",
+  maxWidth = "full",
+  style,
+}: ContainerProps) => {
   const maxWidthClasses = {
     sm: "max-w-sm",
     md: "max-w-md",
@@ -17,16 +23,15 @@ const Container = ({ children, className = "", maxWidth = "full" }: ContainerPro
     full: "max-w-full",
   };
 
-  const classes = [
-    "mx-auto",
-    maxWidthClasses[maxWidth],
-    className,
-  ]
+  const classes = ["mx-auto", maxWidthClasses[maxWidth], className]
     .filter(Boolean)
     .join(" ");
 
-  return <div className={classes}>{children}</div>;
+  return (
+    <div className={classes} style={style}>
+      {children}
+    </div>
+  );
 };
 
 export default Container;
-

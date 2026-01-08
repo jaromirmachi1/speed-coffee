@@ -17,10 +17,20 @@ const Locations = () => {
           </div>
 
           <div className="text-right md:text-left">
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-display font-bold text-dark mb-6">
+            <h2
+              className="text-3xl md:text-4xl lg:text-[64px] !font-['Agright'] font-normal text-dark leading-[1] mb-6"
+              style={{ lineHeight: 1 }}
+            >
               WHERE CAN YOU FIND US?
             </h2>
-            <ul className="space-y-3 font-sans text-base md:text-lg text-dark">
+            <ul
+              className="space-y-3 text-base md:text-lg lg:text-[24px] !font-['Manrope'] text-dark"
+              style={{
+                fontFamily: "Manrope, sans-serif",
+                fontWeight: 400,
+                lineHeight: 1.0,
+              }}
+            >
               {locations.map((location, index) => (
                 <li
                   key={index}

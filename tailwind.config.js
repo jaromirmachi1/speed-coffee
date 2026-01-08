@@ -9,8 +9,8 @@ export default {
           DEFAULT: "#EAE1CF",
         },
         matcha: {
-          green: "#A8C6A8",
-          DEFAULT: "#A8C6A8",
+          green: "#A0B08C",
+          DEFAULT: "#A0B08C",
         },
         accent: {
           brown: "#8B5A3C",
@@ -26,6 +26,7 @@ export default {
         display: ['"Manuka Condensed"', "sans-serif"],
         sans: ['"Manuka Condensed"', "sans-serif"],
         agright: ['"Agright"', "sans-serif"],
+        manrope: ['"Manrope"', "sans-serif"],
       },
       spacing: {
         18: "4.5rem",
