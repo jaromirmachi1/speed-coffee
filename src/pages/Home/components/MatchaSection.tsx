@@ -86,9 +86,13 @@ const MatchaSection = () => {
       // Full-bleed: escape the global `#root` horizontal padding for this section only.
       style={{
         minHeight: "200vh",
-        width: "100vw",
-        marginLeft: "calc(50% - 50vw)",
-        marginRight: "calc(50% - 50vw)",
+        // Use dvw to avoid the classic 100vw horizontal overflow caused by scrollbar width.
+        width: "100dvw",
+        marginLeft: "calc(50% - 50dvw)",
+        marginRight: "calc(50% - 50dvw)",
+        // Prevent any tiny horizontal overflow (e.g., sub-pixel math / large absolute text) from
+        // creating a page-level horizontal scrollbar.
+        overflowX: "hidden",
       }}
     >
       <Container
