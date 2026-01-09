@@ -10,6 +10,7 @@ const MatchaSection = () => {
   const stage2BgRef = useRef<HTMLDivElement | null>(null);
   const stage2ImageRef = useRef<HTMLImageElement | null>(null);
   const stage2TextRef = useRef<HTMLHeadingElement | null>(null);
+  const stage2StartPRef = useRef<number | null>(null);
 
   useEffect(() => {
     const section = sectionRef.current;
@@ -85,31 +86,45 @@ const MatchaSection = () => {
        * - same easing/timing patterns (image motion + heading in/out)
        * - different background color + different image + different text
        */
-      // Stage 2 start: after Matcha fade-out window completes (imgRect.bottom <= -160).
-      const stage2Start = -200; // px threshold (below -160 so Matcha is fully gone)
-      const stage2Range = vh * 1.8; // scroll distance over which stage2 plays
-      const stage2P = clamp01((stage2Start - imgRect.bottom) / stage2Range);
-      const stage2Ease = easeOut(stage2P);
+      // Stage 2 timing: match the Matcha "physics" by driving stage2 off section scroll progress (p),
+      // not off image pixels (which compresses the motion and feels faster).
+      // We "arm" stage2 once the Matcha image has fully cleared the top.
+      const stage2ArmPx = -200; // px threshold (below -160 so Matcha is fully gone)
+      if (stage2StartPRef.current === null && imgRect.bottom <= stage2ArmPx) {
+        stage2StartPRef.current = p;
+      }
+      const stage2StartP = stage2StartPRef.current ?? 1;
+      const stage2DurationP = 0.5; // portion of section scroll reserved for stage 2
+      const stage2P = clamp01((p - stage2StartP) / stage2DurationP);
+      // Stage 2 physics: match the "feel" of the Matcha part (single ease-out, no double-easing).
+      // Split stage2 into 3 sequential phases (requested):
+      // 1) background slide in (0.00 -> 0.25)
+      // 2) then text fades in (0.25 -> 0.43)  [same 0.18 ramp as Matcha heading]
+      // 3) then image moves bottom -> top (0.43 -> 1.00)
+      const bgT = easeOut(clamp01(stage2P / 0.25));
+      const stage2TextT = easeOut(clamp01((stage2P - 0.25) / 0.18));
+      const imgT = easeOut(clamp01((stage2P - 0.43) / 0.57));
 
       // Stage 2 background: slide in to cover the full viewport (no partial height).
-      stage2Bg.style.transform = `translate3d(0, ${
-        (1 - stage2Ease) * 100
-      }%, 0)`;
+      stage2Bg.style.transform = `translate3d(0, ${(1 - bgT) * 100}%, 0)`;
 
-      // Stage 2 image motion (same as Matcha: bottom -> top, enough to exit)
-      const coffeeTranslateY = lerp(vh * 0.9, -vh * 1.25, stage2Ease);
+      // Stage 2 image motion starts ONLY after text is visible.
+      const coffeeTranslateY = lerp(vh * 0.9, -vh * 1.25, imgT);
       stage2Image.style.transform = `translate3d(-50%, calc(-50% + ${coffeeTranslateY.toFixed(
         2
       )}px), 0)`;
-      stage2Image.style.opacity = String(stage2Ease);
+      stage2Image.style.opacity = String(imgT);
 
-      // Stage 2 text: fade in ONLY after the background has fully slid in.
-      const coffeeTextIn = clamp01((stage2Ease - 0.9) / 0.1);
-      const coffeeOpacityIn = easeOut(coffeeTextIn);
+      // Stage 2 text: fade in only after background is in (phase 2).
+      const coffeeOpacityIn = stage2TextT;
 
-      const coffeeRect = stage2Image.getBoundingClientRect();
-      const coffeeOutT = clamp01((-40 - coffeeRect.bottom) / 120);
-      const coffeeOpacityOut = 1 - easeOut(coffeeOutT);
+      // Only start computing fade-out after the image is actually moving/visible.
+      let coffeeOpacityOut = 1;
+      if (imgT > 0.01) {
+        const coffeeRect = stage2Image.getBoundingClientRect();
+        const coffeeOutT = clamp01((-40 - coffeeRect.bottom) / 120);
+        coffeeOpacityOut = 1 - easeOut(coffeeOutT);
+      }
 
       stage2Text.style.opacity = String(coffeeOpacityIn * coffeeOpacityOut);
       stage2Text.style.transform = `translate3d(-50%, calc(-50% + ${lerp(
@@ -169,7 +184,7 @@ const MatchaSection = () => {
       // Provide scroll room for the "scene" without global CSS or extra wrappers.
       style={{
         // More runway so you can add another image underneath and keep the scroll feeling long/smooth.
-        minHeight: "360vh",
+        minHeight: "520vh",
       }}
     >
       <Container
@@ -321,6 +336,18 @@ const MatchaSection = () => {
           }}
         >
           <span
+            style={{
+              fontFamily: "Agright, sans-serif",
+              fontWeight: 400,
+              fontSize: "min(6vw, 60px)",
+              lineHeight: 1,
+              marginBottom: "-0.65em",
+              color: "#EAE1CF",
+            }}
+          >
+            Or sticking with
+          </span>
+          <span
             className="font-sans font-black"
             style={{
               fontSize: "min(22vw, 360px)",
@@ -330,18 +357,6 @@ const MatchaSection = () => {
             }}
           >
             COFFEE
-          </span>
-          <span
-            style={{
-              fontFamily: "Agright, sans-serif",
-              fontWeight: 400,
-              fontSize: "min(6vw, 60px)",
-              lineHeight: 1,
-              marginTop: "-0.35em",
-              color: "#EAE1CF",
-            }}
-          >
-            Or sticking with
           </span>
         </h2>
       </Container>
