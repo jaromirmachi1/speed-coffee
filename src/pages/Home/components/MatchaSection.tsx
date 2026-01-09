@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import Container from "../../../components/Container";
 import matchaSc from "../../../assets/matchaSc.webp";
-import coffeeVan from "../../../assets/coffeeVan.webp";
+import coffeeSell from "../../../assets/coffeeSell.png";
 
 const MatchaSection = () => {
   const sectionRef = useRef<HTMLElement | null>(null);
@@ -113,7 +113,9 @@ const MatchaSection = () => {
       stage2Image.style.transform = `translate3d(-50%, calc(-50% + ${coffeeTranslateY.toFixed(
         2
       )}px), 0)`;
-      stage2Image.style.opacity = String(imgT);
+      // Make the image clearly sit "on top" once phase 3 begins by fading it in quickly to opaque.
+      const imgOpacityT = easeOut(clamp01((stage2P - 0.43) / 0.07));
+      stage2Image.style.opacity = String(imgOpacityT);
 
       // Stage 2 text: fade in only after background is in (phase 2).
       const coffeeOpacityIn = stage2TextT;
@@ -282,83 +284,95 @@ const MatchaSection = () => {
 
         {/* Stage 2 (COFFEE): same scene structure as Matcha, but with a different background + image + text */}
         <div
-          ref={stage2BgRef}
-          aria-hidden="true"
+          // Single fixed overlay wrapper to guarantee layering order (matches Matcha behavior).
           style={{
             position: "fixed",
             inset: 0,
-            backgroundColor: "#3b2a1f",
-            transform: "translate3d(0, 100%, 0)",
-            willChange: "transform",
             zIndex: 30,
             pointerEvents: "none",
           }}
-        />
-        <img
-          ref={stage2ImageRef}
-          src={coffeeVan}
-          alt=""
-          aria-hidden="true"
-          style={{
-            position: "fixed",
-            left: "50%",
-            top: "50%",
-            width: "min(420px, 95vw)",
-            height: "auto",
-            transform: "translate3d(-50%, -50%, 0)",
-            borderRadius: "20px",
-            boxShadow: "0 10px 30px rgba(0, 0, 0, 0.18)",
-            opacity: 0,
-            willChange: "transform, opacity",
-            zIndex: 31,
-            pointerEvents: "none",
-            userSelect: "none",
-          }}
-        />
-        <h2
-          ref={stage2TextRef}
-          style={{
-            position: "fixed",
-            left: "50%",
-            top: "50%",
-            transform: "translate3d(-50%, calc(-50% + 20px), 0)",
-            opacity: 0,
-            display: "flex",
-            flexDirection: "column",
-            gap: 0,
-            alignItems: "center",
-            justifyContent: "center",
-            textAlign: "center",
-            zIndex: 32,
-            pointerEvents: "none",
-            whiteSpace: "nowrap",
-            willChange: "transform, opacity",
-          }}
         >
-          <span
+          <div
+            ref={stage2BgRef}
+            aria-hidden="true"
             style={{
-              fontFamily: "Agright, sans-serif",
-              fontWeight: 400,
-              fontSize: "min(6vw, 60px)",
-              lineHeight: 1,
-              marginBottom: "-0.65em",
-              color: "#EAE1CF",
+              position: "absolute",
+              inset: 0,
+              backgroundColor: "#BEA791",
+              transform: "translate3d(0, 100%, 0)",
+              willChange: "transform",
+            }}
+          />
+
+          {/* Text is below the image */}
+          <h2
+            ref={stage2TextRef}
+            style={{
+              position: "absolute",
+              left: "50%",
+              top: "50%",
+              transform: "translate3d(-50%, calc(-50% + 20px), 0)",
+              opacity: 0,
+              display: "flex",
+              flexDirection: "column",
+              gap: 0,
+              alignItems: "center",
+              justifyContent: "center",
+              textAlign: "center",
+              zIndex: 1,
+              whiteSpace: "nowrap",
+              willChange: "transform, opacity",
             }}
           >
-            Or sticking with
-          </span>
-          <span
-            className="font-sans font-black"
+            <span
+              style={{
+                fontFamily: "Agright, sans-serif",
+                fontWeight: 400,
+                fontSize: "min(6vw, 60px)",
+                lineHeight: 1,
+                marginBottom: "-0.65em",
+                color: "#EAE1CF",
+              }}
+            >
+              Or sticking with
+            </span>
+            <span
+              className="font-sans"
+              style={{
+                // Keep the big MATCHA exactly as the main visual
+                fontSize: "min(26vw, 420px)",
+                lineHeight: 0.9,
+                letterSpacing: "0.02em",
+                color: "#EAE1CF",
+              }}
+            >
+              COFFEE
+            </span>
+          </h2>
+
+          {/* Image is on top of text */}
+          <img
+            ref={stage2ImageRef}
+            src={coffeeSell}
+            alt=""
+            aria-hidden="true"
             style={{
-              fontSize: "min(22vw, 360px)",
-              lineHeight: 0.9,
-              letterSpacing: "0.02em",
-              color: "#EAE1CF",
+              position: "absolute",
+              left: "50%",
+              top: "50%",
+              width: "min(420px, 95vw)",
+              height: "auto",
+              transform: "translate3d(-50%, -50%, 0)",
+              backgroundColor: "#EAE1CF",
+              borderRadius: "20px",
+              boxShadow: "0 10px 30px rgba(0, 0, 0, 0.18)",
+              opacity: 0,
+              willChange: "transform, opacity",
+              zIndex: 2,
+              userSelect: "none",
             }}
-          >
-            COFFEE
-          </span>
-        </h2>
+          />
+        </div>
       </Container>
     </section>
   );
