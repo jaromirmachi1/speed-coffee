@@ -6,6 +6,7 @@ import {
   Locations,
   EventBooking,
   MatchaSection,
+  ProductsSection,
 } from "./components";
 
 const Home = () => {
@@ -19,6 +20,7 @@ const Home = () => {
         <Locations />
         <EventBooking />
         <MatchaSection />
+        <ProductsSection />
       </main>
     </div>
   );

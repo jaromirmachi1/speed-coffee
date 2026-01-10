@@ -64,7 +64,6 @@ const MatchaSection = () => {
       // Coffee stage is handled by CoffeeSection (separate file).
       coffeeRef.current?.update({
         scrolledPx: scrolled,
-        scrollablePx: scrollable,
         vh,
         matchaImgBottom: imgRect.bottom,
       });
