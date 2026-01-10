@@ -2,8 +2,10 @@ import { forwardRef, useImperativeHandle, useRef } from "react";
 import coffeeSell from "../../../assets/coffeeSell.png";
 
 export interface CoffeeSectionUpdateParams {
-  /** Section scroll progress from the Matcha parent (0..1). */
-  p: number;
+  /** Scroll distance (px) within the Matcha section: `scrolled = -sectionRect.top`. */
+  scrolledPx: number;
+  /** Total scrollable distance (px) within the Matcha section: `rect.height - vh`. */
+  scrollablePx: number;
   /** Current viewport height in px. */
   vh: number;
   /** Matcha image rect.bottom in viewport coordinates (post-transform). */
@@ -18,7 +20,7 @@ export interface CoffeeSectionHandle {
 /**
  * Coffee stage overlay.
  * All "coffee section" refs + animation math live here.
- * Parent drives it by calling `ref.current.update({ p, vh, matchaImgBottom })`.
+ * Parent drives it by calling `ref.current.update({ scrolledPx, scrollablePx, vh, matchaImgBottom })`.
  */
 const CoffeeSection = forwardRef<CoffeeSectionHandle>((_, ref) => {
   const stage2BgRef = useRef<HTMLDivElement | null>(null);
@@ -31,14 +33,14 @@ const CoffeeSection = forwardRef<CoffeeSectionHandle>((_, ref) => {
   const stage3BgRef = useRef<HTMLDivElement | null>(null);
   const stage3ContentRef = useRef<HTMLDivElement | null>(null);
 
-  const stage2StartPRef = useRef<number | null>(null);
+  const stage2StartScrollPxRef = useRef<number | null>(null);
 
   const easeOut = (t: number) => 1 - Math.pow(1 - t, 2);
   const clamp01 = (v: number) => Math.min(1, Math.max(0, v));
   const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
 
   const reset = () => {
-    stage2StartPRef.current = null;
+    stage2StartScrollPxRef.current = null;
 
     stage2WrapperRef.current?.style.setProperty(
       "transform",
@@ -68,7 +70,12 @@ const CoffeeSection = forwardRef<CoffeeSectionHandle>((_, ref) => {
     stage3ContentRef.current?.style.setProperty("opacity", "0");
   };
 
-  const update = ({ p, vh, matchaImgBottom }: CoffeeSectionUpdateParams) => {
+  const update = ({
+    scrolledPx,
+    scrollablePx,
+    vh,
+    matchaImgBottom,
+  }: CoffeeSectionUpdateParams) => {
     const stage2Bg = stage2BgRef.current;
     const stage2Image = stage2ImageRef.current;
     const stage2Text = stage2TextRef.current;
@@ -91,33 +98,31 @@ const CoffeeSection = forwardRef<CoffeeSectionHandle>((_, ref) => {
       return;
     }
 
-    // STRICT gating: stage2 must NOT begin until Matcha is fully out AND the Matcha heading is gone.
-    // Matcha heading fade-out completes when matchaImgBottom is around -160 (see Matcha outT mapping).
-    const stage2ArmPx = -160;
-    if (stage2StartPRef.current === null && matchaImgBottom <= stage2ArmPx) {
-      stage2StartPRef.current = p;
+    // Gate stage2 off Matcha’s exit so we have enough scroll runway for the full Coffee sequence.
+    // Matcha outT *starts* when matchaImgBottom reaches ~-40 (see Matcha outT mapping),
+    // which aligns Coffee background entering with Matcha beginning to fade out.
+    const stage2ArmPx = -40;
+    if (
+      stage2StartScrollPxRef.current === null &&
+      matchaImgBottom <= stage2ArmPx
+    ) {
+      stage2StartScrollPxRef.current = scrolledPx;
     }
 
-    // Reserve scroll space AFTER stage 2 for the "beige exits → brown fills → new section" transition.
-    const stage2DurationP = 0.55;
-    const stage3DurationP = 0.18;
+    /**
+     * Coffee scroll physics model (match MatchaSection):
+     * - Drive progress from *real* scroll distance in px (not normalized time slices).
+     * - No "durationEffective" compression: 100px scroll should feel like 100px everywhere.
+     */
+    // Fixed durations expressed in px (derived from the Matcha section's scrollable px).
+    // This keeps Coffee speed consistent relative to the same scroll runway driving Matcha.
+    const stage2DurationPx = Math.max(1, scrollablePx * 0.55);
+    const stage3DurationPx = Math.max(1, scrollablePx * 0.18);
 
-    const stage2StartP = stage2StartPRef.current;
-    // If stage2 arms late, we must still allow it to reach the zoom before stage3 starts.
-    // So we shrink the stage2 duration to whatever scroll remains before the stage3 window.
-    const stage2MaxEndP = 1 - stage3DurationP;
-    const stage2DurationEffective =
-      stage2StartP === null
-        ? stage2DurationP
-        : Math.max(
-            0.001,
-            Math.min(stage2DurationP, stage2MaxEndP - stage2StartP)
-          );
-
-    const stage2P =
-      stage2StartP === null
-        ? 0
-        : clamp01((p - stage2StartP) / stage2DurationEffective);
+    const stage2StartScrollPx = stage2StartScrollPxRef.current;
+    const stage2ScrolledPx =
+      stage2StartScrollPx === null ? 0 : scrolledPx - stage2StartScrollPx;
+    const stage2P = clamp01(stage2ScrolledPx / stage2DurationPx);
 
     // Split stage2 into 4 sequential phases:
     // 1) background slide in (0.00 -> 0.20)
@@ -166,12 +171,15 @@ const CoffeeSection = forwardRef<CoffeeSectionHandle>((_, ref) => {
     stage2Wrapper.style.opacity = "1";
 
     // Stage 3: only start after stage2 has started AND completed.
-    const stage2Complete = stage2StartP !== null && stage2P >= 1;
-    const stage2EndP =
-      stage2StartP === null ? 1 : stage2StartP + stage2DurationEffective;
-    const stage3P = stage2Complete
-      ? clamp01((p - stage2EndP) / stage3DurationP)
+    const stage2Complete = stage2StartScrollPx !== null && stage2P >= 1;
+    const stage2EndScrollPx =
+      stage2StartScrollPx === null
+        ? Number.POSITIVE_INFINITY
+        : stage2StartScrollPx + stage2DurationPx;
+    const stage3ScrolledPx = stage2Complete
+      ? scrolledPx - stage2EndScrollPx
       : 0;
+    const stage3P = clamp01(stage3ScrolledPx / stage3DurationPx);
     const stage3T = easeOut(stage3P);
 
     // Keep stage 3 using the SAME background color as stage 2 (enter into it).

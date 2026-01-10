@@ -22,22 +22,17 @@ const MatchaSection = () => {
     const clamp01 = (v: number) => Math.min(1, Math.max(0, v));
     const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
 
-    /**
-     * Scroll progress across this section:
-     * - 0 when section top hits viewport top
-     * - 1 when section bottom hits viewport bottom
-     */
-    const computeProgress = () => {
-      const rect = section.getBoundingClientRect();
+    const update = () => {
       const vh = window.innerHeight || 1;
+      const rect = section.getBoundingClientRect();
       const scrollable = Math.max(1, rect.height - vh);
       const scrolled = -rect.top;
-      return clamp01(scrolled / scrollable);
-    };
-
-    const update = () => {
-      const p = computeProgress();
-      const vh = window.innerHeight || 1;
+      /**
+       * Scroll progress across this section:
+       * - 0 when section top hits viewport top
+       * - 1 when section bottom hits viewport bottom
+       */
+      const p = clamp01(scrolled / scrollable);
 
       // Background image parallax: moves bottom -> top while the section background color stays static.
       // No opacity changes; subtle motion only.
@@ -67,7 +62,12 @@ const MatchaSection = () => {
       )}px), 0)`;
 
       // Coffee stage is handled by CoffeeSection (separate file).
-      coffeeRef.current?.update({ p, vh, matchaImgBottom: imgRect.bottom });
+      coffeeRef.current?.update({
+        scrolledPx: scrolled,
+        scrollablePx: scrollable,
+        vh,
+        matchaImgBottom: imgRect.bottom,
+      });
 
       rafId = 0;
     };
