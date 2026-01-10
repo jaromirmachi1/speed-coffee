@@ -15,4 +15,3 @@
 
 /* NOTE: TextRevealLines builds its own wrappers + animates inner spans via GSAP.
    Avoid global `.line` styling here to prevent layout/overlap issues. */
-

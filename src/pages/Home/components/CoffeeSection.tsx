@@ -55,6 +55,10 @@ const CoffeeSection = forwardRef<CoffeeSectionHandle>((_, ref) => {
     stage2ImageRef.current?.style.setProperty("opacity", "0");
     stage2TextRef.current?.style.setProperty("opacity", "0");
     stage2PrefixRef.current?.style.setProperty("opacity", "0");
+    stage2PrefixRef.current?.style.setProperty("display", "block");
+    // Restore responsive base sizing and remove any zoom-time overrides.
+    stage2CoffeeRef.current?.style.setProperty("font-size", "min(26vw, 520px)");
+    stage2CoffeeRef.current?.style.setProperty("transform", "none");
 
     stage3BgRef.current?.style.setProperty(
       "transform",
@@ -147,10 +151,17 @@ const CoffeeSection = forwardRef<CoffeeSectionHandle>((_, ref) => {
       stage2TextT
     ).toFixed(2)}px), 0)`;
 
-    // Zoom: scale the COFFEE word from center.
-    const zoomScale = lerp(1, 40, zoomT);
-    stage2Coffee.style.transformOrigin = "50% 50%";
-    stage2Coffee.style.transform = `scale(${zoomScale.toFixed(4)})`;
+    // Zoom: keep text crisp by animating font-size (no transform-based scaling).
+    // Initial size matches CSS: min(26vw, 520px)
+    const vw = window.innerWidth || 0;
+    const initialFontPx = Math.min(vw * 0.26, 520);
+    // Large cinematic target; cap to avoid extreme layout values on very large screens.
+    const cinematicFontPx = Math.min(initialFontPx * 40, 12000);
+    const coffeeFontPx = lerp(initialFontPx, cinematicFontPx, zoomT);
+    stage2Coffee.style.fontSize = `${coffeeFontPx.toFixed(2)}px`;
+    // After the prefix fully fades, remove it from layout to keep the zoom centered on "COFFEE".
+    stage2Prefix.style.display =
+      prefixOutT >= 0.999 || zoomT > 0 ? "none" : "block";
 
     stage2Wrapper.style.opacity = "1";
 
@@ -254,7 +265,7 @@ const CoffeeSection = forwardRef<CoffeeSectionHandle>((_, ref) => {
               lineHeight: 0.9,
               letterSpacing: "0.04em",
               color: "#EAE1CF",
-              willChange: "transform",
+              willChange: "font-size",
             }}
           >
             COFFEE
