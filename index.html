@@ -4,6 +4,37 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script>
+      // Ensure refresh always starts at the top (unless a deep link hash is present).
+      // This must run BEFORE React/Lenis mount, otherwise the browser may already restore scroll.
+      (function () {
+        try {
+          var hasHash = !!(window.location.hash && window.location.hash !== "#");
+          if ("scrollRestoration" in window.history && !hasHash) {
+            window.history.scrollRestoration = "manual";
+          }
+
+          var scrollTop = function () {
+            if (hasHash) return;
+            window.scrollTo(0, 0);
+          };
+
+          // Run multiple times to beat any late restoration/layout shifts.
+          scrollTop();
+          document.addEventListener("DOMContentLoaded", scrollTop, { once: true });
+          window.addEventListener("load", scrollTop, { once: true });
+          window.addEventListener("pageshow", function (e) {
+            if (!hasHash && e && e.persisted) scrollTop();
+          });
+          requestAnimationFrame(scrollTop);
+          requestAnimationFrame(function () {
+            requestAnimationFrame(scrollTop);
+          });
+        } catch (e) {
+          // ignore
+        }
+      })();
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
