@@ -9,7 +9,7 @@ const HeroIntro = () => {
       <Container className="w-full">
         <div className="min-h-[70vh] flex flex-col">
           <div className="flex-1 flex items-center justify-center py-10">
-            <div className="text-center max-w-7xl mx-auto">
+            <div className="text-center w-full max-w-none mx-auto">
               <TextRevealLines>
                 <p className="text-[96px] font-manuka font-medium text-dark leading-[0.80]">
                   EVERY MOMENT WITH OUR COFFEE OR MATCHA IS AN{" "}

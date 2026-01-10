@@ -37,7 +37,7 @@ const TextRevealLines = ({
         const segments: Segment[] = [];
 
         // Collect text segments with their active inline classes (e.g. spans).
-        // Important: ignore our own `.line` wrappers so we can rebuild on resize / layout changes.
+        // Important: ignore our own wrappers so we can rebuild on resize / layout changes.
         const collectSegments = (
           node: Node,
           activeClasses: string[] = []
@@ -66,7 +66,7 @@ const TextRevealLines = ({
             el.tagName === "I";
 
           const isInternalLineWrapper =
-            el.tagName === "SPAN" && el.classList.contains("line");
+            el.tagName === "SPAN" && el.classList.contains("text-reveal-line");
 
           if (isInlineStyleCarrier && !isInternalLineWrapper) {
             if (el.className) newActive.push(el.className);
@@ -138,7 +138,7 @@ const TextRevealLines = ({
 
           if (testWidth > containerWidth && currentUnits.length > 0) {
             const lineContainer = document.createElement("span");
-            lineContainer.className = "line";
+            lineContainer.className = "text-reveal-line";
             lineContainer.style.display = "block";
             lineContainer.style.overflow = "hidden";
 
@@ -156,7 +156,7 @@ const TextRevealLines = ({
 
           if (index === units.length - 1 && currentUnits.length > 0) {
             const lineContainer = document.createElement("span");
-            lineContainer.className = "line";
+            lineContainer.className = "text-reveal-line";
             lineContainer.style.display = "block";
             lineContainer.style.overflow = "hidden";
 

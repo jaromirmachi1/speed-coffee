@@ -56,7 +56,9 @@ export function useSpeedCoffeeMotion(rootRef: RefObject<HTMLElement | null>) {
     const lenis = new Lenis({
       duration: 1.18,
       smoothWheel: true,
-      smoothTouch: false,
+      // Lenis v1.3.x: `smoothTouch` is not a valid option; `syncTouch` controls touch-style syncing.
+      // We keep touch syncing disabled (default) to avoid altering native touch scrolling behavior.
+      syncTouch: false,
       easing: (t: number) => 1 - Math.pow(1 - t, 3), // close to power2.out
     });
 
