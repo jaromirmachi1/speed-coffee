@@ -19,7 +19,9 @@ export function useSpeedCoffeeMotion(rootRef: RefObject<HTMLElement | null>) {
 
     // By default, browsers restore scroll position on refresh/back-forward.
     // For this site we want a clean "start at top" on reload, but still respect deep links (#hash).
-    const hasHash = Boolean(window.location.hash && window.location.hash !== "#");
+    const hasHash = Boolean(
+      window.location.hash && window.location.hash !== "#"
+    );
     const canControlRestoration = "scrollRestoration" in window.history;
     const prevRestoration =
       canControlRestoration && window.history.scrollRestoration
@@ -228,7 +230,10 @@ export function useSpeedCoffeeMotion(rootRef: RefObject<HTMLElement | null>) {
       if (!el) return;
 
       e.preventDefault();
-      lenis.scrollTo(el, { duration: 1.18, easing: (t: number) => 1 - Math.pow(1 - t, 3) });
+      lenis.scrollTo(el, {
+        duration: 1.18,
+        easing: (t: number) => 1 - Math.pow(1 - t, 3),
+      });
       history.pushState(null, "", href);
     };
     root.addEventListener("click", onClick);
@@ -268,5 +273,3 @@ export function useSpeedCoffeeMotion(rootRef: RefObject<HTMLElement | null>) {
     };
   }, [rootRef]);
 }
-
-
