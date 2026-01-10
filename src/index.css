@@ -1,95 +1,60 @@
+/* Import fonts and animations FIRST */
+@import "./styles/fonts.css";
+@import "./styles/animations.css";
+
+/* Tailwind directives */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Manuka Font Family */
-@font-face {
-  font-family: "Manuka";
-  src: url("./assets/manuka-font-family-1749104552-0/TestManuka-Thin-BF663c33db97e05.otf")
-    format("opentype");
-  font-weight: 100;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Manuka";
-  src: url("./assets/manuka-font-family-1749104552-0/TestManuka-Light-BF663c33db8aab4.otf")
-    format("opentype");
-  font-weight: 300;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Manuka";
-  src: url("./assets/manuka-font-family-1749104552-0/TestManuka-Regular-BF663c33db89825.otf")
-    format("opentype");
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Manuka";
-  src: url("./assets/manuka-font-family-1749104552-0/TestManuka-Medium-BF663c33db67c40.otf")
-    format("opentype");
-  font-weight: 500;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Manuka";
-  src: url("./assets/manuka-font-family-1749104552-0/TestManuka-Bold-BF663c33db7b03f.otf")
-    format("opentype");
-  font-weight: 700;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Manuka";
-  src: url("./assets/manuka-font-family-1749104552-0/TestManuka-Black-BF663c33db5944e.otf")
-    format("opentype");
-  font-weight: 900;
-  font-style: normal;
-  font-display: swap;
-}
-
+/* Base styles */
 @layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
   * {
     transition: color 0.2s;
   }
 
   body {
-    background-color: #eae1cf;
-    color: #222222;
-    font-family: "Open Sans", sans-serif;
+    @apply bg-beige text-dark;
+    font-family: "Manuka Condensed", sans-serif;
+    font-weight: 700;
+    line-height: 0.85;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
 
+  /* Hide vertical scrollbar (keep scrolling enabled) */
+  html,
+  body {
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE/old Edge */
+  }
+
+  html::-webkit-scrollbar,
+  body::-webkit-scrollbar {
+    display: none; /* Chrome/Safari */
+  }
+
+  /* Global side padding (gutter) for entire app */
+  #root {
+    @apply px-4 sm:px-6 lg:px-8;
+  }
+
   @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+
     *,
     *::before,
     *::after {
       animation: none !important;
       transition: none !important;
+      transition-duration: 0.001ms !important;
+      animation-duration: 0.001ms !important;
     }
   }
-}
-
-/* Global container padding */
-section > div:first-child,
-nav,
-.container,
-[class*="max-w-"] {
-  padding-left: 100px !important;
-  padding-right: 100px !important;
-}
-
-/* Remove max-width constraints */
-[class*="max-w-"] {
-  max-width: 100% !important;
 }

@@ -9,8 +9,8 @@ export default {
           DEFAULT: "#EAE1CF",
         },
         matcha: {
-          green: "#A8C6A8",
-          DEFAULT: "#A8C6A8",
+          green: "#A0B08C",
+          DEFAULT: "#A0B08C",
         },
         accent: {
           brown: "#8B5A3C",
@@ -22,17 +22,22 @@ export default {
         },
       },
       fontFamily: {
-        manuka: ["Manuka", "sans-serif"],
-        display: ["Playfair Display", "serif"],
-        sans: ["Open Sans", "sans-serif"],
+        manuka: ['"Manuka Condensed"', "sans-serif"],
+        display: ['"Manuka Condensed"', "sans-serif"],
+        sans: ['"Manuka Condensed"', "sans-serif"],
+        agright: ['"Agright"', "sans-serif"],
+        manrope: ['"Manrope"', "sans-serif"],
       },
       spacing: {
         18: "4.5rem",
         88: "22rem",
+        100: "100px",
+      },
+      fontSize: {
+        hero: "clamp(120px, 20vw, 330px)",
       },
       container: {
         center: true,
-        padding: "100px",
       },
     },
   },
