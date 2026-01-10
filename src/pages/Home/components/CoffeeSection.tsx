@@ -87,8 +87,9 @@ const CoffeeSection = forwardRef<CoffeeSectionHandle>((_, ref) => {
       return;
     }
 
-    // STRICT gating: stage2 must NOT begin until Matcha is fully out.
-    const stage2ArmPx = -200;
+    // STRICT gating: stage2 must NOT begin until Matcha is fully out AND the Matcha heading is gone.
+    // Matcha heading fade-out completes when matchaImgBottom is around -160 (see Matcha outT mapping).
+    const stage2ArmPx = -160;
     if (stage2StartPRef.current === null && matchaImgBottom <= stage2ArmPx) {
       stage2StartPRef.current = p;
     }
@@ -98,8 +99,21 @@ const CoffeeSection = forwardRef<CoffeeSectionHandle>((_, ref) => {
     const stage3DurationP = 0.18;
 
     const stage2StartP = stage2StartPRef.current;
+    // If stage2 arms late, we must still allow it to reach the zoom before stage3 starts.
+    // So we shrink the stage2 duration to whatever scroll remains before the stage3 window.
+    const stage2MaxEndP = 1 - stage3DurationP;
+    const stage2DurationEffective =
+      stage2StartP === null
+        ? stage2DurationP
+        : Math.max(
+            0.001,
+            Math.min(stage2DurationP, stage2MaxEndP - stage2StartP)
+          );
+
     const stage2P =
-      stage2StartP === null ? 0 : clamp01((p - stage2StartP) / stage2DurationP);
+      stage2StartP === null
+        ? 0
+        : clamp01((p - stage2StartP) / stage2DurationEffective);
 
     // Split stage2 into 4 sequential phases:
     // 1) background slide in (0.00 -> 0.20)
@@ -143,7 +157,7 @@ const CoffeeSection = forwardRef<CoffeeSectionHandle>((_, ref) => {
     // Stage 3: only start after stage2 has started AND completed.
     const stage2Complete = stage2StartP !== null && stage2P >= 1;
     const stage2EndP =
-      stage2StartP === null ? 1 : stage2StartP + stage2DurationP;
+      stage2StartP === null ? 1 : stage2StartP + stage2DurationEffective;
     const stage3P = stage2Complete
       ? clamp01((p - stage2EndP) / stage3DurationP)
       : 0;
