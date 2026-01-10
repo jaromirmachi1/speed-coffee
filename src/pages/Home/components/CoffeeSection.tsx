@@ -18,29 +18,26 @@ const CoffeeSection = forwardRef<CoffeeSectionHandle>((_, ref) => {
   const imageRef = useRef<HTMLImageElement | null>(null);
   const textRef = useRef<HTMLHeadingElement | null>(null);
   const prefixRef = useRef<HTMLSpanElement | null>(null);
+  const cameraRef = useRef<HTMLSpanElement | null>(null);
 
-  // 🔥 CAMERA (this is the magic)
-  const coffeeCameraRef = useRef<HTMLSpanElement | null>(null);
-
-  const stage2StartPxRef = useRef<number | null>(null);
+  const startPxRef = useRef<number | null>(null);
 
   const clamp01 = (v: number) => Math.min(1, Math.max(0, v));
   const easeOut = (t: number) => 1 - Math.pow(1 - t, 2);
   const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
 
   const reset = () => {
-    stage2StartPxRef.current = null;
+    startPxRef.current = null;
 
     wrapperRef.current!.style.transform = "translate3d(0,0,0)";
-    wrapperRef.current!.style.opacity = "1";
-
     bgRef.current!.style.transform = "translate3d(0,100%,0)";
     imageRef.current!.style.opacity = "0";
     textRef.current!.style.opacity = "0";
+
     prefixRef.current!.style.opacity = "0";
     prefixRef.current!.style.display = "block";
 
-    coffeeCameraRef.current!.style.transform = "translateX(-10%) scale(1)";
+    cameraRef.current!.style.transform = "translateX(0px) scale(1)";
   };
 
   const update = ({
@@ -54,20 +51,19 @@ const CoffeeSection = forwardRef<CoffeeSectionHandle>((_, ref) => {
       !imageRef.current ||
       !textRef.current ||
       !prefixRef.current ||
-      !coffeeCameraRef.current
+      !cameraRef.current
     )
       return;
 
-    // 🔒 Arm coffee after Matcha exits
-    if (stage2StartPxRef.current === null && matchaImgBottom <= -40) {
-      stage2StartPxRef.current = scrolledPx;
+    // Arm after Matcha exits
+    if (startPxRef.current === null && matchaImgBottom <= -40) {
+      startPxRef.current = scrolledPx;
     }
+    if (startPxRef.current === null) return;
 
-    if (stage2StartPxRef.current === null) return;
+    const elapsed = Math.max(0, scrolledPx - startPxRef.current);
 
-    const elapsed = Math.max(0, scrolledPx - stage2StartPxRef.current);
-
-    // --- PX-BASED PHYSICS (MATCH MATCHA) ---
+    // PX-based phases (same physics as Matcha)
     const BG_PX = 260;
     const TEXT_PX = 220;
     const IMAGE_PX = 600;
@@ -80,25 +76,27 @@ const CoffeeSection = forwardRef<CoffeeSectionHandle>((_, ref) => {
       clamp01((elapsed - BG_PX - TEXT_PX - IMAGE_PX) / ZOOM_PX)
     );
 
-    // --- BACKGROUND ---
+    /* ---------------- BACKGROUND ---------------- */
     bgRef.current.style.transform = `translate3d(0, ${(1 - bgT) * 100}%, 0)`;
 
-    // --- IMAGE ---
+    /* ---------------- IMAGE ---------------- */
     const imgY = lerp(vh * 0.9, -vh * 1.25, imgT);
     imageRef.current.style.transform = `translate3d(-50%, calc(-50% + ${imgY}px), 0)`;
     imageRef.current.style.opacity = String(1 - zoomT);
 
-    // --- TEXT ---
+    /* ---------------- TEXT ---------------- */
     textRef.current.style.opacity = String(textT);
-    prefixRef.current.style.opacity = String(
-      1 - clamp01((elapsed - 700) / 200)
-    );
-    if (zoomT > 0) prefixRef.current.style.display = "none";
 
-    // 🔥🔥🔥 CAMERA ZOOM (YAMAMATCHA STYLE)
+    const prefixFadeT = clamp01((elapsed - 700) / 200);
+    prefixRef.current.style.opacity = String(1 - prefixFadeT);
+    prefixRef.current.style.display = zoomT >= 1 ? "none" : "block";
+
+    /* ---------------- CAMERA ZOOM (yamamatcha-style) ---------------- */
     const scale = lerp(1, 48, zoomT);
-    coffeeCameraRef.current.style.transform = `
-      translateX(-10%)
+    const offsetX = lerp(0, -10, zoomT); // only bias DURING zoom
+
+    cameraRef.current.style.transform = `
+      translateX(${offsetX}px)
       scale(${scale})
     `;
   };
@@ -132,8 +130,8 @@ const CoffeeSection = forwardRef<CoffeeSectionHandle>((_, ref) => {
           left: "50%",
           top: "50%",
           transform: "translate(-50%, -50%)",
-          textAlign: "center",
           whiteSpace: "nowrap",
+          textAlign: "center",
           opacity: 0,
         }}
       >
@@ -150,9 +148,9 @@ const CoffeeSection = forwardRef<CoffeeSectionHandle>((_, ref) => {
           Or sticking with
         </span>
 
-        {/* 🎥 CAMERA */}
+        {/* CAMERA */}
         <span
-          ref={coffeeCameraRef}
+          ref={cameraRef}
           style={{
             display: "inline-block",
             transformOrigin: "58% 50%",
