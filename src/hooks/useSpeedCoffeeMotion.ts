@@ -17,12 +17,39 @@ export function useSpeedCoffeeMotion(rootRef: RefObject<HTMLElement | null>) {
     const root = rootRef?.current;
     if (!root) return;
 
+    // By default, browsers restore scroll position on refresh/back-forward.
+    // For this site we want a clean "start at top" on reload, but still respect deep links (#hash).
+    const hasHash = Boolean(window.location.hash && window.location.hash !== "#");
+    const canControlRestoration = "scrollRestoration" in window.history;
+    const prevRestoration =
+      canControlRestoration && window.history.scrollRestoration
+        ? window.history.scrollRestoration
+        : null;
+    if (!hasHash && canControlRestoration) {
+      window.history.scrollRestoration = "manual";
+    }
+
     const reduceMotion = window.matchMedia?.(
       "(prefers-reduced-motion: reduce)"
     )?.matches;
 
     gsap.registerPlugin(ScrollTrigger);
-    if (reduceMotion) return;
+    if (reduceMotion) {
+      // Ensure we also reset scroll on refresh even when motion system is disabled.
+      if (!hasHash) window.scrollTo(0, 0);
+
+      const onPageShow = (e: PageTransitionEvent) => {
+        if (!hasHash && e.persisted) window.scrollTo(0, 0);
+      };
+      window.addEventListener("pageshow", onPageShow);
+
+      return () => {
+        window.removeEventListener("pageshow", onPageShow);
+        if (!hasHash && canControlRestoration && prevRestoration) {
+          window.history.scrollRestoration = prevRestoration;
+        }
+      };
+    }
 
     const lenis = new Lenis({
       duration: 1.18,
@@ -30,6 +57,17 @@ export function useSpeedCoffeeMotion(rootRef: RefObject<HTMLElement | null>) {
       smoothTouch: false,
       easing: (t: number) => 1 - Math.pow(1 - t, 3), // close to power2.out
     });
+
+    // Force top on refresh/load (unless URL has a hash deep link).
+    if (!hasHash) {
+      window.scrollTo(0, 0);
+      // Lenis may apply its own internal scroll state; sync it immediately.
+      try {
+        lenis.scrollTo(0, { immediate: true });
+      } catch {
+        // ignore
+      }
+    }
 
     // Keep ScrollTrigger synced with Lenis scroll.
     const onLenisScroll = () => ScrollTrigger.update();
@@ -198,8 +236,23 @@ export function useSpeedCoffeeMotion(rootRef: RefObject<HTMLElement | null>) {
     const onLoad = () => ScrollTrigger.refresh();
     window.addEventListener("load", onLoad);
 
+    const onPageShow = (e: PageTransitionEvent) => {
+      // When coming from bfcache, the browser may restore scroll. Keep it consistent.
+      if (!hasHash && e.persisted) {
+        window.scrollTo(0, 0);
+        try {
+          lenis.scrollTo(0, { immediate: true });
+        } catch {
+          // ignore
+        }
+        ScrollTrigger.refresh();
+      }
+    };
+    window.addEventListener("pageshow", onPageShow);
+
     return () => {
       window.removeEventListener("load", onLoad);
+      window.removeEventListener("pageshow", onPageShow);
       root.removeEventListener("click", onClick);
       ctx.revert();
       lenis.off("scroll", onLenisScroll);
@@ -209,6 +262,9 @@ export function useSpeedCoffeeMotion(rootRef: RefObject<HTMLElement | null>) {
         // ignore
       }
       gsap.ticker.remove(onTick);
+      if (!hasHash && canControlRestoration && prevRestoration) {
+        window.history.scrollRestoration = prevRestoration;
+      }
     };
   }, [rootRef]);
 }
