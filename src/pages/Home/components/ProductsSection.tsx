@@ -1,6 +1,9 @@
 import { useEffect, useRef } from "react";
 import Container from "../../../components/Container";
 import TextRevealLines from "../../../lib/TextRevealLines";
+import scAppleGinger from "../../../assets/ScAppleGinger.webp";
+import scMatchaCan from "../../../assets/ScMatchaCan.webp";
+import scCoffeeProduct from "../../../assets/ScCoffeeProduct.webp";
 
 const ProductsSection = () => {
   const sectionRef = useRef<HTMLElement | null>(null);
@@ -77,22 +80,22 @@ const ProductsSection = () => {
       <Container maxWidth="7xl" className="px-4 sm:px-6 lg:px-8">
         <div ref={contentRef} style={{ opacity: 0 }}>
           <TextRevealLines>
-            <h2 className="text-center text-5xl md:text-6xl lg:text-7xl font-manuka font-bold text-dark mb-16 md:mb-20">
+            <h2 className="text-center text-5xl md:text-6xl lg:text-7xl font-agright font-bold text-dark mb-16 md:mb-20">
               OUR PRODUCTS
             </h2>
           </TextRevealLines>
 
           <div className="space-y-24 md:space-y-32">
-            {/* Apple & Ginger */}
+            {/* 1. Apple & Ginger */}
             <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-center">
               <div className="order-2 md:order-1">
                 <TextRevealLines>
-                  <h3 className="text-4xl md:text-5xl lg:text-6xl font-manuka font-bold text-dark mb-2">
+                  <h3 className="text-4xl md:text-5xl lg:text-6xl font-agright font-bold text-dark mb-2">
                     APPLE & GINGER
                   </h3>
                 </TextRevealLines>
                 <TextRevealLines>
-                  <p className="text-lg md:text-xl font-manrope font-semibold text-accent mb-6">
+                  <p className="text-lg md:text-xl font-manuka font-semibold text-accent mb-6">
                     FRUIT POWERED BOOST
                   </p>
                 </TextRevealLines>
@@ -107,47 +110,26 @@ const ProductsSection = () => {
                 </button>
               </div>
               <div className="order-1 md:order-2 flex justify-center md:justify-end">
-                <div className="w-32 h-96 bg-accent/20 rounded-lg flex items-center justify-center">
-                  <span className="text-beige text-sm">Product Image</span>
-                </div>
+                <img
+                  src={scAppleGinger}
+                  alt="Apple & Ginger product"
+                  className="w-32 h-96 object-contain"
+                />
               </div>
             </div>
 
-            {/* Speed Coffee */}
+            {/* 2. Matcha */}
             <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-center">
               <div className="order-2 flex justify-center md:justify-start">
-                <div className="w-32 h-96 bg-accent/20 rounded-lg flex items-center justify-center">
-                  <span className="text-beige text-sm">Product Image</span>
-                </div>
+                <img
+                  src={scMatchaCan}
+                  alt="Matcha product"
+                  className="w-32 h-96 object-contain"
+                />
               </div>
               <div className="order-1">
                 <TextRevealLines>
-                  <h3 className="text-4xl md:text-5xl lg:text-6xl font-manuka font-bold text-dark mb-2">
-                    SPEED COFFEE
-                  </h3>
-                </TextRevealLines>
-                <TextRevealLines>
-                  <p className="text-lg md:text-xl font-manrope font-semibold text-accent mb-6">
-                    PLANT POWERED BOOST
-                  </p>
-                </TextRevealLines>
-                <TextRevealLines>
-                  <p className="text-base md:text-lg font-manrope text-dark leading-relaxed mb-8">
-                    NON-ALCOHOLIC CARBONATED BEVERAGE CONTAINING NATURAL
-                    CAFFEINE.
-                  </p>
-                </TextRevealLines>
-                <button className="px-8 py-3 border-2 border-dark text-dark font-manrope font-semibold rounded-lg hover:bg-dark hover:text-beige transition-colors">
-                  BUY NOW
-                </button>
-              </div>
-            </div>
-
-            {/* Matcha */}
-            <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-center">
-              <div className="order-2 md:order-1">
-                <TextRevealLines>
-                  <h3 className="text-4xl md:text-5xl lg:text-6xl font-manuka font-bold text-dark mb-2">
+                  <h3 className="text-4xl md:text-5xl lg:text-6xl font-agright font-bold text-dark mb-2">
                     MATCHA
                   </h3>
                 </TextRevealLines>
@@ -166,10 +148,37 @@ const ProductsSection = () => {
                   BUY NOW
                 </button>
               </div>
+            </div>
+
+            {/* 3. Speed Coffee */}
+            <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-center">
+              <div className="order-2 md:order-1">
+                <TextRevealLines>
+                  <h3 className="text-4xl md:text-5xl lg:text-6xl font-agright font-bold text-dark mb-2">
+                    SPEED COFFEE
+                  </h3>
+                </TextRevealLines>
+                <TextRevealLines>
+                  <p className="text-lg md:text-xl font-manrope font-semibold text-accent mb-6">
+                    PLANT POWERED BOOST
+                  </p>
+                </TextRevealLines>
+                <TextRevealLines>
+                  <p className="text-base md:text-lg font-manrope text-dark leading-relaxed mb-8">
+                    NON-ALCOHOLIC CARBONATED BEVERAGE CONTAINING NATURAL
+                    CAFFEINE.
+                  </p>
+                </TextRevealLines>
+                <button className="px-8 py-3 border-2 border-dark text-dark font-manrope font-semibold rounded-lg hover:bg-dark hover:text-beige transition-colors">
+                  BUY NOW
+                </button>
+              </div>
               <div className="order-1 md:order-2 flex justify-center md:justify-end">
-                <div className="w-32 h-96 bg-accent/20 rounded-lg flex items-center justify-center">
-                  <span className="text-beige text-sm">Product Image</span>
-                </div>
+                <img
+                  src={scCoffeeProduct}
+                  alt="Speed Coffee product"
+                  className="w-32 h-96 object-contain"
+                />
               </div>
             </div>
           </div>
