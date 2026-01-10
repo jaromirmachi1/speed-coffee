@@ -58,9 +58,13 @@ const CoffeeSection = forwardRef<CoffeeSectionHandle>((_, ref) => {
     stage2TextRef.current?.style.setProperty("opacity", "0");
     stage2PrefixRef.current?.style.setProperty("opacity", "0");
     stage2PrefixRef.current?.style.setProperty("display", "block");
-    // Restore responsive base sizing and remove any zoom-time overrides.
+    // Restore crisp zoom baseline (zoom = font-size interpolation).
     stage2CoffeeRef.current?.style.setProperty("font-size", "min(26vw, 520px)");
-    stage2CoffeeRef.current?.style.setProperty("transform", "none");
+    stage2CoffeeRef.current?.style.setProperty(
+      "transform",
+      // Fixed camera offset; do not re-center dynamically during zoom.
+      "translate3d(-8%, 0, 0)"
+    );
 
     stage3BgRef.current?.style.setProperty(
       "transform",
@@ -72,7 +76,7 @@ const CoffeeSection = forwardRef<CoffeeSectionHandle>((_, ref) => {
 
   const update = ({
     scrolledPx,
-    scrollablePx,
+    scrollablePx: _scrollablePx,
     vh,
     matchaImgBottom,
   }: CoffeeSectionUpdateParams) => {
@@ -111,28 +115,34 @@ const CoffeeSection = forwardRef<CoffeeSectionHandle>((_, ref) => {
 
     /**
      * Coffee scroll physics model (match MatchaSection):
-     * - Drive progress from *real* scroll distance in px (not normalized time slices).
-     * - No "durationEffective" compression: 100px scroll should feel like 100px everywhere.
+     * - Drive progress from *real* scroll distance in px (not normalized percentages).
+     * - Use fixed pixel durations per phase so 100px scroll produces consistent perceived speed.
      */
-    // Fixed durations expressed in px (derived from the Matcha section's scrollable px).
-    // This keeps Coffee speed consistent relative to the same scroll runway driving Matcha.
-    const stage2DurationPx = Math.max(1, scrollablePx * 0.55);
-    const stage3DurationPx = Math.max(1, scrollablePx * 0.18);
-
     const stage2StartScrollPx = stage2StartScrollPxRef.current;
-    const stage2ScrolledPx =
-      stage2StartScrollPx === null ? 0 : scrolledPx - stage2StartScrollPx;
-    const stage2P = clamp01(stage2ScrolledPx / stage2DurationPx);
+    const stage2ElapsedPx =
+      stage2StartScrollPx === null
+        ? 0
+        : Math.max(0, scrolledPx - stage2StartScrollPx);
 
-    // Split stage2 into 4 sequential phases:
-    // 1) background slide in (0.00 -> 0.20)
-    // 2) heading fades in (0.20 -> 0.35)
-    // 3) image moves bottom -> top (0.35 -> 0.75)
-    // 4) cinematic zoom into the center of "COFFEE" (0.75 -> 1.00)
-    const bgT = easeOut(clamp01(stage2P / 0.2));
-    const stage2TextT = easeOut(clamp01((stage2P - 0.2) / 0.15));
-    const imgT = easeOut(clamp01((stage2P - 0.35) / 0.4));
-    const zoomT = easeOut(clamp01((stage2P - 0.75) / 0.25));
+    // Stage2 phases in fixed px (not % of scrollable):
+    // 1) bg slides in
+    // 2) heading fades/slides in
+    // 3) image moves bottom -> top
+    // 4) cinematic zoom (starts earlier so you actually reach it)
+    const bgPx = 280;
+    const textInPx = 240;
+    const imgMovePx = 600;
+    const zoomPx = 520;
+    const stage2TotalPx = bgPx + textInPx + imgMovePx + zoomPx;
+
+    const bgT = easeOut(clamp01(stage2ElapsedPx / bgPx));
+    const stage2TextT = easeOut(clamp01((stage2ElapsedPx - bgPx) / textInPx));
+    const imgT = easeOut(
+      clamp01((stage2ElapsedPx - (bgPx + textInPx)) / imgMovePx)
+    );
+    const zoomT = easeOut(
+      clamp01((stage2ElapsedPx - (bgPx + textInPx + imgMovePx)) / zoomPx)
+    );
 
     // Stage 2 background: slide in to cover the full viewport.
     stage2Bg.style.transform = `translate3d(0, ${(1 - bgT) * 100}%, 0)`;
@@ -143,12 +153,14 @@ const CoffeeSection = forwardRef<CoffeeSectionHandle>((_, ref) => {
     stage2Image.style.transform = `translate3d(-50%, calc(-50% + ${coffeeTranslateY.toFixed(
       2
     )}px), 0)`;
-    const imgOpacityT = easeOut(clamp01((stage2P - 0.35) / 0.06));
+    const imgOpacityT = easeOut(
+      clamp01((stage2ElapsedPx - (bgPx + textInPx)) / 90)
+    );
     stage2Image.style.opacity = String(imgOpacityT * (1 - zoomT));
 
     // Text in; only fade out the "Or sticking with" line.
     stage2Text.style.opacity = String(stage2TextT);
-    const prefixOutT = easeOut(clamp01((stage2P - 0.55) / 0.15));
+    const prefixOutT = easeOut(clamp01((stage2ElapsedPx - 820) / 225));
     stage2Prefix.style.opacity = String(stage2TextT * (1 - prefixOutT));
     stage2Text.style.transform = `translate3d(-50%, calc(-50% + ${lerp(
       20,
@@ -156,14 +168,24 @@ const CoffeeSection = forwardRef<CoffeeSectionHandle>((_, ref) => {
       stage2TextT
     ).toFixed(2)}px), 0)`;
 
-    // Zoom: keep text crisp by animating font-size (no transform-based scaling).
-    // Initial size matches CSS: min(26vw, 520px)
+    // Zoom (crisp): zoom = font-size interpolation (no scale on text).
+    // Optical target: bias toward the "FF" gap by aligning ~58% of word width to viewport center.
     const vw = window.innerWidth || 0;
     const initialFontPx = Math.min(vw * 0.26, 520);
-    // Large cinematic target; cap to avoid extreme layout values on very large screens.
-    const cinematicFontPx = Math.min(initialFontPx * 40, 12000);
+    const cinematicFontPx = Math.min(initialFontPx * 52, 18000);
     const coffeeFontPx = lerp(initialFontPx, cinematicFontPx, zoomT);
     stage2Coffee.style.fontSize = `${coffeeFontPx.toFixed(2)}px`;
+    if (zoomT > 0.001) {
+      const opticalX = 0.58;
+      stage2Coffee.style.transform = "translate3d(0px, 0, 0)";
+      const rect = stage2Coffee.getBoundingClientRect();
+      const targetX = rect.left + rect.width * opticalX;
+      const viewportCenterX = (window.innerWidth || 0) / 2;
+      const dx = viewportCenterX - targetX;
+      stage2Coffee.style.transform = `translate3d(${dx.toFixed(2)}px, 0, 0)`;
+    } else {
+      stage2Coffee.style.transform = "translate3d(0px, 0, 0)";
+    }
     // After the prefix fully fades, remove it from layout to keep the zoom centered on "COFFEE".
     stage2Prefix.style.display =
       prefixOutT >= 0.999 || zoomT > 0 ? "none" : "block";
@@ -171,15 +193,17 @@ const CoffeeSection = forwardRef<CoffeeSectionHandle>((_, ref) => {
     stage2Wrapper.style.opacity = "1";
 
     // Stage 3: only start after stage2 has started AND completed.
-    const stage2Complete = stage2StartScrollPx !== null && stage2P >= 1;
+    const stage2Complete =
+      stage2StartScrollPx !== null && stage2ElapsedPx >= stage2TotalPx;
     const stage2EndScrollPx =
       stage2StartScrollPx === null
         ? Number.POSITIVE_INFINITY
-        : stage2StartScrollPx + stage2DurationPx;
-    const stage3ScrolledPx = stage2Complete
-      ? scrolledPx - stage2EndScrollPx
+        : stage2StartScrollPx + stage2TotalPx;
+    const stage3ElapsedPx = stage2Complete
+      ? Math.max(0, scrolledPx - stage2EndScrollPx)
       : 0;
-    const stage3P = clamp01(stage3ScrolledPx / stage3DurationPx);
+    const stage3Px = 480;
+    const stage3P = clamp01(stage3ElapsedPx / stage3Px);
     const stage3T = easeOut(stage3P);
 
     // Keep stage 3 using the SAME background color as stage 2 (enter into it).
@@ -273,7 +297,7 @@ const CoffeeSection = forwardRef<CoffeeSectionHandle>((_, ref) => {
               lineHeight: 0.9,
               letterSpacing: "0.04em",
               color: "#EAE1CF",
-              willChange: "font-size",
+              willChange: "font-size, transform",
             }}
           >
             COFFEE
