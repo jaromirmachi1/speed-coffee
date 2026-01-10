@@ -13,6 +13,8 @@ const MatchaSection = () => {
   const stage2PrefixRef = useRef<HTMLSpanElement | null>(null);
   const stage2CoffeeRef = useRef<HTMLSpanElement | null>(null);
   const stage2WrapperRef = useRef<HTMLDivElement | null>(null);
+  const stage3BgRef = useRef<HTMLDivElement | null>(null);
+  const stage3ContentRef = useRef<HTMLDivElement | null>(null);
   const stage2StartPRef = useRef<number | null>(null);
 
   useEffect(() => {
@@ -25,6 +27,8 @@ const MatchaSection = () => {
     const stage2Prefix = stage2PrefixRef.current;
     const stage2Coffee = stage2CoffeeRef.current;
     const stage2Wrapper = stage2WrapperRef.current;
+    const stage3Bg = stage3BgRef.current;
+    const stage3Content = stage3ContentRef.current;
     if (
       !section ||
       !bgImage ||
@@ -34,7 +38,9 @@ const MatchaSection = () => {
       !stage2Text ||
       !stage2Prefix ||
       !stage2Coffee ||
-      !stage2Wrapper
+      !stage2Wrapper ||
+      !stage3Bg ||
+      !stage3Content
     )
       return;
 
@@ -99,33 +105,37 @@ const MatchaSection = () => {
       // not off image pixels (which compresses the motion and feels faster).
       // We "arm" stage2 once the Matcha image has fully cleared the top.
       const stage2ArmPx = -200; // px threshold (below -160 so Matcha is fully gone)
+      // Reserve scroll space AFTER stage 2 for the "beige exits → brown fills → new section" transition.
+      const stage2DurationP = 0.55;
+      const stage3DurationP = 0.18;
+      // STRICT gating: stage2 must NOT begin until Matcha is fully out.
       if (stage2StartPRef.current === null && imgRect.bottom <= stage2ArmPx) {
         stage2StartPRef.current = p;
       }
-      const stage2DurationP = 0.65; // portion of section scroll reserved for stage 2 (slower, more cinematic)
-      // Ensure stage 2 can always complete (reach the zoom) even if it arms late.
-      // If we arm too close to the end, clamp the start so there's enough remaining scroll.
-      const latestAllowedStart = 1 - stage2DurationP;
-      const stage2StartP = Math.min(
-        stage2StartPRef.current ?? latestAllowedStart,
-        latestAllowedStart
-      );
-      const stage2P = clamp01((p - stage2StartP) / stage2DurationP);
+
+      const stage2StartP = stage2StartPRef.current;
+      const stage2P =
+        stage2StartP === null
+          ? 0
+          : clamp01((p - stage2StartP) / stage2DurationP);
       // Stage 2 physics: match the "feel" of the Matcha part (single ease-out, no double-easing).
       // Split stage2 into 4 sequential phases:
       // 1) background slide in (0.00 -> 0.20)
       // 2) heading fades in (0.20 -> 0.35)
-      // 3) image moves bottom -> top (0.35 -> 0.70)
-      // 4) cinematic zoom into the center of "COFFEE" (0.70 -> 1.00), then fade overlay out
+      // 3) image moves bottom -> top (0.35 -> 0.75)  (longer = same "physics" feel as Matcha)
+      // 4) cinematic zoom into the center of "COFFEE" (0.75 -> 1.00)
       const bgT = easeOut(clamp01(stage2P / 0.2));
       const stage2TextT = easeOut(clamp01((stage2P - 0.2) / 0.15));
-      const imgT = easeOut(clamp01((stage2P - 0.35) / 0.35));
-      const zoomT = easeOut(clamp01((stage2P - 0.7) / 0.3));
+      const imgT = easeOut(clamp01((stage2P - 0.35) / 0.4));
+      const zoomT = easeOut(clamp01((stage2P - 0.75) / 0.25));
 
       // Stage 2 background: slide in to cover the full viewport (no partial height).
       stage2Bg.style.transform = `translate3d(0, ${(1 - bgT) * 100}%, 0)`;
+      // Ensure the coffee background starts as BEA791 immediately (no early EAE1CF).
+      stage2Bg.style.backgroundColor = "#BEA791";
 
-      // Stage 2 image motion starts ONLY after text is visible.
+      // Stage 2 image motion: match Matcha settings (same travel distance and easing),
+      // just starting later (after bg + heading).
       const coffeeTranslateY = lerp(vh * 0.9, -vh * 1.25, imgT);
       stage2Image.style.transform = `translate3d(-50%, calc(-50% + ${coffeeTranslateY.toFixed(
         2
@@ -150,26 +160,41 @@ const MatchaSection = () => {
       ).toFixed(2)}px), 0)`;
 
       // Cinematic zoom into the center of the word "COFFEE"
-      // Anchor the zoom slightly left of center (so we zoom into the first "F").
-      const zoomScale = lerp(1, 16, zoomT);
-      stage2Coffee.style.transformOrigin = "calc(50% - 20px) 50%";
+      // Anchor the zoom to the exact center of the word.
+      const zoomScale = lerp(1, 40, zoomT);
+      stage2Coffee.style.transformOrigin = "50% 50%";
       stage2Coffee.style.transform = `scale(${zoomScale.toFixed(4)})`;
 
-      // At the end of the zoom, fill the whole viewport with the COFFEE text color
-      // (so we don't reveal the green Matcha background again).
-      const endFillT = easeOut(clamp01((zoomT - 0.85) / 0.15));
-      const COFFEE_BG = { r: 0xbe, g: 0xa7, b: 0x91 }; // #BEA791
-      const COFFEE_TEXT = { r: 0xea, g: 0xe1, b: 0xcf }; // #EAE1CF
-      const r = Math.round(lerp(COFFEE_BG.r, COFFEE_TEXT.r, endFillT));
-      const g = Math.round(lerp(COFFEE_BG.g, COFFEE_TEXT.g, endFillT));
-      const b = Math.round(lerp(COFFEE_BG.b, COFFEE_TEXT.b, endFillT));
-      stage2Bg.style.backgroundColor = `rgb(${r} ${g} ${b})`;
-
-      // Fade the COFFEE word out into the matching background near the very end.
-      stage2Text.style.opacity = String(
-        Number(stage2Text.style.opacity || "0") * (1 - endFillT)
-      );
       stage2Wrapper.style.opacity = "1";
+
+      // Stage 3: only start after stage2 has started AND completed.
+      const stage2Complete = stage2StartP !== null && stage2P >= 1;
+      const stage2EndP =
+        stage2StartP === null ? 1 : stage2StartP + stage2DurationP;
+      const stage3P = stage2Complete
+        ? clamp01((p - stage2EndP) / stage3DurationP)
+        : 0;
+      const stage3T = easeOut(stage3P);
+
+      // Keep stage 3 using the SAME background color as stage 2 at this moment,
+      // so it feels like we "enter into" the coffee background (no new random brown).
+      stage3Bg.style.backgroundColor =
+        stage2Bg.style.backgroundColor || "#BEA791";
+
+      // Beige exits (slides up out of the viewport)
+      stage2Wrapper.style.transform = `translate3d(0, ${(
+        -stage3T * 100
+      ).toFixed(3)}%, 0)`;
+
+      // Brown expands (slides up) to fill the whole viewport
+      stage3Bg.style.transform = `translate3d(0, ${(1 - stage3T) * 100}%, 0)`;
+
+      // Once brown is fully in, introduce a new section on top.
+      const stage3ContentT = easeOut(clamp01((stage3P - 0.9) / 0.1));
+      stage3Content.style.opacity = String(stage3ContentT);
+      stage3Content.style.transform = `translate3d(-50%, calc(-50% + ${
+        (1 - stage3ContentT) * 20
+      }px), 0)`;
 
       rafId = 0;
     };
@@ -328,6 +353,8 @@ const MatchaSection = () => {
             zIndex: 30,
             pointerEvents: "none",
             opacity: 1,
+            transform: "translate3d(0, 0%, 0)",
+            willChange: "transform, opacity",
           }}
         >
           <div
@@ -382,7 +409,7 @@ const MatchaSection = () => {
                 // Keep the big MATCHA exactly as the main visual
                 fontSize: "min(26vw, 520px)",
                 lineHeight: 0.9,
-                letterSpacing: "0.02em",
+                letterSpacing: "0.04em",
                 color: "#EAE1CF",
                 willChange: "transform",
               }}
@@ -413,6 +440,60 @@ const MatchaSection = () => {
               userSelect: "none",
             }}
           />
+        </div>
+
+        {/* Stage 3: brown background fills the screen and becomes the locked base */}
+        <div
+          ref={stage3BgRef}
+          aria-hidden="true"
+          style={{
+            position: "fixed",
+            inset: 0,
+            backgroundColor: "#BEA791",
+            transform: "translate3d(0, 100%, 0)",
+            willChange: "transform",
+            zIndex: 20,
+            pointerEvents: "none",
+          }}
+        />
+
+        {/* Stage 3 content: appears on top once brown is locked */}
+        <div
+          ref={stage3ContentRef}
+          style={{
+            position: "fixed",
+            left: "50%",
+            top: "50%",
+            transform: "translate3d(-50%, calc(-50% + 20px), 0)",
+            opacity: 0,
+            zIndex: 40,
+            pointerEvents: "none",
+            textAlign: "center",
+            color: "#EAE1CF",
+            willChange: "transform, opacity",
+          }}
+        >
+          <div
+            style={{
+              fontFamily: "Agright, sans-serif",
+              fontWeight: 400,
+              fontSize: "min(6vw, 60px)",
+              lineHeight: 1,
+              marginBottom: "-0.2em",
+            }}
+          >
+            Next up
+          </div>
+          <div
+            className="font-sans font-black"
+            style={{
+              fontSize: "min(18vw, 240px)",
+              lineHeight: 0.9,
+              letterSpacing: "0.04em",
+            }}
+          >
+            COFFEE
+          </div>
         </div>
       </Container>
     </section>
