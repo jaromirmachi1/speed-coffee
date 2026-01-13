@@ -11,11 +11,12 @@ const HeroIntro = () => {
           <div className="flex-1 flex items-center justify-center py-10">
             <div className="text-center w-full max-w-none mx-auto">
               <TextRevealLines>
-                <p className="text-[96px] font-manuka font-medium text-dark leading-[0.80]">
+                <p className="text-[48px] font-manrope font-bold text-dark leading-[0.90]">
                   EVERY MOMENT WITH OUR COFFEE OR MATCHA IS AN{" "}
+                  <span className="text-accent font-bold">OPPORTUNITY</span> TO{" "}
                   <span className="text-accent font-bold">
-                    OPPORTUNITY TO CONNECT, SHARE, AND ENJOY
-                  </span>{" "}
+                    CONNECT, SHARE, AND ENJOY
+                  </span>
                   THE POSITIVE ENERGY THAT BRIGHTENS YOUR DAY.
                 </p>
               </TextRevealLines>
@@ -25,7 +26,7 @@ const HeroIntro = () => {
           <div className="text-center pb-10">
             <a
               href="#about"
-              className="inline-block text-lg lg:text-[64px] font-manuka font-bold text-dark hover:text-white transition-colors"
+              className="inline-block text-lg lg:text-[36px] font-manrope font-bold text-dark hover:text-white transition-colors"
             >
               DISCOVER OUR SPEED
             </a>
