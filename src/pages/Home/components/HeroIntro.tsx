@@ -7,7 +7,7 @@ const HeroIntro = () => {
   return (
     // NOTE: use min-height (not fixed height) so font-load reflow can’t push
     // “DISCOVER OUR SPEED” outside the section on some refreshes.
-    <section className="bg-beige min-h-[70vh]">
+    <section className="bg-beige min-h-[70vh] px-[130px] py-[100px]">
       <Container className="w-full">
         <div className="min-h-[70vh] flex flex-col">
           <div className="flex-1 flex items-center justify-center py-10">
