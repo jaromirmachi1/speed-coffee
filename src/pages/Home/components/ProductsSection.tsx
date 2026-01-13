@@ -9,7 +9,7 @@ const ProductsSection = () => {
     <section className="bg-beige py-24 relative z-40">
       <Container>
         <div>
-          <h2 className="text-center text-5xl md:text-6xl lg:text-7xl font-agright font-bold text-dark mb-16 md:mb-20">
+          <h2 className="text-center text-5xl md:text-6xl lg:text-7xl font-agright font-extrabold text-dark mb-16 md:mb-20">
             OUR PRODUCTS
           </h2>
 
@@ -17,50 +17,58 @@ const ProductsSection = () => {
             {/* 1. Apple & Ginger */}
             <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-center">
               <div className="order-2 md:order-1 flex justify-center">
-                <div className="p-8 space-y-4 max-w-md text-center">
-                  <h3 className="text-4xl md:text-5xl lg:text-6xl font-agright font-bold text-dark">
+                <div
+                  className="p-8 space-y-4 text-center"
+                  style={{ maxWidth: "48rem" }}
+                >
+                  <h3 className="text-4xl md:text-5xl lg:text-6xl font-agright font-normal text-dark mb-10">
                     APPLE & GINGER
                   </h3>
                   <TextRevealLines>
-                    <p className="text-lg md:text-xl font-manuka font-semibold text-accent">
+                    <p className="font-manrope font-bold text-[24px]">
                       FRUIT POWERED BOOST
                     </p>
                   </TextRevealLines>
-                  <TextRevealLines>
-                    <p className="text-base md:text-lg font-manrope text-dark leading-relaxed">
-                      APPLE GINGER JUICE MADE DIRECTLY FROM FRUIT BY COLD
-                      PRESSING SELECTED APPLE VARIETIES AND NATURAL GINGER
-                      JUICE.
-                    </p>
-                  </TextRevealLines>
+                  <div className="flex justify-center">
+                    <TextRevealLines>
+                      <p className="font-normal w-[600px] md:text-[24px] font-manrope text-dark leading-relaxed text-center">
+                        APPLE GINGER JUICE MADE DIRECTLY FROM FRUIT BY COLD
+                        PRESSING SELECTED APPLE VARIETIES AND NATURAL GINGER
+                        JUICE.
+                      </p>
+                    </TextRevealLines>
+                  </div>
                   <div className="pt-4">
-                    <button className="px-8 py-3 border-2 border-dark text-dark font-manrope font-semibold rounded-lg hover:bg-dark hover:text-beige transition-colors">
+                    <button className="px-8 py-3 w-2xl border-2 md:text-[18px] border-white text-dark font-manrope font-bold rounded-3xl hover:bg-white hover:text-dark transition-colors">
                       BUY NOW
                     </button>
                   </div>
                 </div>
               </div>
-              <div className="order-1 md:order-2 flex justify-center md:justify-end">
+              <div className="order-1 md:order-2 flex justify-center">
                 <img
                   src={scAppleGinger}
                   alt="Apple & Ginger product"
-                  className="w-[400px] h-auto object-contain"
+                  className="w-[500px] h-auto object-contain"
                 />
               </div>
             </div>
 
             {/* 2. Matcha */}
             <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-center">
-              <div className="order-1 flex justify-center md:justify-start">
+              <div className="order-1 flex justify-center md:justify-center">
                 <img
                   src={scMatchaCan}
                   alt="Matcha product"
-                  className="w-[400px] h-auto object-contain"
+                  className="w-[500px] h-auto object-contain"
                 />
               </div>
               <div className="order-2 flex justify-center">
-                <div className="p-8 space-y-4 max-w-md text-center">
-                  <h3 className="text-4xl md:text-5xl lg:text-6xl font-agright font-bold text-dark">
+                <div
+                  className="p-8 space-y-4 text-center"
+                  style={{ maxWidth: "48rem" }}
+                >
+                  <h3 className="text-4xl md:text-5xl lg:text-6xl font-agright font-normal text-dark mb-10">
                     MATCHA
                   </h3>
                   <TextRevealLines>
@@ -68,14 +76,16 @@ const ProductsSection = () => {
                       PLANT POWERED BOOST
                     </p>
                   </TextRevealLines>
-                  <TextRevealLines>
-                    <p className="font-medium md:text-[24px] font-manrope text-dark leading-relaxed ">
-                      NON-ALCOHOLIC CARBONATED BEVERAGE CONTAINING NATURAL
-                      CAFFEINE.
-                    </p>
-                  </TextRevealLines>
+                  <div className="flex justify-center">
+                    <TextRevealLines>
+                      <p className="font-normal w-[600px] md:text-[24px] font-manrope text-dark leading-relaxed text-center">
+                        NON-ALCOHOLIC CARBONATED BEVERAGE CONTAINING NATURAL
+                        CAFFEINE.
+                      </p>
+                    </TextRevealLines>
+                  </div>
                   <div className="pt-4">
-                    <button className="px-8 py-3 border-2 border-dark text-dark font-manrope font-semibold rounded-lg hover:bg-dark hover:text-beige transition-colors">
+                    <button className="px-8 py-3 w-2xl border-2 md:text-[18px] border-white text-dark font-manrope font-bold rounded-3xl hover:bg-white hover:text-dark transition-colors">
                       BUY NOW
                     </button>
                   </div>
@@ -86,33 +96,38 @@ const ProductsSection = () => {
             {/* 3. Speed Coffee */}
             <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-center">
               <div className="order-2 md:order-1 flex justify-center">
-                <div className="p-8 space-y-4 max-w-md text-center">
-                  <h3 className="text-4xl md:text-5xl lg:text-6xl font-agright font-bold text-dark">
+                <div
+                  className="p-8 space-y-4 text-center"
+                  style={{ maxWidth: "48rem" }}
+                >
+                  <h3 className="text-4xl md:text-5xl lg:text-6xl font-agright font-normal text-dark mb-10">
                     SPEED COFFEE
                   </h3>
                   <TextRevealLines>
-                    <p className="text-lg md:text-xl font-manrope font-semibold text-accent">
+                    <p className="font-manrope font-bold text-[24px]">
                       PLANT POWERED BOOST
                     </p>
                   </TextRevealLines>
-                  <TextRevealLines>
-                    <p className="text-base md:text-lg font-manrope text-dark leading-relaxed">
-                      NON-ALCOHOLIC CARBONATED BEVERAGE CONTAINING NATURAL
-                      CAFFEINE.
-                    </p>
-                  </TextRevealLines>
+                  <div className="flex justify-center">
+                    <TextRevealLines>
+                      <p className="font-normal w-[600px] md:text-[24px] font-manrope text-dark leading-relaxed text-center">
+                        NON-ALCOHOLIC CARBONATED BEVERAGE CONTAINING NATURAL
+                        CAFFEINE.
+                      </p>
+                    </TextRevealLines>
+                  </div>
                   <div className="pt-4">
-                    <button className="px-8 py-3 border-2 border-dark text-dark font-manrope font-semibold rounded-lg hover:bg-dark hover:text-beige transition-colors">
+                    <button className="px-8 py-3 w-2xl border-2 md:text-[18px] border-white text-dark font-manrope font-bold rounded-3xl hover:bg-white hover:text-dark transition-colors">
                       BUY NOW
                     </button>
                   </div>
                 </div>
               </div>
-              <div className="order-1 md:order-2 flex justify-center md:justify-end">
+              <div className="order-1 md:order-2 flex justify-center ">
                 <img
                   src={scCoffeeProduct}
                   alt="Speed Coffee product"
-                  className="w-[400px] h-auto object-contain"
+                  className="w-[500px] h-auto object-contain"
                 />
               </div>
             </div>

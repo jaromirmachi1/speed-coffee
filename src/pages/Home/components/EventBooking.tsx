@@ -63,13 +63,12 @@ const EventBooking = () => {
           >
             Book us for your next event
           </p>
-          <a
-            href="#contact"
-            className="inline-block px-8 py-3 bg-beige border-2 border-dark rounded-full !font-['Manrope'] font-medium text-dark hover:bg-dark hover:text-beige transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-dark focus:ring-offset-2"
+          <button
+            className="px-8 py-3 w-2xl border-2 md:text-[18px] border-white text-dark font-manrope font-bold rounded-3xl hover:bg-white hover:text-dark transition-colors"
             style={{ fontFamily: "Manrope, sans-serif" }}
           >
-            here
-          </a>
+            HERE
+          </button>
         </div>
       </Container>
     </section>
