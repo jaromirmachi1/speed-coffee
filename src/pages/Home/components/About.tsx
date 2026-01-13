@@ -1,8 +1,10 @@
 import TextRevealLines from "../../../lib/TextRevealLines";
 import Container from "../../../components/Container";
+import { useLanguage } from "../../../contexts/LanguageContext";
 import aboutImg from "../../../assets/openSc_4x.webp";
 
 const About = () => {
+  const { t } = useLanguage();
   return (
     <section
       id="about"
@@ -15,7 +17,7 @@ const About = () => {
               className="text-3xl md:text-4xl  lg:text-[64px] !font-['Agright'] font-normal text-dark leading-[1] mb-6"
               style={{ lineHeight: 1 }}
             >
-              ABOUT OUR COFFEE HOUSE
+              {t("about.title")}
             </h2>
             <TextRevealLines>
               <p
@@ -26,10 +28,7 @@ const About = () => {
                   lineHeight: 1.0,
                 }}
               >
-                SPEED COFFEE SHOP IS A MOBILE CAFE WITH SOUL THAT TRAVELS ALL
-                AROUND THE CZECH REPUBLIC. YOU CAN FIND US AT VARIOUS EVENTS,
-                CORPORATE GATHERINGS, WEDDINGS, AND SPECIAL OCCASIONS WHERE WE
-                BRING HIGH-QUALITY COFFEE AND MATCHA DIRECTLY TO YOU.
+                {t("about.description")}
               </p>
             </TextRevealLines>
           </div>

@@ -1,7 +1,9 @@
 import TextRevealLines from "../../../lib/TextRevealLines";
 import Container from "../../../components/Container";
+import { useLanguage } from "../../../contexts/LanguageContext";
 
 const HeroIntro = () => {
+  const { t } = useLanguage();
   return (
     // NOTE: use min-height (not fixed height) so font-load reflow can’t push
     // “DISCOVER OUR SPEED” outside the section on some refreshes.
@@ -12,12 +14,11 @@ const HeroIntro = () => {
             <div className="text-center w-full max-w-none mx-auto">
               <TextRevealLines>
                 <p className="text-[48px] font-manrope font-bold text-dark leading-[0.90]">
-                  EVERY MOMENT WITH OUR COFFEE OR MATCHA IS AN{" "}
-                  <span className="text-accent font-bold">OPPORTUNITY</span> TO{" "}
+                  {t("heroIntro.text")}{" "}
                   <span className="text-accent font-bold">
-                    CONNECT, SHARE, AND ENJOY
-                  </span>
-                  THE POSITIVE ENERGY THAT BRIGHTENS YOUR DAY.
+                    {t("heroIntro.highlight")}
+                  </span>{" "}
+                  {t("heroIntro.textEnd")}
                 </p>
               </TextRevealLines>
             </div>
@@ -28,7 +29,7 @@ const HeroIntro = () => {
               href="#about"
               className="inline-block text-lg lg:text-[36px] font-manrope font-bold text-dark hover:text-white transition-colors"
             >
-              DISCOVER OUR SPEED
+              {t("hero.discover")}
             </a>
           </div>
         </div>

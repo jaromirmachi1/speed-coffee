@@ -1,17 +1,29 @@
 import Container from "../../../components/Container";
 import TextRevealLines from "../../../lib/TextRevealLines";
+import { motion } from "framer-motion";
+import { useLanguage } from "../../../contexts/LanguageContext";
 import scAppleGinger from "../../../assets/ScAppleGinger.webp";
 import scMatchaCan from "../../../assets/ScMatchaCan.webp";
 import scCoffeeProduct from "../../../assets/ScCoffeeProduct.webp";
 
 const ProductsSection = () => {
+  const { t } = useLanguage();
   return (
     <section className="bg-beige py-24 relative z-40">
       <Container>
         <div>
-          <h2 className="text-center text-5xl md:text-6xl lg:text-7xl font-agright font-extrabold text-dark mb-16 md:mb-20">
-            OUR PRODUCTS
-          </h2>
+          <motion.h2
+            className="text-center text-5xl md:text-6xl lg:text-7xl font-agright font-extrabold text-dark mb-16 md:mb-20"
+            initial={{ opacity: 0, y: -30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.3 }}
+            transition={{
+              duration: 0.8,
+              ease: [0.25, 0.46, 0.45, 0.94],
+            }}
+          >
+            {t("products.title")}
+          </motion.h2>
 
           <div className="space-y-20 md:space-y-28">
             {/* 1. Apple & Ginger */}
@@ -22,34 +34,51 @@ const ProductsSection = () => {
                   style={{ maxWidth: "48rem" }}
                 >
                   <h3 className="text-4xl md:text-5xl lg:text-6xl font-agright font-normal text-dark mb-10">
-                    APPLE & GINGER
+                    {t("products.appleGinger.title")}
                   </h3>
                   <TextRevealLines>
                     <p className="font-manrope font-bold text-[24px]">
-                      FRUIT POWERED BOOST
+                      {t("products.appleGinger.subtitle")}
                     </p>
                   </TextRevealLines>
                   <div className="flex justify-center">
                     <TextRevealLines>
                       <p className="font-normal w-[600px] md:text-[24px] font-manrope text-dark leading-relaxed text-center">
-                        APPLE GINGER JUICE MADE DIRECTLY FROM FRUIT BY COLD
-                        PRESSING SELECTED APPLE VARIETIES AND NATURAL GINGER
-                        JUICE.
+                        {t("products.appleGinger.description")}
                       </p>
                     </TextRevealLines>
                   </div>
                   <div className="pt-4">
                     <button className="px-8 py-3 w-2xl border-2 md:text-[18px] border-white text-dark font-manrope font-bold rounded-3xl hover:bg-white hover:text-dark transition-colors">
-                      BUY NOW
+                      {t("products.buyNow")}
                     </button>
                   </div>
                 </div>
               </div>
               <div className="order-1 md:order-2 flex justify-center">
-                <img
+                <motion.img
                   src={scAppleGinger}
                   alt="Apple & Ginger product"
                   className="w-[500px] h-auto object-contain"
+                  initial={{
+                    opacity: 0,
+                    scale: 0.8,
+                    filter: "blur(10px)",
+                    y: 30,
+                  }}
+                  whileInView={{
+                    opacity: 1,
+                    scale: 1,
+                    filter: "blur(0px)",
+                    y: 0,
+                  }}
+                  viewport={{ once: true, amount: 0.2 }}
+                  transition={{
+                    duration: 0.8,
+                    ease: [0.25, 0.46, 0.45, 0.94],
+                    scale: { duration: 0.6 },
+                    filter: { duration: 0.5 },
+                  }}
                 />
               </div>
             </div>
@@ -57,10 +86,29 @@ const ProductsSection = () => {
             {/* 2. Matcha */}
             <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-center">
               <div className="order-1 flex justify-center md:justify-center">
-                <img
+                <motion.img
                   src={scMatchaCan}
                   alt="Matcha product"
                   className="w-[500px] h-auto object-contain"
+                  initial={{
+                    opacity: 0,
+                    scale: 0.8,
+                    filter: "blur(10px)",
+                    y: 30,
+                  }}
+                  whileInView={{
+                    opacity: 1,
+                    scale: 1,
+                    filter: "blur(0px)",
+                    y: 0,
+                  }}
+                  viewport={{ once: true, amount: 0.2 }}
+                  transition={{
+                    duration: 0.8,
+                    ease: [0.25, 0.46, 0.45, 0.94],
+                    scale: { duration: 0.6 },
+                    filter: { duration: 0.5 },
+                  }}
                 />
               </div>
               <div className="order-2 flex justify-center">
@@ -69,24 +117,23 @@ const ProductsSection = () => {
                   style={{ maxWidth: "48rem" }}
                 >
                   <h3 className="text-4xl md:text-5xl lg:text-6xl font-agright font-normal text-dark mb-10">
-                    MATCHA
+                    {t("products.matcha.title")}
                   </h3>
                   <TextRevealLines>
                     <p className="font-manrope font-bold text-[24px]">
-                      PLANT POWERED BOOST
+                      {t("products.matcha.subtitle")}
                     </p>
                   </TextRevealLines>
                   <div className="flex justify-center">
                     <TextRevealLines>
                       <p className="font-normal w-[600px] md:text-[24px] font-manrope text-dark leading-relaxed text-center">
-                        NON-ALCOHOLIC CARBONATED BEVERAGE CONTAINING NATURAL
-                        CAFFEINE.
+                        {t("products.matcha.description")}
                       </p>
                     </TextRevealLines>
                   </div>
                   <div className="pt-4">
                     <button className="px-8 py-3 w-2xl border-2 md:text-[18px] border-white text-dark font-manrope font-bold rounded-3xl hover:bg-white hover:text-dark transition-colors">
-                      BUY NOW
+                      {t("products.buyNow")}
                     </button>
                   </div>
                 </div>
@@ -101,33 +148,51 @@ const ProductsSection = () => {
                   style={{ maxWidth: "48rem" }}
                 >
                   <h3 className="text-4xl md:text-5xl lg:text-6xl font-agright font-normal text-dark mb-10">
-                    SPEED COFFEE
+                    {t("products.coffee.title")}
                   </h3>
                   <TextRevealLines>
                     <p className="font-manrope font-bold text-[24px]">
-                      PLANT POWERED BOOST
+                      {t("products.coffee.subtitle")}
                     </p>
                   </TextRevealLines>
                   <div className="flex justify-center">
                     <TextRevealLines>
                       <p className="font-normal w-[600px] md:text-[24px] font-manrope text-dark leading-relaxed text-center">
-                        NON-ALCOHOLIC CARBONATED BEVERAGE CONTAINING NATURAL
-                        CAFFEINE.
+                        {t("products.coffee.description")}
                       </p>
                     </TextRevealLines>
                   </div>
                   <div className="pt-4">
                     <button className="px-8 py-3 w-2xl border-2 md:text-[18px] border-white text-dark font-manrope font-bold rounded-3xl hover:bg-white hover:text-dark transition-colors">
-                      BUY NOW
+                      {t("products.buyNow")}
                     </button>
                   </div>
                 </div>
               </div>
               <div className="order-1 md:order-2 flex justify-center ">
-                <img
+                <motion.img
                   src={scCoffeeProduct}
                   alt="Speed Coffee product"
                   className="w-[500px] h-auto object-contain"
+                  initial={{
+                    opacity: 0,
+                    scale: 0.8,
+                    filter: "blur(10px)",
+                    y: 30,
+                  }}
+                  whileInView={{
+                    opacity: 1,
+                    scale: 1,
+                    filter: "blur(0px)",
+                    y: 0,
+                  }}
+                  viewport={{ once: true, amount: 0.2 }}
+                  transition={{
+                    duration: 0.8,
+                    ease: [0.25, 0.46, 0.45, 0.94],
+                    scale: { duration: 0.6 },
+                    filter: { duration: 0.5 },
+                  }}
                 />
               </div>
             </div>

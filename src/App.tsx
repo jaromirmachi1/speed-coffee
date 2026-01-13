@@ -2,6 +2,7 @@ import { useRef } from "react";
 import Home from "./pages/Home/Home";
 import { useSpeedCoffeeMotion } from "./hooks/useSpeedCoffeeMotion";
 import { useCustomCursor } from "./hooks/useCustomCursor";
+import { LanguageProvider } from "./contexts/LanguageContext";
 
 function App() {
   const rootRef = useRef<HTMLDivElement | null>(null);
@@ -17,9 +18,11 @@ function App() {
   });
 
   return (
-    <div ref={rootRef} id="top">
-      <Home />
-    </div>
+    <LanguageProvider>
+      <div ref={rootRef} id="top">
+        <Home />
+      </div>
+    </LanguageProvider>
   );
 }
 

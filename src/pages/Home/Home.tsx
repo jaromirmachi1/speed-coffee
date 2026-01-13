@@ -1,4 +1,5 @@
 import Header from "../../components/Header/Header";
+import Footer from "../../components/Footer";
 import {
   Hero,
   HeroIntro,
@@ -22,6 +23,7 @@ const Home = () => {
         <MatchaSection />
         <ProductsSection />
       </main>
+      <Footer />
     </div>
   );
 };

@@ -1,9 +1,11 @@
 import Container from "../../../components/Container";
 import { locations } from "../utils/locations";
+import { useLanguage } from "../../../contexts/LanguageContext";
 import Img2and3 from "../../../assets/Img2and3.png";
 import TextRevealLines from "../../../lib/TextRevealLines";
 
 const Locations = () => {
+  const { t } = useLanguage();
   return (
     <section id="events" className="py-16 bg-beige">
       <Container>
@@ -22,7 +24,7 @@ const Locations = () => {
               className="text-3xl md:text-4xl lg:text-[64px] !font-['Agright'] font-normal text-dark leading-[1] mb-6"
               style={{ lineHeight: 1 }}
             >
-              WHERE CAN YOU FIND US?
+              {t("locations.title")}
             </h2>
             <ul
               className="space-y-3 text-base md:text-lg lg:text-[24px] !font-['Manrope'] text-dark"

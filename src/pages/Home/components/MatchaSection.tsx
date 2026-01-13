@@ -1,9 +1,11 @@
 import { useEffect, useRef } from "react";
 import Container from "../../../components/Container";
+import { useLanguage } from "../../../contexts/LanguageContext";
 import matchaSc from "../../../assets/matchaSc.webp";
 import CoffeeSection, { type CoffeeSectionHandle } from "./CoffeeSection";
 
 const MatchaSection = () => {
+  const { t } = useLanguage();
   const sectionRef = useRef<HTMLElement | null>(null);
   const bgImageRef = useRef<HTMLImageElement | null>(null);
   const textRef = useRef<HTMLHeadingElement | null>(null);
@@ -190,7 +192,7 @@ const MatchaSection = () => {
               marginBottom: "-0.15em",
             }}
           >
-            Fallen for
+            {t("matcha.fallenFor")}
           </span>
           <span
             className="font-sans font-black"
@@ -201,7 +203,7 @@ const MatchaSection = () => {
               letterSpacing: "0.02em",
             }}
           >
-            MATCHA
+            {t("matcha.title")}
           </span>
           <span
             style={{
@@ -212,7 +214,7 @@ const MatchaSection = () => {
               marginTop: "-0.35em",
             }}
           >
-            yet?
+            {t("matcha.yet")}
           </span>
         </h2>
 

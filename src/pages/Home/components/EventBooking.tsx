@@ -1,8 +1,10 @@
 import Container from "../../../components/Container";
 import TextRevealLines from "../../../lib/TextRevealLines";
+import { useLanguage } from "../../../contexts/LanguageContext";
 import coffeeVan from "../../../assets/coffeeVan.webp";
 
 const EventBooking = () => {
+  const { t } = useLanguage();
   return (
     <section id="reserve" className="py-16 bg-beige">
       <Container>
@@ -12,7 +14,7 @@ const EventBooking = () => {
               className="text-3xl md:text-4xl lg:text-[64px] !font-['Agright'] font-normal text-dark leading-[1] mb-6"
               style={{ lineHeight: 1 }}
             >
-              DO YOU HAVE AN EVENT WHERE YOU'D LIKE US TO BE?
+              {t("event.title")}
             </h2>
             <TextRevealLines>
               <>
@@ -24,8 +26,7 @@ const EventBooking = () => {
                     lineHeight: 1.2,
                   }}
                 >
-                  Get in touch with us and let's bring good vibes, high-quality
-                  coffee, and matcha to your special occasion.
+                  {t("event.description1")}
                 </p>
                 <p
                   className="text-base md:text-lg lg:text-[24px] text-dark leading-[1.2] uppercase"
@@ -35,8 +36,7 @@ const EventBooking = () => {
                     lineHeight: 1.2,
                   }}
                 >
-                  We promise an unforgettable experience that will make your
-                  event memorable.
+                  {t("event.description2")}
                 </p>
               </>
             </TextRevealLines>
@@ -61,13 +61,13 @@ const EventBooking = () => {
               lineHeight: 1.0,
             }}
           >
-            Book us for your next event
+            {t("event.bookUs")}
           </p>
           <button
             className="px-8 py-3 w-2xl border-2 md:text-[18px] border-white text-dark font-manrope font-bold rounded-3xl hover:bg-white hover:text-dark transition-colors"
             style={{ fontFamily: "Manrope, sans-serif" }}
           >
-            HERE
+            {t("event.here")}
           </button>
         </div>
       </Container>
