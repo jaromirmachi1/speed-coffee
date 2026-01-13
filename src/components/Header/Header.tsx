@@ -107,7 +107,7 @@ const Header = () => {
               <NavLink href="#shop" onClick={closeMenu} isMobile>
                 {t("nav.shop")}
               </NavLink>
-              
+
               {/* Language Switcher */}
               <div className="pt-4 border-t border-dark/20">
                 <div className="flex items-center gap-4">

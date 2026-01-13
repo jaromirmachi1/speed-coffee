@@ -1,6 +1,7 @@
 import Container from "../../../components/Container";
 import { locations } from "../utils/locations";
 import { useLanguage } from "../../../contexts/LanguageContext";
+import { motion } from "framer-motion";
 import Img2and3 from "../../../assets/Img2and3.png";
 import TextRevealLines from "../../../lib/TextRevealLines";
 
@@ -11,11 +12,15 @@ const Locations = () => {
       <Container>
         <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-center">
           <div className="relative max-w-xl md:max-w-2xl mx-auto md:mx-0">
-            <img
+            <motion.img
               src={Img2and3}
               alt="Speed Coffee sign and drinks"
               className="w-full h-auto object-cover"
               loading="lazy"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.2 }}
+              transition={{ duration: 0.6, ease: "easeOut" }}
             />
           </div>
 

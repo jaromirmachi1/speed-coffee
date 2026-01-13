@@ -1,15 +1,13 @@
 import TextRevealLines from "../../../lib/TextRevealLines";
 import Container from "../../../components/Container";
 import { useLanguage } from "../../../contexts/LanguageContext";
+import { motion } from "framer-motion";
 import aboutImg from "../../../assets/openSc_4x.webp";
 
 const About = () => {
   const { t } = useLanguage();
   return (
-    <section
-      id="about"
-      className="py-16 bg-beige border-t border-dashed border-gray-300"
-    >
+    <section id="about" className="py-16 bg-beige">
       <Container>
         <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-center">
           <div>
@@ -34,11 +32,15 @@ const About = () => {
           </div>
 
           <div className="rounded-lg overflow-hidden shadow-lg">
-            <img
+            <motion.img
               src={aboutImg}
               alt="Barista holding coffee cups and pastries"
               className="w-full h-auto object-cover"
               loading="lazy"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.2 }}
+              transition={{ duration: 0.6, ease: "easeOut" }}
             />
           </div>
         </div>

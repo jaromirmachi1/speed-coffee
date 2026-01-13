@@ -1,6 +1,7 @@
 import Container from "../../../components/Container";
 import TextRevealLines from "../../../lib/TextRevealLines";
 import { useLanguage } from "../../../contexts/LanguageContext";
+import { motion } from "framer-motion";
 import coffeeVan from "../../../assets/coffeeVan.webp";
 
 const EventBooking = () => {
@@ -43,11 +44,15 @@ const EventBooking = () => {
           </div>
 
           <div className="rounded-lg overflow-hidden shadow-lg">
-            <img
+            <motion.img
               src={coffeeVan}
               alt="Outdoor event with coffee van and people"
               className="w-full h-auto object-cover"
               loading="lazy"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.2 }}
+              transition={{ duration: 0.6, ease: "easeOut" }}
             />
           </div>
         </div>
