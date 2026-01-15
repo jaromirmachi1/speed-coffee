@@ -141,9 +141,11 @@ const TextRevealLines = ({
             lineContainer.className = "text-reveal-line";
             lineContainer.style.display = "block";
             lineContainer.style.overflow = "hidden";
+            lineContainer.style.position = "relative";
 
             const lineInner = document.createElement("span");
-            lineInner.style.display = "block";
+            lineInner.style.display = "inline-block";
+            lineInner.style.width = "100%";
             lineInner.innerHTML = buildHTML(currentUnits);
             lineContainer.appendChild(lineInner);
 
@@ -159,9 +161,11 @@ const TextRevealLines = ({
             lineContainer.className = "text-reveal-line";
             lineContainer.style.display = "block";
             lineContainer.style.overflow = "hidden";
+            lineContainer.style.position = "relative";
 
             const lineInner = document.createElement("span");
-            lineInner.style.display = "block";
+            lineInner.style.display = "inline-block";
+            lineInner.style.width = "100%";
             lineInner.innerHTML = buildHTML(currentUnits);
             lineContainer.appendChild(lineInner);
 
