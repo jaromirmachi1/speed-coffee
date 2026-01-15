@@ -17,7 +17,7 @@ const NavLink = ({
 }: NavLinkProps) => {
   const baseClasses = isMobile
     ? "text-dark font-manuka font-normal uppercase hover:text-accent transition-colors block text-xl md:text-2xl"
-    : "text-dark font-manuka font-normal uppercase hover:text-accent transition-colors text-2xl md:text-3xl lg:text-4xl";
+    : "text-dark font-manuka font-normal uppercase hover:text-accent transition-colors text-3xl md:text-4xl lg:text-5xl";
 
   return (
     <a href={href} onClick={onClick} className={baseClasses}>

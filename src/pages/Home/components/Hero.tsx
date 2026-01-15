@@ -11,7 +11,7 @@ const Hero = () => {
       <Container>
         <div className="pt-0 pb-0 hidden sm:block">
           <TextReveal animateOnScroll={false} delay={0.3}>
-            <h1 className="text-dark uppercase flex justify-between items-center w-full font-manuka text-[120px] sm:text-[180px] md:text-[240px] lg:text-[380px] font-medium leading-none">
+            <h1 className="text-dark uppercase flex justify-between items-center w-full font-manuka text-[100px] sm:text-[180px] md:text-[220px] lg:text-[380px] font-medium leading-none">
               <span>SPEED</span>
               <span>COFFEE</span>
             </h1>
