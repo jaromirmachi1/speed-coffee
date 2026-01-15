@@ -11,10 +11,7 @@ const Hero = () => {
       <Container>
         <div className="pt-0 pb-0 hidden sm:block">
           <TextReveal animateOnScroll={false} delay={0.3}>
-            <h1
-              className="text-dark uppercase flex justify-between items-center w-full font-manuka font-medium leading-none"
-              style={{ fontSize: "clamp(120px, 20vw, 330px)" }}
-            >
+            <h1 className="text-dark uppercase flex justify-between items-center w-full font-manuka text-[120px] sm:text-[180px] md:text-[240px] lg:text-[380px] font-medium leading-none">
               <span>SPEED</span>
               <span>COFFEE</span>
             </h1>
@@ -22,7 +19,7 @@ const Hero = () => {
         </div>
 
         <div className="pb-16">
-          <div className="-mt-2">
+          <div className="-mt-1">
             <div
               ref={imageRef}
               className="rounded-lg overflow-hidden shadow-lg h-[calc(100vh-300px)]"
