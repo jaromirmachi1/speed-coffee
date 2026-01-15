@@ -8,9 +8,9 @@ import TextRevealLines from "../../../lib/TextRevealLines";
 const Locations = () => {
   const { t } = useLanguage();
   return (
-    <section id="events" className="py-16 bg-beige">
+    <section id="events" className="py-8 md:py-16 bg-beige">
       <Container>
-        <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-center">
+        <div className="grid md:grid-cols-2 gap-6 md:gap-12 items-center">
           <div className="relative max-w-xl md:max-w-2xl mx-auto md:mx-0">
             <motion.img
               src={Img2and3}
@@ -26,13 +26,13 @@ const Locations = () => {
 
           <div className="text-right md:text-left">
             <h2
-              className="text-3xl md:text-4xl lg:text-[64px] !font-['Agright'] font-normal text-dark leading-[1] mb-6"
+              className="text-2xl sm:text-3xl md:text-4xl lg:text-[64px] !font-['Agright'] font-normal text-dark leading-[1] mb-4 md:mb-6"
               style={{ lineHeight: 1 }}
             >
               {t("locations.title")}
             </h2>
             <ul
-              className="space-y-3 text-base md:text-lg lg:text-[24px] !font-['Manrope'] text-dark"
+              className="space-y-2 md:space-y-3 text-sm sm:text-base md:text-lg lg:text-[24px] !font-['Manrope'] text-dark"
               style={{
                 fontFamily: "Manrope, sans-serif",
                 fontWeight: 400,

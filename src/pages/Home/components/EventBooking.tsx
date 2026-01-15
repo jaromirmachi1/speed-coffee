@@ -7,12 +7,12 @@ import coffeeVan from "../../../assets/coffeeVan.webp";
 const EventBooking = () => {
   const { t } = useLanguage();
   return (
-    <section id="reserve" className="py-16 bg-beige">
+    <section id="reserve" className="py-8 md:py-16 bg-beige">
       <Container>
-        <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-center mb-16 md:mb-24">
+        <div className="grid md:grid-cols-2 gap-6 md:gap-12 items-center mb-8 md:mb-24">
           <div>
             <h2
-              className="text-3xl md:text-4xl lg:text-[64px] !font-['Agright'] font-normal text-dark leading-[1] mb-6"
+              className="text-2xl sm:text-3xl md:text-4xl lg:text-[64px] !font-['Agright'] font-normal text-dark leading-[1] mb-4 md:mb-6"
               style={{ lineHeight: 1 }}
             >
               {t("event.title")}
@@ -20,7 +20,7 @@ const EventBooking = () => {
             <TextRevealLines>
               <>
                 <p
-                  className="text-base md:text-lg lg:text-[24px] text-dark leading-[1.2] uppercase"
+                  className="text-sm sm:text-base md:text-lg lg:text-[24px] text-dark leading-[1.2] uppercase"
                   style={{
                     fontFamily: "Manrope, sans-serif",
                     fontWeight: 400,
@@ -30,7 +30,7 @@ const EventBooking = () => {
                   {t("event.description1")}
                 </p>
                 <p
-                  className="text-base md:text-lg lg:text-[24px] text-dark leading-[1.2] uppercase"
+                  className="text-sm sm:text-base md:text-lg lg:text-[24px] text-dark leading-[1.2] uppercase"
                   style={{
                     fontFamily: "Manrope, sans-serif",
                     fontWeight: 400,
@@ -59,7 +59,7 @@ const EventBooking = () => {
 
         <div className="text-center">
           <p
-            className="text-base md:text-lg lg:text-[24px] !font-['Manrope'] text-dark mb-4 uppercase"
+            className="text-sm sm:text-base md:text-lg lg:text-[24px] !font-['Manrope'] text-dark mb-4 uppercase"
             style={{
               fontFamily: "Manrope, sans-serif",
               fontWeight: 400,
@@ -69,7 +69,7 @@ const EventBooking = () => {
             {t("event.bookUs")}
           </p>
           <button
-            className="px-8 py-3 w-2xl border-2 md:text-[18px] border-white text-dark font-manrope font-bold rounded-3xl hover:bg-white hover:text-dark transition-colors"
+            className="px-6 md:px-8 py-2 md:py-3 text-sm md:text-[18px] border-2 border-white text-dark font-manrope font-bold rounded-3xl hover:bg-white hover:text-dark transition-colors"
             style={{ fontFamily: "Manrope, sans-serif" }}
           >
             {t("event.here")}

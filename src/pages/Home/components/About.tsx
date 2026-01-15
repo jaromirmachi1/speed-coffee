@@ -7,19 +7,19 @@ import aboutImg from "../../../assets/openSc_4x.webp";
 const About = () => {
   const { t } = useLanguage();
   return (
-    <section id="about" className="py-16 bg-beige">
+    <section id="about" className="py-8 md:py-16 bg-beige">
       <Container>
-        <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-center">
+        <div className="grid md:grid-cols-2 gap-6 md:gap-12 items-center">
           <div>
             <h2
-              className="text-3xl md:text-4xl  lg:text-[64px] !font-['Agright'] font-normal text-dark leading-[1] mb-6"
+              className="text-2xl sm:text-3xl md:text-4xl lg:text-[64px] !font-['Agright'] font-normal text-dark leading-[1] mb-4 md:mb-6"
               style={{ lineHeight: 1 }}
             >
               {t("about.title")}
             </h2>
             <TextRevealLines>
               <p
-                className="text-base md:text-lg lg:text-[24px] text-dark leading-relaxed "
+                className="text-sm sm:text-base md:text-lg lg:text-[24px] text-dark leading-relaxed "
                 style={{
                   fontFamily: "Manrope, sans-serif",
                   fontWeight: 400,

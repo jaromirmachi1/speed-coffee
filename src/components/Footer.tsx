@@ -11,7 +11,7 @@ const Footer = () => {
         <div className="absolute left-2/3 top-0 bottom-0 w-px bg-white/10"></div>
       </div>
 
-      <div className="w-full px-[100px] relative h-full flex flex-col justify-between min-h-[60vh]">
+      <div className="w-full px-4 md:px-[100px] relative h-full flex flex-col justify-between min-h-[60vh]">
         {/* Top section - Center brand name */}
         <div className="flex-1 flex items-center justify-center">
           <motion.div
@@ -25,7 +25,7 @@ const Footer = () => {
               delay: 0.2,
             }}
           >
-            <div className="text-[128px] md:text-5xl lg:text-[164px] font-agright font-normal text-white tracking-tight leading-tight">
+            <div className="text-4xl sm:text-6xl md:text-5xl lg:text-[164px] font-agright font-normal text-white tracking-tight leading-tight">
               <div>SPEED</div>
               <div>COFFEE</div>
             </div>

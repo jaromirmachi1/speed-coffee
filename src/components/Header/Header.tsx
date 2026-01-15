@@ -79,14 +79,27 @@ const Header = () => {
       <Container>
         <nav className="py-0">
           <div className="flex items-center justify-between">
-            <MenuButton isOpen={isMenuOpen} onClick={toggleMenu} />
+            {/* Mobile: Logo on left, Hamburger on right */}
+            <div className="flex items-center justify-between w-full sm:hidden">
+              <a
+                href="#top"
+                className="text-dark uppercase font-manuka font-medium leading-none"
+                style={{ fontSize: "clamp(20px, 5vw, 24px)" }}
+              >
+                <span>SPEED</span> <span>COFFEE</span>
+              </a>
+              <MenuButton isOpen={isMenuOpen} onClick={toggleMenu} />
+            </div>
 
-            <div className="flex-1" />
-
-            <div className="flex items-center gap-4 md:gap-6">
-              <NavLink href="#events">{t("nav.events")}</NavLink>
-              <NavLink href="#reserve">{t("nav.reserve")}</NavLink>
-              <NavLink href="#shop">{t("nav.shop")}</NavLink>
+            {/* Desktop/Tablet: Original layout */}
+            <div className="hidden sm:flex items-center justify-between w-full">
+              <MenuButton isOpen={isMenuOpen} onClick={toggleMenu} />
+              <div className="flex-1" />
+              <div className="flex items-center gap-4 md:gap-6">
+                <NavLink href="#events">{t("nav.events")}</NavLink>
+                <NavLink href="#reserve">{t("nav.reserve")}</NavLink>
+                <NavLink href="#shop">{t("nav.shop")}</NavLink>
+              </div>
             </div>
           </div>
 

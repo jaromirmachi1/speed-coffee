@@ -9,7 +9,7 @@ const Hero = () => {
   return (
     <section className="bg-beige -mt-8">
       <Container>
-        <div className="pt-0 pb-0">
+        <div className="pt-0 pb-0 hidden sm:block">
           <TextReveal animateOnScroll={false} delay={0.3}>
             <h1
               className="text-dark uppercase flex justify-between items-center w-full font-manuka font-medium leading-none"
