@@ -3,7 +3,7 @@ import {
   useContext,
   useState,
   useEffect,
-  ReactNode,
+  type ReactNode,
 } from "react";
 
 type Language = "en" | "cz";
@@ -90,6 +90,11 @@ export const LanguageProvider = ({ children }: LanguageProviderProps) => {
 
       // Locations
       "locations.title": "WHERE CAN YOU FIND US?",
+      "locations.openingHours": "OPENING HOURS",
+      "locations.weekdays": "WEEKDAYS",
+      "locations.weekdaysHours": "8:00 - 18:00",
+      "locations.weekends": "WEEKENDS",
+      "locations.weekendsHours": "9:00 - 19:00",
 
       // Matcha
       "matcha.fallenFor": "Fallen for",
@@ -145,6 +150,11 @@ export const LanguageProvider = ({ children }: LanguageProviderProps) => {
 
       // Locations
       "locations.title": "KDE NÁS MŮŽETE NAJÍT?",
+      "locations.openingHours": "OTEVÍRACÍ DOBA",
+      "locations.weekdays": "VŠEDNÍ DNY",
+      "locations.weekdaysHours": "8:00 - 18:00",
+      "locations.weekends": "VÍKENDY",
+      "locations.weekendsHours": "9:00 - 19:00",
 
       // Matcha
       "matcha.fallenFor": "Zamilovali jste si",

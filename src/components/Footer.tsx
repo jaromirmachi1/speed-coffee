@@ -1,5 +1,10 @@
 import { motion } from "framer-motion";
 import { useLanguage } from "../contexts/LanguageContext";
+import {
+  typography,
+  fontWeights,
+  lineHeights,
+} from "../lib/constants/typography";
 
 const Footer = () => {
   const { t } = useLanguage();
@@ -25,7 +30,9 @@ const Footer = () => {
               delay: 0.2,
             }}
           >
-            <div className="text-4xl sm:text-6xl md:text-5xl lg:text-[164px] font-agright font-normal text-white tracking-tight leading-tight">
+            <div
+              className={`${typography.agright.footerBrand} font-agright ${fontWeights.agright.normal} text-white tracking-tight ${lineHeights.tight}`}
+            >
               <div>SPEED</div>
               <div>COFFEE</div>
             </div>
@@ -41,7 +48,9 @@ const Footer = () => {
             viewport={{ once: true }}
             transition={{ duration: 0.6, ease: "easeOut", delay: 0.4 }}
           >
-            <p className="text-xs md:text-lg font-manrope font-light text-white">
+            <p
+              className={`${typography.manrope.footerSmall} font-manrope ${fontWeights.manrope.light} text-white`}
+            >
               © {new Date().getFullYear()}
             </p>
           </motion.div>
@@ -57,7 +66,9 @@ const Footer = () => {
             viewport={{ once: true }}
             transition={{ duration: 0.6, ease: "easeOut", delay: 0.5 }}
           >
-            <p className="text-xs md:text-lg font-manrope font-light text-white">
+            <p
+              className={`${typography.manrope.footerSmall} font-manrope ${fontWeights.manrope.light} text-white`}
+            >
               {t("footer.madeBy")}
             </p>
           </motion.div>

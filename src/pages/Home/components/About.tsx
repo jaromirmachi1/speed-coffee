@@ -3,6 +3,11 @@ import Container from "../../../components/Container";
 import { useLanguage } from "../../../contexts/LanguageContext";
 import { motion } from "framer-motion";
 import aboutImg from "../../../assets/openSc_4x.webp";
+import {
+  typography,
+  fontWeights,
+  lineHeights,
+} from "../../../lib/constants/typography";
 
 const About = () => {
   const { t } = useLanguage();
@@ -12,14 +17,14 @@ const About = () => {
         <div className="grid md:grid-cols-2 gap-6 md:gap-12 items-center">
           <div>
             <h2
-              className="text-2xl sm:text-3xl md:text-4xl lg:text-[64px] !font-['Agright'] font-normal text-dark leading-[1] mb-4 md:mb-6"
+              className={`${typography.agright.sectionHeading} font-agright ${fontWeights.agright.normal} text-dark ${lineHeights.custom.sectionHeading} mb-4 md:mb-6`}
               style={{ lineHeight: 1 }}
             >
               {t("about.title")}
             </h2>
             <TextRevealLines>
               <p
-                className="text-sm sm:text-base md:text-lg lg:text-[24px] text-dark leading-relaxed "
+                className={`${typography.manrope.body} font-manrope ${fontWeights.manrope.normal} text-dark ${lineHeights.custom.body}`}
                 style={{
                   fontFamily: "Manrope, sans-serif",
                   fontWeight: 400,

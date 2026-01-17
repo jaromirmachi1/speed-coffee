@@ -3,6 +3,11 @@ import TextRevealLines from "../../../lib/TextRevealLines";
 import { useLanguage } from "../../../contexts/LanguageContext";
 import { motion } from "framer-motion";
 import coffeeVan from "../../../assets/coffeeVan.webp";
+import {
+  typography,
+  fontWeights,
+  lineHeights,
+} from "../../../lib/constants/typography";
 
 const EventBooking = () => {
   const { t } = useLanguage();
@@ -12,7 +17,7 @@ const EventBooking = () => {
         <div className="grid md:grid-cols-2 gap-6 md:gap-12 items-center mb-8 md:mb-24">
           <div>
             <h2
-              className="text-2xl sm:text-3xl md:text-4xl lg:text-[64px] !font-['Agright'] font-normal text-dark leading-[1] mb-4 md:mb-6"
+              className={`${typography.agright.sectionHeading} font-agright ${fontWeights.agright.normal} text-dark ${lineHeights.custom.sectionHeading} mb-4 md:mb-6`}
               style={{ lineHeight: 1 }}
             >
               {t("event.title")}
@@ -20,7 +25,7 @@ const EventBooking = () => {
             <TextRevealLines>
               <>
                 <p
-                  className="text-sm sm:text-base md:text-lg lg:text-[24px] text-dark leading-[1.2] uppercase"
+                  className={`${typography.manrope.body} font-manrope ${fontWeights.manrope.normal} text-dark ${lineHeights.custom.bodyCompact} uppercase`}
                   style={{
                     fontFamily: "Manrope, sans-serif",
                     fontWeight: 400,
@@ -30,7 +35,7 @@ const EventBooking = () => {
                   {t("event.description1")}
                 </p>
                 <p
-                  className="text-sm sm:text-base md:text-lg lg:text-[24px] text-dark leading-[1.2] uppercase"
+                  className={`${typography.manrope.body} font-manrope ${fontWeights.manrope.normal} text-dark ${lineHeights.custom.bodyCompact} uppercase`}
                   style={{
                     fontFamily: "Manrope, sans-serif",
                     fontWeight: 400,
@@ -59,7 +64,7 @@ const EventBooking = () => {
 
         <div className="text-center">
           <p
-            className="text-sm sm:text-base md:text-lg lg:text-[24px] !font-['Manrope'] text-dark mb-4 uppercase"
+            className={`${typography.manrope.body} font-manrope ${fontWeights.manrope.normal} text-dark mb-4 uppercase`}
             style={{
               fontFamily: "Manrope, sans-serif",
               fontWeight: 400,
@@ -69,7 +74,7 @@ const EventBooking = () => {
             {t("event.bookUs")}
           </p>
           <button
-            className="px-6 md:px-8 py-2 md:py-3 text-sm md:text-[18px] border-2 border-white text-dark font-manrope font-bold rounded-3xl hover:bg-white hover:text-dark transition-colors"
+            className={`px-6 md:px-8 py-2 md:py-3 ${typography.manrope.button} border-2 border-white text-dark font-manrope ${fontWeights.manrope.bold} rounded-3xl hover:bg-white hover:text-dark transition-colors`}
             style={{ fontFamily: "Manrope, sans-serif" }}
           >
             {t("event.here")}

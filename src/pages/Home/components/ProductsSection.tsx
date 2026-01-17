@@ -5,6 +5,11 @@ import { useLanguage } from "../../../contexts/LanguageContext";
 import scAppleGinger from "../../../assets/ScAppleGinger.webp";
 import scMatchaCan from "../../../assets/ScMatchaCan.webp";
 import scCoffeeProduct from "../../../assets/ScCoffeeProduct.webp";
+import {
+  typography,
+  fontWeights,
+  lineHeights,
+} from "../../../lib/constants/typography";
 
 const ProductsSection = () => {
   const { t } = useLanguage();
@@ -13,7 +18,7 @@ const ProductsSection = () => {
       <Container>
         <div>
           <motion.h2
-            className="text-center text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-agright font-extrabold text-dark mb-12 md:mb-20"
+            className={`text-center ${typography.agright.productsMain} font-agright ${fontWeights.agright.extrabold} text-dark mb-12 md:mb-20`}
             initial={{ opacity: 0, y: -30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.3 }}
@@ -33,23 +38,31 @@ const ProductsSection = () => {
                   className="p-4 md:p-8 space-y-4 text-center"
                   style={{ maxWidth: "48rem" }}
                 >
-                  <h3 className="text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-agright font-normal text-dark mb-6 md:mb-10">
+                  <h3
+                    className={`${typography.agright.productTitle} font-agright ${fontWeights.agright.normal} text-dark mb-6 md:mb-10`}
+                  >
                     {t("products.appleGinger.title")}
                   </h3>
                   <TextRevealLines>
-                    <p className="font-manrope font-bold text-base sm:text-lg md:text-[24px]">
+                    <p
+                      className={`font-manrope ${fontWeights.manrope.bold} ${typography.manrope.productSubtitle}`}
+                    >
                       {t("products.appleGinger.subtitle")}
                     </p>
                   </TextRevealLines>
                   <div className="flex justify-center">
                     <TextRevealLines>
-                      <p className="font-normal w-full max-w-[600px] text-sm sm:text-base md:text-[24px] font-manrope text-dark leading-relaxed text-center">
+                      <p
+                        className={`${fontWeights.manrope.normal} w-full max-w-[600px] ${typography.manrope.productDescription} font-manrope text-dark ${lineHeights.custom.body} text-center`}
+                      >
                         {t("products.appleGinger.description")}
                       </p>
                     </TextRevealLines>
                   </div>
                   <div className="pt-4">
-                    <button className="px-6 md:px-8 py-2 md:py-3 text-sm md:text-[18px] border-2 border-white text-dark font-manrope font-bold rounded-3xl hover:bg-white hover:text-dark transition-colors">
+                    <button
+                      className={`px-6 md:px-8 py-2 md:py-3 ${typography.manrope.button} border-2 border-white text-dark font-manrope ${fontWeights.manrope.bold} rounded-3xl hover:bg-white hover:text-dark transition-colors`}
+                    >
                       {t("products.buyNow")}
                     </button>
                   </div>
@@ -116,23 +129,31 @@ const ProductsSection = () => {
                   className="p-4 md:p-8 space-y-4 text-center"
                   style={{ maxWidth: "48rem" }}
                 >
-                  <h3 className="text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-agright font-normal text-dark mb-6 md:mb-10">
+                  <h3
+                    className={`${typography.agright.productTitle} font-agright ${fontWeights.agright.normal} text-dark mb-6 md:mb-10`}
+                  >
                     {t("products.matcha.title")}
                   </h3>
                   <TextRevealLines>
-                    <p className="font-manrope font-bold text-base sm:text-lg md:text-[24px]">
+                    <p
+                      className={`font-manrope ${fontWeights.manrope.bold} ${typography.manrope.productSubtitle}`}
+                    >
                       {t("products.matcha.subtitle")}
                     </p>
                   </TextRevealLines>
                   <div className="flex justify-center">
                     <TextRevealLines>
-                      <p className="font-normal w-full max-w-[600px] text-sm sm:text-base md:text-[24px] font-manrope text-dark leading-relaxed text-center">
+                      <p
+                        className={`${fontWeights.manrope.normal} w-full max-w-[600px] ${typography.manrope.productDescription} font-manrope text-dark ${lineHeights.custom.body} text-center`}
+                      >
                         {t("products.matcha.description")}
                       </p>
                     </TextRevealLines>
                   </div>
                   <div className="pt-4">
-                    <button className="px-6 md:px-8 py-2 md:py-3 text-sm md:text-[18px] border-2 border-white text-dark font-manrope font-bold rounded-3xl hover:bg-white hover:text-dark transition-colors">
+                    <button
+                      className={`px-6 md:px-8 py-2 md:py-3 ${typography.manrope.button} border-2 border-white text-dark font-manrope ${fontWeights.manrope.bold} rounded-3xl hover:bg-white hover:text-dark transition-colors`}
+                    >
                       {t("products.buyNow")}
                     </button>
                   </div>
@@ -147,23 +168,31 @@ const ProductsSection = () => {
                   className="p-4 md:p-8 space-y-4 text-center"
                   style={{ maxWidth: "48rem" }}
                 >
-                  <h3 className="text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-agright font-normal text-dark mb-6 md:mb-10">
+                  <h3
+                    className={`${typography.agright.productTitle} font-agright ${fontWeights.agright.normal} text-dark mb-6 md:mb-10`}
+                  >
                     {t("products.coffee.title")}
                   </h3>
                   <TextRevealLines>
-                    <p className="font-manrope font-bold text-base sm:text-lg md:text-[24px]">
+                    <p
+                      className={`font-manrope ${fontWeights.manrope.bold} ${typography.manrope.productSubtitle}`}
+                    >
                       {t("products.coffee.subtitle")}
                     </p>
                   </TextRevealLines>
                   <div className="flex justify-center">
                     <TextRevealLines>
-                      <p className="font-normal w-full max-w-[600px] text-sm sm:text-base md:text-[24px] font-manrope text-dark leading-relaxed text-center">
+                      <p
+                        className={`${fontWeights.manrope.normal} w-full max-w-[600px] ${typography.manrope.productDescription} font-manrope text-dark ${lineHeights.custom.body} text-center`}
+                      >
                         {t("products.coffee.description")}
                       </p>
                     </TextRevealLines>
                   </div>
                   <div className="pt-4">
-                    <button className="px-6 md:px-8 py-2 md:py-3 text-sm md:text-[18px] border-2 border-white text-dark font-manrope font-bold rounded-3xl hover:bg-white hover:text-dark transition-colors">
+                    <button
+                      className={`px-6 md:px-8 py-2 md:py-3 ${typography.manrope.button} border-2 border-white text-dark font-manrope ${fontWeights.manrope.bold} rounded-3xl hover:bg-white hover:text-dark transition-colors`}
+                    >
                       {t("products.buyNow")}
                     </button>
                   </div>

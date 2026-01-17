@@ -1,6 +1,11 @@
 import Container from "../../../components/Container";
 import { useLanguage } from "../../../contexts/LanguageContext";
 import TextRevealLines from "../../../lib/TextRevealLines";
+import {
+  typography,
+  fontWeights,
+  lineHeights,
+} from "../../../lib/constants/typography";
 
 const HeroIntro = () => {
   const { t } = useLanguage();
@@ -13,7 +18,9 @@ const HeroIntro = () => {
           <div className="flex-1 flex items-center justify-center py-6 md:py-10">
             <div className="text-center w-full max-w-none mx-auto">
               <TextRevealLines>
-                <p className="text-2xl sm:text-3xl md:text-[64px] lg:text-[124px] font-manuka font-bold text-dark leading-[1.1] md:leading-[0.8] lg:leading-[0.8]">
+                <p
+                  className={`${typography.manuka.heroIntro} font-manuka ${fontWeights.manuka.bold} text-dark ${lineHeights.custom.heroIntro}`}
+                >
                   {t("heroIntro.text")}{" "}
                   <span className="text-accent font-bold">
                     {t("heroIntro.highlight")}
@@ -27,7 +34,7 @@ const HeroIntro = () => {
           <div className="text-center pb-10">
             <a
               href="#about"
-              className="inline-block text-lg lg:text-[64px] font-manuka font-bold text-dark hover:text-white transition-colors"
+              className={`inline-block ${typography.manuka.heroIntroCta} font-manuka ${fontWeights.manuka.bold} text-dark hover:text-white transition-colors`}
             >
               {t("hero.discover")}
             </a>

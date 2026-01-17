@@ -1,6 +1,7 @@
 import { useState, type ReactNode } from "react";
 import Container from "../Container";
 import { useLanguage } from "../../contexts/LanguageContext";
+import { typography, fontWeights } from "../../lib/constants/typography";
 
 interface NavLinkProps {
   href: string;
@@ -16,8 +17,8 @@ const NavLink = ({
   isMobile = false,
 }: NavLinkProps) => {
   const baseClasses = isMobile
-    ? "text-dark font-manuka font-normal uppercase hover:text-accent transition-colors block text-xl md:text-2xl"
-    : "text-dark font-manuka font-normal uppercase hover:text-accent transition-colors text-3xl md:text-4xl lg:text-5xl";
+    ? `text-dark font-manuka ${fontWeights.manuka.normal} uppercase hover:text-accent transition-colors block ${typography.manuka.navMobile}`
+    : `text-dark font-manuka ${fontWeights.manuka.normal} uppercase hover:text-accent transition-colors ${typography.manuka.navDesktop}`;
 
   return (
     <a href={href} onClick={onClick} className={baseClasses}>
@@ -83,8 +84,8 @@ const Header = () => {
             <div className="flex items-center justify-between w-full sm:hidden">
               <a
                 href="#top"
-                className="text-dark uppercase font-manuka font-medium leading-none"
-                style={{ fontSize: "clamp(20px, 5vw, 24px)" }}
+                className={`text-dark uppercase font-manuka ${fontWeights.manuka.medium} leading-none`}
+                style={{ fontSize: typography.manuka.mobileLogo }}
               >
                 <span>SPEED</span> <span>COFFEE</span>
               </a>
@@ -124,7 +125,9 @@ const Header = () => {
               {/* Language Switcher */}
               <div className="pt-4 border-t border-dark/20">
                 <div className="flex items-center gap-4">
-                  <span className="text-dark font-manuka font-normal uppercase text-xl">
+                  <span
+                    className={`text-dark font-manuka ${fontWeights.manuka.normal} uppercase ${typography.manuka.languageLabel}`}
+                  >
                     Language:
                   </span>
                   <button
