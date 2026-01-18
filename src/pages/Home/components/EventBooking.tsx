@@ -1,6 +1,7 @@
 import Container from "../../../components/Container";
 import TextRevealLines from "../../../lib/TextRevealLines";
 import { useLanguage } from "../../../contexts/LanguageContext";
+import { useEffect, useRef, useState } from "react";
 import coffeeVan from "../../../assets/images/coffeeVan.png";
 import {
   typography,
@@ -10,6 +11,29 @@ import {
 
 const EventBooking = () => {
   const { t } = useLanguage();
+  const [isVisible, setIsVisible] = useState(false);
+  const imgRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+        }
+      },
+      { threshold: 0.2 }
+    );
+
+    if (imgRef.current) {
+      observer.observe(imgRef.current);
+    }
+
+    return () => {
+      if (imgRef.current) {
+        observer.unobserve(imgRef.current);
+      }
+    };
+  }, []);
   return (
     <section id="reserve" className="py-8 md:py-16 bg-beige">
       <Container>
@@ -47,7 +71,14 @@ const EventBooking = () => {
             </TextRevealLines>
           </div>
 
-          <div className="rounded-lg overflow-hidden shadow-lg max-w-4xl md:ml-auto">
+          <div
+            ref={imgRef}
+            className={`rounded-lg overflow-hidden shadow-lg max-w-4xl md:ml-auto transition-all duration-[600ms] ease-out ${
+              isVisible
+                ? "opacity-100 translate-y-0"
+                : "opacity-0 translate-y-5"
+            }`}
+          >
             <img
               src={coffeeVan}
               alt="Outdoor event with coffee van and people"
