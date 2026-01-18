@@ -102,7 +102,7 @@ export const LanguageProvider = ({ children }: LanguageProviderProps) => {
       "matcha.yet": "yet?",
 
       // Event Booking
-      "event.title": "DO YOU HAVE AN EVENT WHERE YOU'D LIKE US TO BE?",
+      "event.title": "ANY EVENT YOU WANT US TO BE AT?",
       "event.description1":
         "Get in touch with us and let's bring good vibes, high-quality coffee, and matcha to your special occasion.",
       "event.description2":

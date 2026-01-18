@@ -191,7 +191,7 @@ const MatchaSection = () => {
               fontWeight: 400,
               fontSize: "min(6vw, 60px)",
               lineHeight: 1,
-              marginBottom: "-0.15em",
+              marginBottom: "-0.45em",
             }}
           >
             {t("matcha.fallenFor")}
@@ -213,7 +213,7 @@ const MatchaSection = () => {
               fontWeight: 400,
               fontSize: "min(6vw, 60px)",
               lineHeight: 1,
-              marginTop: "-0.35em",
+              marginTop: "-0.25em",
             }}
           >
             {t("matcha.yet")}

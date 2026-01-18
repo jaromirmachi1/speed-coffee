@@ -1,1 +1,1 @@
-export const locations = ["Kounicova 13, Brno"] as const;
+export const locations = ["Brno, Kounicova 271/13"] as const;

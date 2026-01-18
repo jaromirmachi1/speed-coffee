@@ -168,7 +168,7 @@ const CoffeeSection = forwardRef<CoffeeSectionHandle>((_, ref) => {
             fontSize: "min(6vw, 60px)",
             color: "#EAE1CF",
             display: "block",
-            marginBottom: "-0.6em",
+            marginBottom: "-0.2em",
           }}
         >
           Or sticking with
