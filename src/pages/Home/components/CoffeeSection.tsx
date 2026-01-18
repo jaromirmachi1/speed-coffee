@@ -108,7 +108,10 @@ const CoffeeSection = forwardRef<CoffeeSectionHandle>((_, ref) => {
     /* ---------------- TEXT ---------------- */
     textRef.current.style.opacity = String(textT);
 
-    const prefixFadeT = clamp01((elapsed - 700) / 200);
+    // Prefix fades out right before zoom begins (when image approaches viewport top)
+    // Start fading when image bottom reaches ~20px above viewport, complete by ~40px (when zoom starts)
+    const prefixFadeProgress = clamp01((-20 - imgRect.bottom) / 20);
+    const prefixFadeT = easeOut(prefixFadeProgress);
     prefixRef.current.style.opacity = String(1 - prefixFadeT);
     // Hide prefix when zoom starts (image above viewport)
     prefixRef.current.style.display = finalZoomT >= 1 ? "none" : "block";
