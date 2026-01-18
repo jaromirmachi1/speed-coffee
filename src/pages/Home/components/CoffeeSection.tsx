@@ -94,8 +94,9 @@ const CoffeeSection = forwardRef<CoffeeSectionHandle>((_, ref) => {
     const imgRect = imageRef.current.getBoundingClientRect();
 
     // ZOOM phase starts when image bottom goes above viewport top (similar to MatchaSection)
-    // Starts when image bottom reaches ~40px above viewport, ends by ~160px above
-    const zoomProgress = clamp01((-40 - imgRect.bottom) / 120);
+    // Increased distance for slower, smoother zoom: starts at ~40px above, ends by ~400px above
+    const zoomProgress = clamp01((-40 - imgRect.bottom) / 360);
+    // Use smoother easing for zoom (easeOut is already smooth, but we can make it even smoother)
     const zoomT = easeOut(zoomProgress);
 
     // Only start zoom when image bottom is above viewport top (imgRect.bottom <= -40)
@@ -121,11 +122,6 @@ const CoffeeSection = forwardRef<CoffeeSectionHandle>((_, ref) => {
       translateX(${offsetX}px)
       scale(${scale})
     `;
-
-    // Hide prefix when zoom starts (image above viewport)
-    const imgRectForPrefix = imageRef.current.getBoundingClientRect();
-    prefixRef.current.style.display =
-      imgRectForPrefix.bottom <= -40 ? "none" : "block";
   };
 
   useImperativeHandle(ref, () => ({ update, reset }), []);
