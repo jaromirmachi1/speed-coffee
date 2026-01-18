@@ -7,13 +7,4 @@ export default defineConfig({
   optimizeDeps: {
     exclude: ["styled-components"],
   },
-  assetsInclude: ["**/*.webp", "**/*.png", "**/*.jpg", "**/*.jpeg", "**/*.svg"],
-  build: {
-    assetsDir: "assets",
-    rollupOptions: {
-      output: {
-        assetFileNames: "assets/[name]-[hash][extname]",
-      },
-    },
-  },
 });
