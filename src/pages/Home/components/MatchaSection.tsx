@@ -123,7 +123,8 @@ const MatchaSection = () => {
       // Provide scroll room for the "scene" without global CSS or extra wrappers.
       style={{
         // More runway so you can add another image underneath and keep the scroll feeling long/smooth.
-        minHeight: "520vh",
+        // Increased height to wait more time before ProductsSection appears
+        minHeight: "700vh",
       }}
     >
       <Container
