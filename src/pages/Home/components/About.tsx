@@ -2,7 +2,7 @@ import TextRevealLines from "../../../lib/TextRevealLines";
 import Container from "../../../components/Container";
 import { useLanguage } from "../../../contexts/LanguageContext";
 import { motion } from "framer-motion";
-import aboutImg from "../../../assets/images/openSc_4x.webp";
+import aboutImg from "../../../assets/images/openSc.webp";
 import {
   typography,
   fontWeights,
