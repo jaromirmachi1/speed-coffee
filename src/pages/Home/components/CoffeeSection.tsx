@@ -5,6 +5,7 @@ export interface CoffeeSectionUpdateParams {
   scrolledPx: number;
   vh: number;
   matchaImgBottom: number;
+  sectionHeight: number;
 }
 
 export interface CoffeeSectionHandle {
@@ -44,6 +45,7 @@ const CoffeeSection = forwardRef<CoffeeSectionHandle>((_, ref) => {
     scrolledPx,
     vh,
     matchaImgBottom,
+    sectionHeight,
   }: CoffeeSectionUpdateParams) => {
     if (
       !wrapperRef.current ||
@@ -63,42 +65,67 @@ const CoffeeSection = forwardRef<CoffeeSectionHandle>((_, ref) => {
 
     const elapsed = Math.max(0, scrolledPx - startPxRef.current);
 
-    // PX-based phases (same physics as Matcha)
+    // Phase durations for other elements
     const BG_PX = 260;
     const TEXT_PX = 220;
-    const IMAGE_PX = 600;
-    const ZOOM_PX = 520;
+
+    // Image movement - wait for BG and TEXT, then move slowly like MatchaSection
+    // Use a large scroll distance to match MatchaSection's speed
+    // MatchaSection uses the full section height (520vh), so use a similar large distance
+    const IMAGE_PX = Math.max(3000, sectionHeight * 0.5); // Large distance for slow movement
+    const imageStartPx = BG_PX + TEXT_PX;
+    const imageElapsed = Math.max(0, elapsed - imageStartPx);
+    const imgT = easeOut(clamp01(imageElapsed / IMAGE_PX));
 
     const bgT = easeOut(clamp01(elapsed / BG_PX));
     const textT = easeOut(clamp01((elapsed - BG_PX) / TEXT_PX));
-    const imgT = easeOut(clamp01((elapsed - BG_PX - TEXT_PX) / IMAGE_PX));
-    const zoomT = easeOut(
-      clamp01((elapsed - BG_PX - TEXT_PX - IMAGE_PX) / ZOOM_PX)
-    );
 
     /* ---------------- BACKGROUND ---------------- */
     bgRef.current.style.transform = `translate3d(0, ${(1 - bgT) * 100}%, 0)`;
 
     /* ---------------- IMAGE ---------------- */
+    // Use EXACT same calculation as MatchaSection for image movement
+    // MatchaSection: lerp(vh * 0.9, -vh * 1.25, easeOut(p))
+    // Image only starts moving after BG + TEXT phases complete, then moves slowly
     const imgY = lerp(vh * 0.9, -vh * 1.25, imgT);
     imageRef.current.style.transform = `translate3d(-50%, calc(-50% + ${imgY}px), 0)`;
-    imageRef.current.style.opacity = String(1 - zoomT);
+
+    // Get image position after transform to check when it goes above viewport
+    const imgRect = imageRef.current.getBoundingClientRect();
+
+    // ZOOM phase starts when image bottom goes above viewport top (similar to MatchaSection)
+    // Starts when image bottom reaches ~40px above viewport, ends by ~160px above
+    const zoomProgress = clamp01((-40 - imgRect.bottom) / 120);
+    const zoomT = easeOut(zoomProgress);
+
+    // Only start zoom when image bottom is above viewport top (imgRect.bottom <= -40)
+    // Before that, zoomT will be 0, so zoom won't happen
+    const finalZoomT = imgRect.bottom <= -40 ? zoomT : 0;
+
+    imageRef.current.style.opacity = String(1 - finalZoomT);
 
     /* ---------------- TEXT ---------------- */
     textRef.current.style.opacity = String(textT);
 
     const prefixFadeT = clamp01((elapsed - 700) / 200);
     prefixRef.current.style.opacity = String(1 - prefixFadeT);
-    prefixRef.current.style.display = zoomT >= 1 ? "none" : "block";
+    // Hide prefix when zoom starts (image above viewport)
+    prefixRef.current.style.display = finalZoomT >= 1 ? "none" : "block";
 
     /* ---------------- CAMERA ZOOM (yamamatcha-style) ---------------- */
-    const scale = lerp(1, 48, zoomT);
-    const offsetX = lerp(0, -10, zoomT); // only bias DURING zoom
+    // Zoom only happens when image is above viewport top
+    const scale = lerp(1, 48, finalZoomT);
+    const offsetX = lerp(0, -10, finalZoomT); // only bias DURING zoom
 
     cameraRef.current.style.transform = `
       translateX(${offsetX}px)
       scale(${scale})
     `;
+
+    // Hide prefix when zoom starts (image above viewport)
+    const imgRectForPrefix = imageRef.current.getBoundingClientRect();
+    prefixRef.current.style.display =
+      imgRectForPrefix.bottom <= -40 ? "none" : "block";
   };
 
   useImperativeHandle(ref, () => ({ update, reset }), []);

@@ -68,6 +68,7 @@ const MatchaSection = () => {
         scrolledPx: scrolled,
         vh,
         matchaImgBottom: imgRect.bottom,
+        sectionHeight: rect.height,
       });
 
       rafId = 0;

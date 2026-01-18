@@ -16,11 +16,11 @@ const Locations = () => {
     <section id="events" className="py-8 md:py-16 bg-beige">
       <Container>
         <div className="grid md:grid-cols-2 gap-6 md:gap-12 items-center">
-          <div className="relative max-w-xl md:max-w-2xl lg:max-w-none mx-auto md:mx-0">
+          <div className="relative max-w-xl md:max-w-2xl lg:max-w-4xl mx-auto md:mx-0">
             <motion.img
               src={Img2and3}
               alt="Speed Coffee sign and drinks"
-              className="w-full lg:max-w-[900px] h-auto object-cover"
+              className="w-full h-auto object-cover"
               loading="lazy"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -29,7 +29,7 @@ const Locations = () => {
             />
           </div>
 
-          <div className="text-center">
+          <div className="text-center max-w-2xl mx-auto">
             <h2
               className={`${typography.agright.sectionHeading} font-agright ${fontWeights.agright.normal} text-dark ${lineHeights.custom.sectionHeading} mb-4 md:mb-6`}
               style={{ lineHeight: 1 }}

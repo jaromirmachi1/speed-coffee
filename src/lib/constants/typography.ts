@@ -13,10 +13,10 @@ export const typography = {
     hero: "text-[100px] sm:text-[180px] md:text-[220px] lg:text-[380px]",
 
     // HeroIntro - Large paragraph text
-    heroIntro: "text-2xl sm:text-3xl md:text-[64px] lg:text-[104px]",
+    heroIntro: "text-4xl sm:text-4xl md:text-[64px] lg:text-[104px]",
 
     // HeroIntro CTA - "DISCOVER OUR SPEED" link
-    heroIntroCta: "text-lg lg:text-[64px]",
+    heroIntroCta: "text-3xl sm:text-4xl md:text-4xl lg:text-[64px]",
 
     // Navigation Links (Desktop)
     navDesktop: "text-3xl md:text-4xl lg:text-5xl",

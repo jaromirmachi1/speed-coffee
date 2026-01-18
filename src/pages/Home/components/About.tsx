@@ -15,7 +15,7 @@ const About = () => {
     <section id="about" className="py-8 md:py-16 bg-beige">
       <Container>
         <div className="grid md:grid-cols-2 gap-6 md:gap-12 items-center">
-          <div>
+          <div className="max-w-4xl">
             <h2
               className={`${typography.agright.sectionHeading} font-agright ${fontWeights.agright.normal} text-dark ${lineHeights.custom.sectionHeading} mb-4 md:mb-6`}
               style={{ lineHeight: 1 }}
@@ -36,7 +36,7 @@ const About = () => {
             </TextRevealLines>
           </div>
 
-          <div className="rounded-lg overflow-hidden shadow-lg">
+          <div className="rounded-lg overflow-hidden shadow-lg max-w-4xl md:ml-auto">
             <motion.img
               src={aboutImg}
               alt="Barista holding coffee cups and pastries"
