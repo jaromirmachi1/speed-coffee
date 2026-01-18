@@ -1,7 +1,6 @@
 import Container from "../../../components/Container";
 import TextRevealLines from "../../../lib/TextRevealLines";
 import { useLanguage } from "../../../contexts/LanguageContext";
-import { motion } from "framer-motion";
 import coffeeVan from "../../../assets/images/coffeeVan.png";
 import {
   typography,
@@ -49,19 +48,13 @@ const EventBooking = () => {
           </div>
 
           <div className="rounded-lg overflow-hidden shadow-lg max-w-4xl md:ml-auto">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.2 }}
-              transition={{ duration: 0.6, ease: "easeOut" }}
-            >
-              <img
-                src={coffeeVan}
-                alt="Outdoor event with coffee van and people"
-                className="w-full h-auto object-cover"
-                loading="lazy"
-              />
-            </motion.div>
+            <img
+              src={coffeeVan}
+              alt="Outdoor event with coffee van and people"
+              className="w-full h-auto object-cover"
+              loading="lazy"
+              decoding="async"
+            />
           </div>
         </div>
 
