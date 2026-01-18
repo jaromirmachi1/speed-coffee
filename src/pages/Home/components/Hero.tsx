@@ -1,4 +1,4 @@
-import headerph from "../../../assets/mainPh.webp";
+import headerph from "../../../assets/images/mainPh.webp";
 import TextReveal from "../../../lib/TextReveal";
 import Container from "../../../components/Container";
 import { useImageReveal } from "../hooks/useImageReveal";

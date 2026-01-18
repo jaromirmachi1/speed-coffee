@@ -3,9 +3,9 @@ import TextRevealLines from "../../../lib/TextRevealLines";
 import { motion, useMotionValue } from "framer-motion";
 import { useEffect, useRef } from "react";
 import { useLanguage } from "../../../contexts/LanguageContext";
-import scAppleGinger from "../../../assets/ScAppleGinger.webp";
-import scMatchaCan from "../../../assets/ScMatchaCan.webp";
-import scCoffeeProduct from "../../../assets/ScCoffeeProduct.webp";
+import scAppleGinger from "../../../assets/images/ScAppleGinger.webp";
+import scMatchaCan from "../../../assets/images/ScMatchaCan.webp";
+import scCoffeeProduct from "../../../assets/images/ScCoffeeProduct.webp";
 import {
   typography,
   fontWeights,

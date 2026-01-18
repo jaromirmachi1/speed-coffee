@@ -2,7 +2,7 @@ import Container from "../../../components/Container";
 import { locations } from "../utils/locations";
 import { useLanguage } from "../../../contexts/LanguageContext";
 import { motion } from "framer-motion";
-import Img2and3 from "../../../assets/twoImgs.webp";
+import Img2and3 from "../../../assets/images/twoImgs.webp";
 import TextRevealLines from "../../../lib/TextRevealLines";
 import {
   typography,

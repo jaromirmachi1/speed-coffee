@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import Container from "../../../components/Container";
 import { useLanguage } from "../../../contexts/LanguageContext";
-import matchaSc from "../../../assets/matchaSc.webp";
+import matchaSc from "../../../assets/images/matchaSc.webp";
 import CoffeeSection, { type CoffeeSectionHandle } from "./CoffeeSection";
 
 const MatchaSection = () => {

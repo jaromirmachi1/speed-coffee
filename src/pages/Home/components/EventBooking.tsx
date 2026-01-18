@@ -2,7 +2,7 @@ import Container from "../../../components/Container";
 import TextRevealLines from "../../../lib/TextRevealLines";
 import { useLanguage } from "../../../contexts/LanguageContext";
 import { motion } from "framer-motion";
-import coffeeVan from "../../../assets/coffeeVan.webp";
+import coffeeVan from "../../../assets/images/coffeeVan.webp";
 import {
   typography,
   fontWeights,

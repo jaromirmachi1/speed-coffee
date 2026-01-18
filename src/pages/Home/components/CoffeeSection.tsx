@@ -1,5 +1,5 @@
 import { forwardRef, useImperativeHandle, useRef } from "react";
-import coffeeSell from "../../../assets/coffeeSell.png";
+import coffeeSell from "../../../assets/images/coffeeSell.png";
 
 export interface CoffeeSectionUpdateParams {
   scrolledPx: number;
