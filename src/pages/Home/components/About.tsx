@@ -2,7 +2,8 @@ import TextRevealLines from "../../../lib/TextRevealLines";
 import Container from "../../../components/Container";
 import { useLanguage } from "../../../contexts/LanguageContext";
 import { motion } from "framer-motion";
-import aboutImg from "../../../assets/images/openSc.webp";
+// Using public folder for Vercel compatibility
+const aboutImg = "/openSc.webp";
 import {
   typography,
   fontWeights,

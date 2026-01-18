@@ -2,7 +2,8 @@ import Container from "../../../components/Container";
 import TextRevealLines from "../../../lib/TextRevealLines";
 import { useLanguage } from "../../../contexts/LanguageContext";
 import { motion } from "framer-motion";
-import coffeeVan from "../../../assets/images/coffeeVan.webp";
+// Using public folder for Vercel compatibility
+const coffeeVan = "/coffeeVan.webp";
 import {
   typography,
   fontWeights,
