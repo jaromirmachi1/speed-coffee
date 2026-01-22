@@ -22,6 +22,11 @@ const CoffeeSection = forwardRef<CoffeeSectionHandle>((_, ref) => {
   const cameraRef = useRef<HTMLSpanElement | null>(null);
 
   const startPxRef = useRef<number | null>(null);
+  // Mobile detection for performance optimization
+  const isMobileRef = useRef(window.innerWidth < 768);
+  // Cache for getBoundingClientRect on mobile
+  const cachedImgBottomRef = useRef(0);
+  const rectCacheFrameRef = useRef(0);
 
   const clamp01 = (v: number) => Math.min(1, Math.max(0, v));
   const easeOut = (t: number) => 1 - Math.pow(1 - t, 2);
@@ -88,31 +93,54 @@ const CoffeeSection = forwardRef<CoffeeSectionHandle>((_, ref) => {
     // MatchaSection: lerp(vh * 0.9, -vh * 1.25, easeOut(p))
     // Image only starts moving after BG + TEXT phases complete, then moves slowly
     const imgY = lerp(vh * 0.9, -vh * 1.25, imgT);
-    imageRef.current.style.transform = `translate3d(-50%, calc(-50% + ${imgY}px), 0)`;
+    // Reduce precision on mobile for better performance
+    const precision = isMobileRef.current ? 0 : 2;
+    imageRef.current.style.transform = `translate3d(-50%, calc(-50% + ${imgY.toFixed(
+      precision
+    )}px), 0)`;
 
     // Get image position after transform to check when it goes above viewport
-    const imgRect = imageRef.current.getBoundingClientRect();
+    // On mobile: cache getBoundingClientRect to reduce reflows (only update every few frames)
+    let imgRectBottom: number;
+    if (isMobileRef.current && rectCacheFrameRef.current % 3 !== 0) {
+      // Use cached value on mobile, estimate based on transform
+      imgRectBottom = cachedImgBottomRef.current + (imgY - (cachedImgBottomRef.current - vh * 0.5));
+    } else {
+      const imgRect = imageRef.current.getBoundingClientRect();
+      imgRectBottom = imgRect.bottom;
+      cachedImgBottomRef.current = imgRectBottom;
+      rectCacheFrameRef.current++;
+    }
 
     // ZOOM phase starts when image bottom goes above viewport top (similar to MatchaSection)
     // Increased distance for slower, smoother zoom: starts at ~40px above, ends by ~400px above
-    const zoomProgress = clamp01((-40 - imgRect.bottom) / 360);
+    const zoomProgress = clamp01((-40 - imgRectBottom) / 360);
     // Use smoother easing for zoom (easeOut is already smooth, but we can make it even smoother)
     const zoomT = easeOut(zoomProgress);
 
-    // Only start zoom when image bottom is above viewport top (imgRect.bottom <= -40)
+    // Only start zoom when image bottom is above viewport top (imgRectBottom <= -40)
     // Before that, zoomT will be 0, so zoom won't happen
-    const finalZoomT = imgRect.bottom <= -40 ? zoomT : 0;
+    const finalZoomT = imgRectBottom <= -40 ? zoomT : 0;
 
-    imageRef.current.style.opacity = String(1 - finalZoomT);
+    // Round opacity on mobile for better performance
+    imageRef.current.style.opacity = String(
+      isMobileRef.current
+        ? Math.round((1 - finalZoomT) * 100) / 100
+        : 1 - finalZoomT
+    );
 
     /* ---------------- TEXT ---------------- */
-    textRef.current.style.opacity = String(textT);
+    textRef.current.style.opacity = String(
+      isMobileRef.current ? Math.round(textT * 100) / 100 : textT
+    );
 
     // Prefix fades out right before zoom begins (when image approaches viewport top)
     // Start fading when image bottom reaches ~20px above viewport, complete by ~40px (when zoom starts)
-    const prefixFadeProgress = clamp01((-20 - imgRect.bottom) / 20);
+    const prefixFadeProgress = clamp01((-20 - imgRectBottom) / 20);
     const prefixFadeT = easeOut(prefixFadeProgress);
-    prefixRef.current.style.opacity = String(1 - prefixFadeT);
+    prefixRef.current.style.opacity = String(
+      isMobileRef.current ? Math.round((1 - prefixFadeT) * 100) / 100 : 1 - prefixFadeT
+    );
     // Hide prefix when zoom starts (image above viewport)
     prefixRef.current.style.display = finalZoomT >= 1 ? "none" : "block";
 
@@ -121,9 +149,10 @@ const CoffeeSection = forwardRef<CoffeeSectionHandle>((_, ref) => {
     const scale = lerp(1, 48, finalZoomT);
     const offsetX = lerp(0, -10, finalZoomT); // only bias DURING zoom
 
+    // Reduce precision on mobile for better performance
     cameraRef.current.style.transform = `
-      translateX(${offsetX}px)
-      scale(${scale})
+      translateX(${offsetX.toFixed(precision)}px)
+      scale(${scale.toFixed(precision)})
     `;
   };
 
@@ -202,11 +231,11 @@ const CoffeeSection = forwardRef<CoffeeSectionHandle>((_, ref) => {
         src={coffeeSell}
         alt=""
         aria-hidden
+        className="w-[min(280px,70vw)] md:w-[min(420px,95vw)]"
         style={{
           position: "absolute",
           left: "50%",
           top: "50%",
-          width: "min(420px, 95vw)",
           transform: "translate(-50%, -50%)",
           borderRadius: 20,
           boxShadow: "0 10px 30px rgba(0,0,0,.18)",

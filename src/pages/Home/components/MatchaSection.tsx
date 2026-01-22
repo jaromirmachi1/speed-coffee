@@ -18,6 +18,12 @@ const MatchaSection = () => {
     if (!section || !bgImage || !text) return;
 
     let rafId = 0;
+    // Mobile detection for performance optimization
+    const isMobile = window.innerWidth < 768;
+    // Cache for getBoundingClientRect on mobile to reduce reflows
+    let cachedImgBottom = 0;
+    let cachedRectHeight = 0;
+    let rectCacheFrame = 0;
 
     // Ease-out only (per spec); no spring/bounce.
     const easeOut = (t: number) => 1 - Math.pow(1 - t, 2);
@@ -41,8 +47,10 @@ const MatchaSection = () => {
       // Start lower, then travel upward (per request).
       // Travel far enough that the image fully exits the top of the viewport.
       const bgTranslateY = lerp(vh * 0.9, -vh * 1.25, easeOut(p));
+      // Reduce precision on mobile for better performance
+      const precision = isMobile ? 0 : 2;
       bgImage.style.transform = `translate3d(-50%, calc(-50% + ${bgTranslateY.toFixed(
-        2
+        precision
       )}px), 0)`;
 
       // 4️⃣ TEXT APPEARANCE: only after scroll begins.
@@ -52,23 +60,34 @@ const MatchaSection = () => {
       const textY = lerp(20, 0, easeOut(textT));
 
       // Fade OUT once the image is out of sight (top). We use the image's actual rect (post-transform).
-      // Starts fading when the image bottom reaches ~40px above the viewport, ends by ~160px above.
-      const imgRect = bgImage.getBoundingClientRect();
-      const outT = clamp01((-40 - imgRect.bottom) / 120);
+      // On mobile: cache getBoundingClientRect to reduce reflows (only update every few frames)
+      let imgRectBottom: number;
+      if (isMobile && rectCacheFrame % 3 !== 0) {
+        // Use cached value on mobile, only update every 3rd frame
+        imgRectBottom = cachedImgBottom + (bgTranslateY - (cachedImgBottom - vh * 0.5));
+      } else {
+        const imgRect = bgImage.getBoundingClientRect();
+        imgRectBottom = imgRect.bottom;
+        cachedImgBottom = imgRectBottom;
+        cachedRectHeight = rect.height;
+        rectCacheFrame++;
+      }
+
+      const outT = clamp01((-40 - imgRectBottom) / 120);
       const textOpacityOut = 1 - easeOut(outT);
 
-      text.style.opacity = String(textOpacityIn * textOpacityOut);
+      text.style.opacity = String(Math.round(textOpacityIn * textOpacityOut * 100) / 100);
       // Keep the heading centered (base -50%) while animating only the extra Y offset.
       text.style.transform = `translate3d(-50%, calc(-50% + ${textY.toFixed(
-        2
+        precision
       )}px), 0)`;
 
       // Coffee stage is handled by CoffeeSection (separate file).
       coffeeRef.current?.update({
         scrolledPx: scrolled,
         vh,
-        matchaImgBottom: imgRect.bottom,
-        sectionHeight: rect.height,
+        matchaImgBottom: imgRectBottom,
+        sectionHeight: cachedRectHeight || rect.height,
       });
 
       rafId = 0;
@@ -146,11 +165,11 @@ const MatchaSection = () => {
           src={matchaSc}
           alt=""
           aria-hidden="true"
+          className="w-[min(280px,70vw)] md:w-[min(400px,95vw)]"
           style={{
             position: "absolute",
             left: "50%",
             top: "50%",
-            width: "min(400px, 95vw)",
             height: "auto",
             transform: "translate3d(-50%, -50%, 0)",
             borderRadius: "20px",
