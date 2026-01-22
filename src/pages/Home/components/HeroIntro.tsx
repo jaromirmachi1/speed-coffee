@@ -2,7 +2,6 @@ import Container from "../../../components/Container";
 import { useLanguage } from "../../../contexts/LanguageContext";
 import TextRevealLines from "../../../lib/TextRevealLines";
 import {
-  typography,
   fontWeights,
   lineHeights,
 } from "../../../lib/constants/typography";
@@ -19,7 +18,7 @@ const HeroIntro = () => {
             <div className="text-center w-full max-w-none mx-auto">
               <TextRevealLines>
                 <p
-                  className={`${typography.manuka.heroIntro} font-manuka ${fontWeights.manuka.bold} text-dark ${lineHeights.custom.heroIntro}`}
+                  className={`text-5xl sm:text-4xl md:text-[64px] lg:text-[104px] font-manuka ${fontWeights.manuka.bold} text-dark ${lineHeights.custom.heroIntro}`}
                 >
                   {t("heroIntro.text")}{" "}
                   <span className="text-accent font-bold">
@@ -34,7 +33,7 @@ const HeroIntro = () => {
           <div className="text-center pb-10">
             <a
               href="#about"
-              className={`inline-block ${typography.manuka.heroIntroCta} font-manuka ${fontWeights.manuka.bold} text-dark hover:text-white transition-colors`}
+              className={`inline-block text-4xl sm:text-4xl md:text-4xl lg:text-[64px] font-manuka ${fontWeights.manuka.bold} text-dark hover:text-white transition-colors`}
             >
               {t("hero.discover")}
             </a>

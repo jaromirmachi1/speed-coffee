@@ -16,7 +16,7 @@ const Locations = () => {
     <section id="events" className="py-8 md:py-16 bg-beige">
       <Container>
         <div className="grid md:grid-cols-2 gap-6 md:gap-12 items-center">
-          <div className="relative max-w-xl md:max-w-2xl lg:max-w-4xl mx-auto md:mx-0">
+          <div className="relative max-w-xl md:max-w-2xl lg:max-w-4xl mx-auto md:mx-0 order-2 md:order-1">
             <motion.img
               src={Img2and3}
               alt="Speed Coffee sign and drinks"
@@ -29,7 +29,7 @@ const Locations = () => {
             />
           </div>
 
-          <div className="text-center max-w-2xl mx-auto">
+          <div className="text-center max-w-2xl mx-auto order-1 md:order-2">
             <h2
               className={`${typography.agright.sectionHeading} font-agright ${fontWeights.agright.normal} text-dark ${lineHeights.custom.sectionHeading} mb-4 md:mb-6`}
               style={{ lineHeight: 1 }}

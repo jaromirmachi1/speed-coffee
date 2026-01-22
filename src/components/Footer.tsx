@@ -5,6 +5,9 @@ import {
   fontWeights,
   lineHeights,
 } from "../lib/constants/typography";
+import igLogo from "../assets/images/igLogo.svg";
+import ttSvg from "../assets/images/ttSvg.svg";
+import logoSc from "../assets/images/logoSc.webp";
 
 const Footer = () => {
   const { t } = useLanguage();
@@ -30,8 +33,15 @@ const Footer = () => {
               delay: 0.2,
             }}
           >
+            {/* Mobile: Logo Image */}
+            <img
+              src={logoSc}
+              alt="Speed Coffee"
+              className="h-auto w-auto max-w-[200px] md:hidden"
+            />
+            {/* Desktop: Text Logo */}
             <div
-              className={`${typography.agright.footerBrand} font-agright ${fontWeights.agright.normal} text-white tracking-tight ${lineHeights.tight}`}
+              className={`hidden md:block ${typography.agright.footerBrand} font-agright ${fontWeights.agright.normal} text-white tracking-tight ${lineHeights.tight}`}
             >
               <div>SPEED</div>
               <div>COFFEE</div>
@@ -55,8 +65,37 @@ const Footer = () => {
             </p>
           </motion.div>
 
-          {/* Bottom Center - Empty */}
-          <div></div>
+          {/* Bottom Center - Social Media Icons */}
+          <motion.div
+            className="flex items-center justify-center gap-3 md:gap-4"
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, ease: "easeOut", delay: 0.45 }}
+          >
+            <a
+              href="https://instagram.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:opacity-80 transition-opacity"
+              aria-label="Instagram"
+            >
+              <img
+                src={igLogo}
+                alt="Instagram"
+                className="h-5 w-5 md:h-6 md:w-6"
+              />
+            </a>
+            <a
+              href="https://tiktok.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:opacity-80 transition-opacity"
+              aria-label="TikTok"
+            >
+              <img src={ttSvg} alt="TikTok" className="h-5 w-5 md:h-6 md:w-6" />
+            </a>
+          </motion.div>
 
           {/* Bottom Right - Made by */}
           <motion.div

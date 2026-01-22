@@ -25,11 +25,11 @@ const Hero = () => {
           </TextReveal>
         </div>
 
-        <div className="pb-16">
-          <div className="-mt-1">
+        <div className="pb-16 md:pb-16">
+          <div className="-mt-1 pt-12 md:pt-0">
             <div
               ref={imageRef}
-              className="rounded-2xl overflow-hidden shadow-lg h-[calc(100vh-300px)]"
+              className="rounded-2xl overflow-hidden shadow-lg h-[85vh] md:h-[calc(100vh-300px)] w-full max-w-md mx-auto md:max-w-none md:mx-0"
             >
               <img
                 src={headerph}

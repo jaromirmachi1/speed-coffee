@@ -2,6 +2,7 @@ import { useState, type ReactNode } from "react";
 import Container from "../Container";
 import { useLanguage } from "../../contexts/LanguageContext";
 import { typography, fontWeights } from "../../lib/constants/typography";
+import logoSc from "../../assets/images/logoSc.webp";
 
 interface NavLinkProps {
   href: string;
@@ -82,12 +83,12 @@ const Header = () => {
           <div className="flex items-center justify-between">
             {/* Mobile: Logo on left, Hamburger on right */}
             <div className="flex items-center justify-between w-full sm:hidden">
-              <a
-                href="#top"
-                className={`text-dark uppercase font-manuka ${fontWeights.manuka.medium} leading-none`}
-                style={{ fontSize: typography.manuka.mobileLogo }}
-              >
-                <span>SPEED</span> <span>COFFEE</span>
+              <a href="#top" className="flex items-center">
+                <img
+                  src={logoSc}
+                  alt="Speed Coffee"
+                  className="h-auto w-auto max-h-[80px] sm:hidden"
+                />
               </a>
               <MenuButton isOpen={isMenuOpen} onClick={toggleMenu} />
             </div>
