@@ -146,7 +146,9 @@ const CoffeeSection = forwardRef<CoffeeSectionHandle>((_, ref) => {
 
     /* ---------------- CAMERA ZOOM (yamamatcha-style) ---------------- */
     // Zoom only happens when image is above viewport top
-    const scale = lerp(1, 48, finalZoomT);
+    // On mobile, use larger scale to ensure full coverage and hide brown background
+    const maxScale = isMobileRef.current ? 80 : 48;
+    const scale = lerp(1, maxScale, finalZoomT);
     const offsetX = lerp(0, -10, finalZoomT); // only bias DURING zoom
 
     // Reduce precision on mobile for better performance
@@ -154,6 +156,12 @@ const CoffeeSection = forwardRef<CoffeeSectionHandle>((_, ref) => {
       translateX(${offsetX.toFixed(precision)}px)
       scale(${scale.toFixed(precision)})
     `;
+    
+    // On mobile, also scale the background to ensure it covers during zoom and hides brown background
+    if (isMobileRef.current && finalZoomT > 0) {
+      const bgScale = lerp(1, maxScale * 0.8, finalZoomT);
+      bgRef.current.style.transform = `translate3d(0, ${(1 - bgT) * 100}%, 0) scale(${bgScale.toFixed(precision)})`;
+    }
   };
 
   useImperativeHandle(ref, () => ({ update, reset }), []);

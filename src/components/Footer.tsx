@@ -7,7 +7,6 @@ import {
 } from "../lib/constants/typography";
 import igLogo from "../assets/images/igLogo.svg";
 import ttSvg from "../assets/images/ttSvg.svg";
-import logoSc from "../assets/images/logoSc.webp";
 
 const Footer = () => {
   const { t } = useLanguage();
@@ -33,15 +32,8 @@ const Footer = () => {
               delay: 0.2,
             }}
           >
-            {/* Mobile: Logo Image */}
-            <img
-              src={logoSc}
-              alt="Speed Coffee"
-              className="h-auto w-auto max-w-[200px] md:hidden"
-            />
-            {/* Desktop: Text Logo */}
             <div
-              className={`hidden md:block ${typography.agright.footerBrand} font-agright ${fontWeights.agright.normal} text-white tracking-tight ${lineHeights.tight}`}
+              className={`text-5xl sm:text-6xl md:text-5xl lg:text-[164px] font-agright ${fontWeights.agright.normal} text-white tracking-tight ${lineHeights.tight}`}
             >
               <div>SPEED</div>
               <div>COFFEE</div>
