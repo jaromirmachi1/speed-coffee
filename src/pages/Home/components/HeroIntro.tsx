@@ -14,11 +14,17 @@ const HeroIntro = () => {
     <section className="bg-beige min-h-[70vh] px-0 md:px-[130px] py-12 md:py-[100px]">
       <Container className="w-full max-w-full px-4 md:px-0">
         <div className="min-h-[70vh] flex flex-col">
-          <div className="flex-1 flex items-center justify-center py-6 md:py-10">
-            <div className="text-center w-full max-w-full mx-auto">
+          <div className="flex-1 flex items-center justify-center py-6 md:py-10 w-full">
+            <div className="text-center w-full max-w-full mx-auto" style={{ width: '100%', minWidth: 0 }}>
               <TextRevealLines>
                 <p
                   className={`text-5xl sm:text-4xl md:text-[64px] lg:text-[104px] font-manuka ${fontWeights.manuka.bold} text-dark ${lineHeights.custom.heroIntro}`}
+                  style={{ 
+                    width: '100%', 
+                    maxWidth: '100%',
+                    minWidth: 0,
+                    boxSizing: 'border-box'
+                  }}
                 >
                   {t("heroIntro.text")}{" "}
                   <span className="text-accent font-bold">
