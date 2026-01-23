@@ -32,18 +32,23 @@ const HeroIntro = () => {
               style={{ 
                 width: '100%', 
                 maxWidth: '100%',
-                minWidth: 0
+                minWidth: 0,
+                flexBasis: '100%',
+                flexShrink: 1,
+                flexGrow: 0
               }}
             >
               <TextRevealLines>
                 <p
-                  className={`text-5xl sm:text-4xl md:text-[64px] lg:text-[104px] font-manuka ${fontWeights.manuka.bold} text-dark ${lineHeights.custom.heroIntro}`}
+                  className={`hero-intro-text text-5xl sm:text-4xl md:text-[64px] lg:text-[104px] font-manuka ${fontWeights.manuka.bold} text-dark ${lineHeights.custom.heroIntro}`}
                   style={{ 
                     width: '100%', 
                     maxWidth: '100%',
                     minWidth: 0,
                     boxSizing: 'border-box',
-                    display: 'block'
+                    display: 'block',
+                    margin: 0,
+                    padding: 0
                   }}
                 >
                   {t("heroIntro.text")}{" "}

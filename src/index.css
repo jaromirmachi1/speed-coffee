@@ -74,6 +74,15 @@
     @apply px-4 sm:px-6 lg:px-8;
   }
 
+  /* Force full width for HeroIntro text on mobile to fix TextRevealLines measurement */
+  @media (max-width: 767px) {
+    .hero-intro-text {
+      width: 100% !important;
+      max-width: 100% !important;
+      min-width: 0 !important;
+    }
+  }
+
   @media (prefers-reduced-motion: reduce) {
     html {
       scroll-behavior: auto;
