@@ -12,8 +12,13 @@ import type { RefObject } from "react";
  *
  * NOTE: Uses gsap.context for safe scoping + cleanup during HMR/dev.
  */
-export function useSpeedCoffeeMotion(rootRef: RefObject<HTMLElement | null>) {
+export function useSpeedCoffeeMotion(
+  rootRef: RefObject<HTMLElement | null>,
+  enabled: boolean = true
+) {
   useLayoutEffect(() => {
+    if (!enabled) return;
+    
     const root = rootRef?.current;
     if (!root) return;
 
@@ -273,5 +278,5 @@ export function useSpeedCoffeeMotion(rootRef: RefObject<HTMLElement | null>) {
         window.history.scrollRestoration = prevRestoration;
       }
     };
-  }, [rootRef]);
+  }, [rootRef, enabled]);
 }

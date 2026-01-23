@@ -1,12 +1,14 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import Home from "./pages/Home/Home";
 import { useSpeedCoffeeMotion } from "./hooks/useSpeedCoffeeMotion";
 import { useCustomCursor } from "./hooks/useCustomCursor";
 import { LanguageProvider } from "./contexts/LanguageContext";
+import IntroLoader from "./components/IntroLoader";
+import { motion } from "framer-motion";
 
 function App() {
   const rootRef = useRef<HTMLDivElement | null>(null);
-  useSpeedCoffeeMotion(rootRef);
+  const [introComplete, setIntroComplete] = useState(false);
 
   // Initialize custom cursor
   useCustomCursor({
@@ -17,11 +19,23 @@ function App() {
     smoothing: 0.15,
   });
 
+  // Initialize smooth scroll - pass introComplete so hook re-runs when element mounts
+  useSpeedCoffeeMotion(rootRef, introComplete);
+
   return (
     <LanguageProvider>
-      <div ref={rootRef} id="top">
-        <Home />
-      </div>
+      <IntroLoader onComplete={() => setIntroComplete(true)} duration={3500} />
+      {introComplete && (
+        <motion.div
+          ref={rootRef}
+          id="top"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.6, ease: "easeInOut" }}
+        >
+          <Home />
+        </motion.div>
+      )}
     </LanguageProvider>
   );
 }
