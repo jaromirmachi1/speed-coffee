@@ -1,4 +1,3 @@
-import Container from "../../../components/Container";
 import { useLanguage } from "../../../contexts/LanguageContext";
 import TextRevealLines from "../../../lib/TextRevealLines";
 import {
@@ -23,8 +22,8 @@ const HeroIntro = () => {
   return (
     // NOTE: use min-height (not fixed height) so font-load reflow can’t push
     // “DISCOVER OUR SPEED” outside the section on some refreshes.
-    <section className="bg-beige min-h-[70vh] px-0 md:px-[130px] py-12 md:py-[100px]">
-      <Container className="w-full max-w-full px-4 md:px-0">
+    <section className="bg-beige min-h-[70vh] px-0 md:px-[130px] py-12 md:py-[100px] -mx-4 sm:-mx-6 lg:-mx-8 md:mx-0">
+      <div className="w-full max-w-full px-4 sm:px-6 lg:px-8 md:px-0 mx-auto">
         <div className="min-h-[70vh] flex flex-col">
           <div className="flex-1 flex items-center justify-center py-6 md:py-10 w-full" style={{ minWidth: 0, width: '100%' }}>
             <div 
@@ -33,9 +32,7 @@ const HeroIntro = () => {
               style={{ 
                 width: '100%', 
                 maxWidth: '100%',
-                minWidth: 0,
-                flexShrink: 1,
-                flexGrow: 0
+                minWidth: 0
               }}
             >
               <TextRevealLines>
@@ -46,8 +43,7 @@ const HeroIntro = () => {
                     maxWidth: '100%',
                     minWidth: 0,
                     boxSizing: 'border-box',
-                    display: 'block',
-                    margin: 0
+                    display: 'block'
                   }}
                 >
                   {t("heroIntro.text")}{" "}
@@ -69,7 +65,7 @@ const HeroIntro = () => {
             </a>
           </div>
         </div>
-      </Container>
+      </div>
     </section>
   );
 };
