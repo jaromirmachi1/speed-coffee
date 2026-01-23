@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import starSvg from "../assets/images/Star 1.svg";
+import starSvg from "../assets/images/star1.svg";
 
 interface IntroLoaderProps {
   onComplete?: () => void;
