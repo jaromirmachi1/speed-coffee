@@ -70,7 +70,7 @@ export const LanguageProvider = ({ children }: LanguageProviderProps) => {
       // About
       "about.title": "ABOUT OUR COFFEE HOUSE",
       "about.description":
-        "SPEED COFFEE SHOP IS A MOBILE CAFE WITH SOUL THAT TRAVELS ALL AROUND THE CZECH REPUBLIC. YOU CAN FIND US AT VARIOUS EVENTS, CORPORATE GATHERINGS, WEDDINGS, AND SPECIAL OCCASIONS WHERE WE BRING HIGH-QUALITY COFFEE AND MATCHA DIRECTLY TO YOU.",
+        "COFFEE SPOT MADE FOR SLOW MOMENTS AND GOOD CONVERSATIONS. COZY, WELCOMING, AND FULL OF RICH COFFEE AROMAS, IT’S THE PERFECT PLACE TO MEET YOUR FRIENDS, CATCH UP, OR JUST ENJOY A QUIET BREAK FROM THE CITY. GREAT COFFEE, RELAXED VIBES, NO RUSH — JUST YOUR SPACE TO CHILL.",
 
       // Products
       "products.title": "OUR PRODUCTS",
@@ -92,7 +92,7 @@ export const LanguageProvider = ({ children }: LanguageProviderProps) => {
       "locations.title": "WHERE CAN YOU FIND US?",
       "locations.openingHours": "OPENING HOURS",
       "locations.weekdays": "WEEKDAYS",
-      "locations.weekdaysHours": "8:00 - 18:00",
+      "locations.weekdaysHours": "7:30 - 19:00",
       "locations.weekends": "WEEKENDS",
       "locations.weekendsHours": "9:00 - 19:00",
 
@@ -123,12 +123,12 @@ export const LanguageProvider = ({ children }: LanguageProviderProps) => {
       "hero.discover": "OBJEVTE NAŠI RYCHLOST",
 
       // Hero Intro
-      "heroIntro.text": "KAŽDÝ OKAMŽIK S NAŠÍ KÁVOU NEBO MATCHA JE",
-      "heroIntro.highlight": "PŘÍLEŽITOST K PROPOJENÍ, SDÍLENÍ A UŽITÍ",
+      "heroIntro.text": "KAŽDÝ OKAMŽIK S NAŠÍ KÁVOU NEBO MATCHOU JE",
+      "heroIntro.highlight": "PŘÍLEŽITOST K PROPOJENÍ, SDÍLENÍ A PROŽITÍ",
       "heroIntro.textEnd": "POZITIVNÍ ENERGIE, KTERÁ ROZSVÍTÍ VÁŠ DEN.",
 
       // About
-      "about.title": "O NAŠÍ KÁVOVÉM DOMU",
+      "about.title": "O NAŠEM KÁVOVÉM DOMU",
       "about.description":
         "SPEED COFFEE SHOP JE MOBILNÍ KAVÁRNA S DUŠÍ, KTERÁ CESTUJE PO CELÉ ČESKÉ REPUBLICE. NAJDETE NÁS NA RŮZNÝCH AKCÍCH, FIREMNÍCH SETKÁNÍCH, SVATBÁCH A SPECIÁLNÍCH PŘÍLEŽITOSTECH, KDE PŘINÁŠÍME VYSOKOKVALITNÍ KÁVU A MATCHA PŘÍMO K VÁM.",
 
