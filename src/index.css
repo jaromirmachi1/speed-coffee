@@ -31,6 +31,12 @@
   #custom-cursor {
     will-change: transform;
   }
+  
+  /* Ensure cursor color stays consistent on hover */
+  #custom-cursor:hover,
+  #custom-cursor {
+    background: rgba(111, 50, 65, 0.4) !important;
+  }
 
   /* Full width footer */
   .footer-full-width {

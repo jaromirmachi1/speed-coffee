@@ -93,6 +93,7 @@ export const useCustomCursor = (options: CustomCursorOptions = {}) => {
           isHoveringRef.current = true;
           cursor.style.width = `${hoverSize}px`;
           cursor.style.height = `${hoverSize}px`;
+          cursor.style.background = color; // Ensure color stays the same on hover
         }
       }
     };
