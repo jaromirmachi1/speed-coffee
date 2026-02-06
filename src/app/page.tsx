@@ -1,0 +1,42 @@
+"use client";
+
+import { useRef, useState } from "react";
+import Home from "@/components-pages/Home/Home";
+import { useSpeedCoffeeMotion } from "@/hooks/useSpeedCoffeeMotion";
+import { useCustomCursor } from "@/hooks/useCustomCursor";
+import IntroLoader from "@/components/IntroLoader";
+import { motion } from "framer-motion";
+
+export default function Page() {
+  const rootRef = useRef<HTMLDivElement | null>(null);
+  const [introComplete, setIntroComplete] = useState(false);
+
+  // Initialize custom cursor
+  useCustomCursor({
+    size: 20,
+    hoverSize: 40,
+    color: "rgba(111, 50, 65, 0.4)", // #6F3241 with transparency
+    transitionSpeed: 0.15,
+    smoothing: 0.15,
+  });
+
+  // Initialize smooth scroll - pass introComplete so hook re-runs when element mounts
+  useSpeedCoffeeMotion(rootRef, introComplete);
+
+  return (
+    <>
+      <IntroLoader onComplete={() => setIntroComplete(true)} duration={3500} />
+      {introComplete && (
+        <motion.div
+          ref={rootRef}
+          id="top"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.6, ease: "easeInOut" }}
+        >
+          <Home />
+        </motion.div>
+      )}
+    </>
+  );
+}

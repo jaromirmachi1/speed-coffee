@@ -1,0 +1,18 @@
+/* [project]/src/styles/animations.css [app-client] (css) */
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: .5s ease-out fade-in-up;
+}
+
+/*# sourceMappingURL=src_styles_animations_css_bad6b30c._.single.css.map*/

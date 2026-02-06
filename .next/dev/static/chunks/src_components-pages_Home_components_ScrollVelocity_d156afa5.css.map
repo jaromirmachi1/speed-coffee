@@ -1,0 +1,6 @@
+{
+  "version": 3,
+  "sources": [],
+  "sections": [
+    {"offset": {"line": 1, "column": 0}, "map": {"version":3,"sources":["file:///Users/sajmikoule/ITDev/speed-coffee/src/components-pages/Home/components/ScrollVelocity.css"],"sourcesContent":[".parallax {\n  position: relative;\n  overflow: visible;\n  padding: 0 50px;\n}\n\n.scroller {\n  display: flex;\n  white-space: nowrap;\n}\n\n.scroller span {\n  flex-shrink: 0;\n}\n"],"names":[],"mappings":"AAAA;;;;;;AAMA;;;;;AAKA"}}]
+}

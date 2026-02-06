@@ -1,8 +1,10 @@
+"use client";
+
 import { useState, type ReactNode } from "react";
-import Container from "../Container";
-import { useLanguage } from "../../contexts/LanguageContext";
-import { typography, fontWeights } from "../../lib/constants/typography";
-import logoSc from "../../assets/images/logoSc.webp";
+import Container from "@/components/Container";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { typography, fontWeights } from "@/lib/constants/typography";
+import logoSc from "@/assets/images/logoSc.webp";
 
 interface NavLinkProps {
   href: string;
@@ -85,7 +87,7 @@ const Header = () => {
             <div className="flex items-center justify-between w-full sm:hidden">
               <a href="#top" className="flex items-center">
                 <img
-                  src={logoSc}
+                  src={typeof logoSc === 'string' ? logoSc : logoSc.src}
                   alt="Speed Coffee"
                   className="h-auto w-auto max-h-[80px] sm:hidden"
                 />

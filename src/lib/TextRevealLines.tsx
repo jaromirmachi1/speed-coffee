@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -22,12 +24,13 @@ const TextRevealLines = ({
 
   useGSAP(
     () => {
-      if (!containerRef.current) return;
+      if (!containerRef.current || !(containerRef.current instanceof Element)) return;
 
       const element = containerRef.current;
       let tween: gsap.core.Tween | null = null;
 
       const createLines = (): HTMLElement[] => {
+        if (!element || !(element instanceof Element)) return [];
         const containerWidth = element.offsetWidth;
         if (!containerWidth) return [];
 
@@ -215,6 +218,7 @@ const TextRevealLines = ({
       };
 
       const rebuild = () => {
+        if (!element || !(element instanceof Element)) return;
         const currentWidth = element.offsetWidth;
         if (!currentWidth) return;
 
@@ -242,10 +246,12 @@ const TextRevealLines = ({
 
       // Rebuild on element resize (e.g., responsive layout / container changes)
       const ro =
-        typeof ResizeObserver !== "undefined"
+        typeof ResizeObserver !== "undefined" && element instanceof Element
           ? new ResizeObserver(() => rebuild())
           : null;
-      ro?.observe(element);
+      if (ro && element instanceof Element) {
+        ro.observe(element);
+      }
 
       return () => {
         ro?.disconnect();

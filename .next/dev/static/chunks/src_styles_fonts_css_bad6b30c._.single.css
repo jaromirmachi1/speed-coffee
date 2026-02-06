@@ -1,0 +1,122 @@
+/* [project]/src/styles/fonts.css [app-client] (css) */
+@font-face {
+  font-family: Manuka;
+  src: url("../media/TestManuka-Thin-BF663c33db97e05.3df7c948.otf") format("opentype");
+  font-weight: 100;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: Manuka;
+  src: url("../media/TestManuka-Light-BF663c33db8aab4.271f5944.otf") format("opentype");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: Manuka;
+  src: url("../media/TestManuka-Regular-BF663c33db89825.45864050.otf") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: Manuka;
+  src: url("../media/TestManuka-Medium-BF663c33db67c40.326da880.otf") format("opentype");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: Manuka;
+  src: url("../media/TestManuka-Bold-BF663c33db7b03f.85f1e178.otf") format("opentype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: Manuka;
+  src: url("../media/TestManuka-Black-BF663c33db5944e.090899c1.otf") format("opentype");
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: Manuka Condensed;
+  src: url("../media/TestManukaCondensed-Bold-BF663c33db0536a.df45fb62.otf") format("opentype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: Agright;
+  src: url("../media/agright regular.1c0996a9.otf") format("opentype"), url("../media/agright regular.b24cfc72.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: Manrope;
+  src: url("../media/manrope-thin.ca9cc2aa.otf") format("opentype");
+  font-weight: 100;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: Manrope;
+  src: url("../media/manrope-light.ae74335e.otf") format("opentype");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: Manrope;
+  src: url("../media/manrope-regular.1d0ae73a.otf") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: Manrope;
+  src: url("../media/manrope-medium.5520c347.otf") format("opentype");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: Manrope;
+  src: url("../media/manrope-semibold.891e5484.otf") format("opentype");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: Manrope;
+  src: url("../media/manrope-bold.e09da3ae.otf") format("opentype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: Manrope;
+  src: url("../media/manrope-extrabold.5d12c6f1.otf") format("opentype");
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+/*# sourceMappingURL=src_styles_fonts_css_bad6b30c._.single.css.map*/

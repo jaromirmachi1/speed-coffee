@@ -1,0 +1,6 @@
+{
+  "version": 3,
+  "sources": [],
+  "sections": [
+    {"offset": {"line": 1, "column": 0}, "map": {"version":3,"sources":["turbopack:///[project]/src/styles/animations.css"],"sourcesContent":["@keyframes fade-in-up {\n  from {\n    opacity: 0;\n    transform: translateY(20px);\n  }\n  to {\n    opacity: 1;\n    transform: translateY(0);\n  }\n}\n\n.animate-fade-in-up {\n  animation: fade-in-up 0.5s ease-out;\n}\n\n/* NOTE: TextRevealLines builds its own wrappers + animates inner spans via GSAP.\n   Avoid global `.line` styling here to prevent layout/overlap issues. */\n"],"names":[],"mappings":"AAAA;;;;;;;;;;;;AAWA"}}]
+}

@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import Home from "./pages/Home/Home";
+import Home from "./components-pages/Home/Home";
 import { useSpeedCoffeeMotion } from "./hooks/useSpeedCoffeeMotion";
 import { useCustomCursor } from "./hooks/useCustomCursor";
 import { LanguageProvider } from "./contexts/LanguageContext";

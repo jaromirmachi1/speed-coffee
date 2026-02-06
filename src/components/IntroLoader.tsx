@@ -1,6 +1,8 @@
+"use client";
+
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import starSvg from "../assets/images/star1.svg";
+import starSvg from "@/assets/images/star1.svg";
 
 interface IntroLoaderProps {
   onComplete?: () => void;
@@ -90,7 +92,7 @@ const IntroLoader = ({ onComplete, duration = 3500 }: IntroLoaderProps) => {
           >
             {/* Star with built-in blur from Figma */}
             <motion.img
-              src={starSvg}
+              src={typeof starSvg === 'string' ? starSvg : starSvg.src}
               alt=""
               className="relative w-full h-full object-contain"
               style={{

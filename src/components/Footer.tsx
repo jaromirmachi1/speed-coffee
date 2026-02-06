@@ -1,12 +1,14 @@
+"use client";
+
 import { motion } from "framer-motion";
-import { useLanguage } from "../contexts/LanguageContext";
+import { useLanguage } from "@/contexts/LanguageContext";
 import {
   typography,
   fontWeights,
   lineHeights,
-} from "../lib/constants/typography";
-import igLogo from "../assets/images/igLogo.svg";
-import ttSvg from "../assets/images/ttSvg.svg";
+} from "@/lib/constants/typography";
+import igLogo from "@/assets/images/igLogo.svg";
+import ttSvg from "@/assets/images/ttSvg.svg";
 
 const Footer = () => {
   const { t } = useLanguage();
@@ -73,7 +75,7 @@ const Footer = () => {
               aria-label="Instagram"
             >
               <img
-                src={igLogo}
+                src={typeof igLogo === 'string' ? igLogo : igLogo.src}
                 alt="Instagram"
                 className="h-5 w-5 md:h-6 md:w-6"
               />
@@ -85,7 +87,7 @@ const Footer = () => {
               className="hover:opacity-80 transition-opacity"
               aria-label="TikTok"
             >
-              <img src={ttSvg} alt="TikTok" className="h-5 w-5 md:h-6 md:w-6" />
+              <img src={typeof ttSvg === 'string' ? ttSvg : ttSvg.src} alt="TikTok" className="h-5 w-5 md:h-6 md:w-6" />
             </a>
           </motion.div>
 

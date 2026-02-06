@@ -1,0 +1,17 @@
+/* [project]/src/components-pages/Home/components/ScrollVelocity.css [app-client] (css) */
+.parallax {
+  padding: 0 50px;
+  position: relative;
+  overflow: visible;
+}
+
+.scroller {
+  white-space: nowrap;
+  display: flex;
+}
+
+.scroller span {
+  flex-shrink: 0;
+}
+
+/*# sourceMappingURL=src_components-pages_Home_components_ScrollVelocity_d156afa5.css.map*/
