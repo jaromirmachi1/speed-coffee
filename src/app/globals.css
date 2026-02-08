@@ -35,7 +35,7 @@
   /* Ensure cursor color stays consistent on hover */
   #custom-cursor:hover,
   #custom-cursor {
-    background: rgba(111, 50, 65, 0.4) !important;
+    background: rgba(139, 90, 60, 0.4) !important;
   }
 
   /* Full width footer */
@@ -78,6 +78,11 @@
   /* Global side padding (gutter) for entire app */
   #top {
     @apply px-4 sm:px-6 lg:px-8;
+  }
+
+  /* Hero intro highlight – accent brown (survives TextRevealLines DOM rebuild) */
+  .hero-intro-highlight {
+    color: #8b5a3c !important;
   }
 
   /* Force full width for HeroIntro text on mobile to fix TextRevealLines measurement */

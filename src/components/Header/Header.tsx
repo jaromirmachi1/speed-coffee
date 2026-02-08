@@ -1,9 +1,14 @@
 "use client";
 
-import { useState, type ReactNode } from "react";
+import { useState, type ReactNode, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import Container from "@/components/Container";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { typography, fontWeights } from "@/lib/constants/typography";
+import {
+  typography,
+  fontWeights,
+  lineHeights,
+} from "@/lib/constants/typography";
 import logoSc from "@/assets/images/logoSc.webp";
 
 interface NavLinkProps {
@@ -30,34 +35,21 @@ const NavLink = ({
   );
 };
 
-interface MenuButtonProps {
+interface MenuToggleProps {
   isOpen: boolean;
   onClick: () => void;
 }
 
-const MenuButton = ({ isOpen, onClick }: MenuButtonProps) => {
+const MenuToggle = ({ isOpen, onClick }: MenuToggleProps) => {
   return (
     <button
+      type="button"
       onClick={onClick}
-      className="p-2 focus:outline-none focus:ring-2 focus:ring-accent rounded"
-      aria-label="Toggle menu"
+      className={`p-2 font-manuka ${fontWeights.manuka.normal} uppercase tracking-wide text-dark hover:text-accent transition-colors focus:outline-none focus:ring-0 ${typography.manuka.navDesktop}`}
+      aria-label={isOpen ? "Close menu" : "Open menu"}
       aria-expanded={isOpen}
     >
-      <svg
-        className="w-8 h-8 text-dark"
-        fill="none"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth="2"
-        viewBox="0 0 24 24"
-        stroke="currentColor"
-      >
-        {isOpen ? (
-          <path d="M6 18L18 6M6 6l12 12" />
-        ) : (
-          <path d="M4 6h16M4 12h16M4 18h16" />
-        )}
-      </svg>
+      {isOpen ? "close" : "Menu"}
     </button>
   );
 };
@@ -67,7 +59,7 @@ const Header = () => {
   const { language, setLanguage, t } = useLanguage();
 
   const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
+    setIsMenuOpen((prev) => !prev);
   };
 
   const closeMenu = () => {
@@ -78,26 +70,37 @@ const Header = () => {
     setLanguage(lang);
   };
 
+  useEffect(() => {
+    if (isMenuOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isMenuOpen]);
+
   return (
     <header className="bg-beige pt-4 relative z-50">
       <Container>
         <nav className="py-0">
           <div className="flex items-center justify-between">
-            {/* Mobile: Logo on left, Hamburger on right */}
+            {/* Mobile: Logo on left, Menu text on right */}
             <div className="flex items-center justify-between w-full sm:hidden">
               <a href="#top" className="flex items-center">
                 <img
-                  src={typeof logoSc === 'string' ? logoSc : logoSc.src}
+                  src={typeof logoSc === "string" ? logoSc : logoSc.src}
                   alt="Speed Coffee"
                   className="h-auto w-auto max-h-[80px] sm:hidden"
                 />
               </a>
-              <MenuButton isOpen={isMenuOpen} onClick={toggleMenu} />
+              <MenuToggle isOpen={isMenuOpen} onClick={toggleMenu} />
             </div>
 
-            {/* Desktop/Tablet: Original layout */}
+            {/* Desktop/Tablet: Menu text left, links right */}
             <div className="hidden sm:flex items-center justify-between w-full">
-              <MenuButton isOpen={isMenuOpen} onClick={toggleMenu} />
+              <MenuToggle isOpen={isMenuOpen} onClick={toggleMenu} />
               <div className="flex-1" />
               <div className="flex items-center gap-4 md:gap-6">
                 <NavLink href="#events">{t("nav.events")}</NavLink>
@@ -106,36 +109,104 @@ const Header = () => {
               </div>
             </div>
           </div>
+        </nav>
+      </Container>
 
-          <div
-            className={`transition-all duration-300 ease-in-out ${
-              isMenuOpen
-                ? "max-h-64 opacity-100"
-                : "max-h-0 opacity-0 overflow-hidden"
-            }`}
+      {/* Full-screen overlay menu: background fades in, then logo + links reveal */}
+      <AnimatePresence>
+        {isMenuOpen && (
+          <motion.div
+            className="fixed inset-0 z-40"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3, ease: "easeOut" }}
+            aria-hidden={false}
           >
-            <div className="py-4 space-y-4">
-              <NavLink href="#events" onClick={closeMenu} isMobile>
-                {t("nav.events")}
-              </NavLink>
-              <NavLink href="#reserve" onClick={closeMenu} isMobile>
-                {t("nav.reserve")}
-              </NavLink>
-              <NavLink href="#shop" onClick={closeMenu} isMobile>
-                {t("nav.shop")}
-              </NavLink>
+            {/* Background only – smooth fade in */}
+            <motion.div
+              className="absolute inset-0 bg-beige"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.35, ease: "easeOut" }}
+            />
 
-              {/* Language Switcher */}
-              <div className="pt-4 border-t border-dark/20">
-                <div className="flex items-center gap-4">
-                  <span
-                    className={`text-dark font-manuka ${fontWeights.manuka.normal} uppercase ${typography.manuka.languageLabel}`}
-                  >
-                    Language:
-                  </span>
+            {/* Content: close button, then logo + links with staggered reveal */}
+            <div className="relative flex flex-col min-h-full pt-6 px-4 sm:px-6 lg:px-8">
+              <div className="flex justify-start">
+                <MenuToggle isOpen={isMenuOpen} onClick={toggleMenu} />
+              </div>
+              <motion.div
+                className="flex-1 flex flex-col items-center justify-center gap-2 sm:gap-5"
+                initial="hidden"
+                animate="visible"
+                variants={{
+                  visible: {
+                    transition: {
+                      staggerChildren: 0.06,
+                      delayChildren: 0.15,
+                    },
+                  },
+                  hidden: {},
+                }}
+              >
+                {/* Text logo above nav links (same style as footer) */}
+                <motion.a
+                  href="#top"
+                  onClick={closeMenu}
+                  className={`text-center mb-[12] -mt-24 sm:-mt-32 text-3xl sm:text-4xl md:text-5xl font-agright ${fontWeights.agright.normal} text-dark tracking-tight ${lineHeights.tight}`}
+                  variants={{
+                    hidden: { opacity: 0, y: 16 },
+                    visible: { opacity: 1, y: 0 },
+                  }}
+                  transition={{ duration: 0.4, ease: "easeOut" }}
+                >
+                  <div>SPEED</div>
+                  <div>COFFEE</div>
+                </motion.a>
+
+                <motion.div
+                  variants={{
+                    hidden: { opacity: 0, y: 16 },
+                    visible: { opacity: 1, y: 0 },
+                  }}
+                  transition={{ duration: 0.4, ease: "easeOut" }}
+                >
+                  <NavLink href="#events" onClick={closeMenu} isMobile={false}>
+                    {t("nav.events")}
+                  </NavLink>
+                </motion.div>
+                <motion.div
+                  variants={{
+                    hidden: { opacity: 0, y: 16 },
+                    visible: { opacity: 1, y: 0 },
+                  }}
+                  transition={{ duration: 0.4, ease: "easeOut" }}
+                >
+                  <NavLink href="#reserve" onClick={closeMenu} isMobile={false}>
+                    {t("nav.reserve")}
+                  </NavLink>
+                </motion.div>
+                <motion.div
+                  variants={{
+                    hidden: { opacity: 0, y: 16 },
+                    visible: { opacity: 1, y: 0 },
+                  }}
+                  transition={{ duration: 0.4, ease: "easeOut" }}
+                >
+                  <NavLink href="#shop" onClick={closeMenu} isMobile={false}>
+                    {t("nav.shop")}
+                  </NavLink>
+                </motion.div>
+              </motion.div>
+
+              {/* Language switcher – bottom right */}
+              <div className="absolute bottom-6 right-4 sm:right-6 lg:right-8 flex flex-col items-end gap-0">
+                <div className="flex gap-4">
                   <button
+                    type="button"
                     onClick={() => handleLanguageChange("en")}
-                    className={`px-4 py-2 rounded font-manuka font-normal uppercase transition-colors ${
+                    className={`px-4 py-2 rounded font-raleway font-normal uppercase transition-colors ${
                       language === "en"
                         ? "bg-dark text-beige"
                         : "bg-beige text-dark border-2 border-dark hover:bg-dark hover:text-beige"
@@ -144,6 +215,7 @@ const Header = () => {
                     EN
                   </button>
                   <button
+                    type="button"
                     onClick={() => handleLanguageChange("cz")}
                     className={`px-4 py-2 rounded font-manuka font-normal uppercase transition-colors ${
                       language === "cz"
@@ -156,9 +228,9 @@ const Header = () => {
                 </div>
               </div>
             </div>
-          </div>
-        </nav>
-      </Container>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </header>
   );
 };

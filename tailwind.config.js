@@ -20,6 +20,7 @@ export default {
           text: "#222222",
           DEFAULT: "#222222",
         },
+        wine: "#6F3241", // dark red (cursor / highlights)
       },
       fontFamily: {
         manuka: ['"Manuka Condensed"', "sans-serif"],

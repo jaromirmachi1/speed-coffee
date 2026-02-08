@@ -24,7 +24,8 @@ const TextRevealLines = ({
 
   useGSAP(
     () => {
-      if (!containerRef.current || !(containerRef.current instanceof Element)) return;
+      if (!containerRef.current || !(containerRef.current instanceof Element))
+        return;
 
       const element = containerRef.current;
       let tween: gsap.core.Tween | null = null;
@@ -43,7 +44,7 @@ const TextRevealLines = ({
         // Important: ignore our own wrappers so we can rebuild on resize / layout changes.
         const collectSegments = (
           node: Node,
-          activeClasses: string[] = []
+          activeClasses: string[] = [],
         ): void => {
           if (node.nodeType === Node.TEXT_NODE) {
             const text = node.textContent || "";
@@ -76,12 +77,12 @@ const TextRevealLines = ({
           }
 
           Array.from(el.childNodes).forEach((child) =>
-            collectSegments(child, newActive)
+            collectSegments(child, newActive),
           );
         };
 
         Array.from(element.childNodes).forEach((child) =>
-          collectSegments(child)
+          collectSegments(child),
         );
 
         type Unit = { text: string; classes: string };
@@ -124,7 +125,13 @@ const TextRevealLines = ({
                 .replace(/</g, "&lt;")
                 .replace(/>/g, "&gt;");
               if (unit.classes) {
-                return `<span class="${unit.classes}">${escaped}</span>`;
+                // Inline style for hero intro highlight so color survives DOM rebuild (accent brown #8B5A3C)
+                const style =
+                  unit.classes.includes("hero-intro-highlight") ||
+                  unit.classes.includes("text-accent")
+                    ? ' style="color:#8b5a3c"'
+                    : "";
+                return `<span class="${unit.classes}"${style}>${escaped}</span>`;
               }
               return escaped;
             })
@@ -261,7 +268,7 @@ const TextRevealLines = ({
         }
       };
     },
-    { scope: containerRef, dependencies: [animateOnScroll, delay] }
+    { scope: containerRef, dependencies: [animateOnScroll, delay] },
   );
 
   if (React.Children.count(children) === 1) {

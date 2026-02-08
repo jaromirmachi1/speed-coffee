@@ -15,7 +15,7 @@ export default function Page() {
   useCustomCursor({
     size: 20,
     hoverSize: 40,
-    color: "rgba(111, 50, 65, 0.4)", // #6F3241 with transparency
+    color: "rgba(139, 90, 60, 0.4)", // #8B5A3C accent brown with transparency
     transitionSpeed: 0.15,
     smoothing: 0.15,
   });
