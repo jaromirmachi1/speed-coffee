@@ -154,7 +154,7 @@ const Header = () => {
                 <motion.a
                   href="#top"
                   onClick={closeMenu}
-                  className={`text-center mb-[12] -mt-24 sm:-mt-32 text-3xl sm:text-4xl md:text-5xl font-agright ${fontWeights.agright.normal} text-dark tracking-tight ${lineHeights.tight}`}
+                  className={`text-center mb-[100px] -mt-24 sm:-mt-32 text-3xl sm:text-4xl md:text-5xl font-agright ${fontWeights.agright.normal} text-dark tracking-tight ${lineHeights.tight}`}
                   variants={{
                     hidden: { opacity: 0, y: 16 },
                     visible: { opacity: 1, y: 0 },
@@ -200,13 +200,25 @@ const Header = () => {
                 </motion.div>
               </motion.div>
 
+              {/* Center bottom – INSTAGRAM (same font as footer text logo) */}
+              <a
+                href="https://instagram.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={`absolute bottom-2 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 font-agright ${fontWeights.agright.normal} text-dark tracking-tight ${lineHeights.tight} text-M sm:text-l hover:text-accent transition-colors`}
+              >
+                <span className="w-px h-6 bg-dark/10" aria-hidden />
+                <span>INSTAGRAM</span>
+                <span className="w-px h-6 bg-dark/10" aria-hidden />
+              </a>
+
               {/* Language switcher – bottom right */}
-              <div className="absolute bottom-6 right-4 sm:right-6 lg:right-8 flex flex-col items-end gap-0">
+              <div className="absolute bottom-6 right-4 sm:right-6 lg:right-8 flex flex-col items-end gap-[0px]">
                 <div className="flex gap-4">
                   <button
                     type="button"
                     onClick={() => handleLanguageChange("en")}
-                    className={`px-4 py-2 rounded font-raleway font-normal uppercase transition-colors ${
+                    className={`px-4 py-2 rounded font-manuka font-normal uppercase transition-colors ${
                       language === "en"
                         ? "bg-dark text-beige"
                         : "bg-beige text-dark border-2 border-dark hover:bg-dark hover:text-beige"
