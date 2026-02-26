@@ -88,7 +88,16 @@ export const LanguageProvider = ({ children }: LanguageProviderProps) => {
       "products.coffee.subtitle": "PLANT POWERED BOOST",
       "products.coffee.description":
         "NON-ALCOHOLIC CARBONATED BEVERAGE CONTAINING NATURAL CAFFEINE.",
+      "products.coffee.price": "€4.50",
+      "products.matcha.price": "€4.50",
+      "products.appleGinger.price": "€5.00",
       "products.buyNow": "BUY NOW",
+
+      // Cart modal
+      "cart.addedToBasket": "Added to your basket",
+      "cart.modalMessage": "Keep shopping or go to checkout?",
+      "cart.goToCheckout": "Go to checkout",
+      "cart.keepShopping": "Keep shopping",
 
       // Locations
       "locations.title": "WHERE CAN YOU FIND US?",
@@ -148,7 +157,16 @@ export const LanguageProvider = ({ children }: LanguageProviderProps) => {
       "products.coffee.subtitle": "ROSTLINNÝ NÁBOJ",
       "products.coffee.description":
         "NEOALKOHOLICKÝ PERLIVÝ NÁPOJ OBSAHUJÍCÍ PŘÍRODNÍ KOFEIN.",
+      "products.coffee.price": "120 Kč",
+      "products.matcha.price": "120 Kč",
+      "products.appleGinger.price": "130 Kč",
       "products.buyNow": "KOUPIT",
+
+      // Cart modal
+      "cart.addedToBasket": "Přidáno do košíku",
+      "cart.modalMessage": "Pokračovat v nákupu nebo přejít k platbě?",
+      "cart.goToCheckout": "Přejít k platbě",
+      "cart.keepShopping": "Pokračovat v nákupu",
 
       // Locations
       "locations.title": "KDE NÁS MŮŽETE NAJÍT?",

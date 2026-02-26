@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { LanguageProvider } from "@/contexts/LanguageContext";
+import { CartProvider } from "@/contexts/CartContext";
+import CartModal from "@/components/CartModal";
 
 export const metadata: Metadata = {
   title: "Speed Coffee - Mobile Coffee Van",
@@ -59,7 +61,12 @@ export default function RootLayout({
         />
       </head>
       <body>
-        <LanguageProvider>{children}</LanguageProvider>
+        <LanguageProvider>
+          <CartProvider>
+            {children}
+            <CartModal />
+          </CartProvider>
+        </LanguageProvider>
       </body>
     </html>
   );
