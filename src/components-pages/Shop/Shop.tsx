@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import Container from "@/components/Container";
 import { motion } from "framer-motion";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -93,60 +94,52 @@ const Shop = () => {
                     transition: { duration: 0.3 },
                   }}
                 >
-                  {/* Image Container */}
-                  <div className="relative bg-white/30 aspect-square overflow-hidden">
-                    <motion.div
-                      className="relative w-full h-full flex items-center justify-center"
-                      whileHover={{ scale: 1.05 }}
-                      transition={{ duration: 0.3 }}
-                    >
-                      <motion.img
-                        src={product.image}
-                        alt={product.alt}
-                        className="w-full h-full object-cover object-center"
-                        style={{ objectPosition: "center center" }}
-                        initial={{
-                          opacity: 0,
-                          scale: 0.95,
-                        }}
-                        animate={{
-                          opacity: 1,
-                          scale: 1,
-                        }}
-                        transition={{
-                          duration: 0.6,
-                          delay: index * 0.1 + 0.2,
-                          ease: "easeOut",
-                        }}
-                      />
-                    </motion.div>
-                  </div>
-
-                  {/* Content */}
-                  <div className="flex flex-col flex-1 p-4 md:p-5">
-                    {/* Title - tighter height for smaller cards */}
-                    <div className="h-[3.5em] md:h-[4em] lg:h-[2em] mb-2 flex items-start">
-                      <h3 className="font-manrope font-extrabold text-dark leading-tight line-clamp-2 text-base md:text-2xl uppercase">
-                        {product.title}
-                      </h3>
+                  {/* Clickable: Image + Title + Subtitle → product page */}
+                  <Link href={`/shop/${product.id}`} className="block">
+                    <div className="relative bg-white/30 aspect-square overflow-hidden">
+                      <motion.div
+                        className="relative w-full h-full flex items-center justify-center"
+                        whileHover={{ scale: 1.05 }}
+                        transition={{ duration: 0.3 }}
+                      >
+                        <motion.img
+                          src={product.image}
+                          alt={product.alt}
+                          className="w-full h-full object-cover object-center"
+                          style={{ objectPosition: "center center" }}
+                          initial={{
+                            opacity: 0,
+                            scale: 0.95,
+                          }}
+                          animate={{
+                            opacity: 1,
+                            scale: 1,
+                          }}
+                          transition={{
+                            duration: 0.6,
+                            delay: index * 0.1 + 0.2,
+                            ease: "easeOut",
+                          }}
+                        />
+                      </motion.div>
                     </div>
 
-                    {/* Subtitle */}
-                    <p
-                      className={`font-manrope ${fontWeights.manrope.normal} text-dark/90 mt-2 mb-2 uppercase tracking-wide text-xs md:text-sm`}
-                    >
-                      {product.subtitle}
-                    </p>
+                    <div className="flex flex-col flex-1 p-4 md:p-5 pt-4">
+                      <div className="h-[3.5em] md:h-[4em] lg:h-[2em] mb-2 flex items-start">
+                        <h3 className="font-manrope font-extrabold text-dark leading-tight line-clamp-2 text-base md:text-2xl uppercase hover:text-accent transition-colors">
+                          {product.title}
+                        </h3>
+                      </div>
+                      <p
+                        className={`font-manrope ${fontWeights.manrope.normal} text-dark/90 mt-2 mb-2 uppercase tracking-wide text-xs md:text-sm`}
+                      >
+                        {product.subtitle}
+                      </p>
+                    </div>
+                  </Link>
 
-                    {/* Description */}
-                    {/* <p
-                      className={`${fontWeights.manrope.normal} font-manrope text-dark/80 ${lineHeights.custom.body} mb-4 flex-1 text-sm line-clamp-3`}
-                    >
-                      {product.description}
-                    </p> */}
-
-                    {/* Price and Button Container */}
-                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pt-3 border-t border-dark/10">
+                  {/* Price + Button stay on shop page */}
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pt-3 px-4 md:px-5 pb-4 md:pb-5 border-t border-dark/10 mt-auto">
                       {/* Price */}
                       <div>
                         <p
@@ -167,7 +160,6 @@ const Shop = () => {
                         {t("products.buyNow")}
                       </motion.button>
                     </div>
-                  </div>
                 </motion.div>
               ))}
             </div>

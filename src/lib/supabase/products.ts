@@ -20,6 +20,24 @@ export async function getProducts(): Promise<Product[]> {
 }
 
 /**
+ * Fetch a single product by ID from Supabase
+ */
+export async function getProductById(id: string): Promise<Product | null> {
+  const { data, error } = await supabase
+    .from("products")
+    .select("*")
+    .eq("id", id)
+    .eq("is_active", true)
+    .single();
+
+  if (error || !data) {
+    if (error) console.error("Error fetching product:", error);
+    return null;
+  }
+  return data;
+}
+
+/**
  * Transform product data for display based on language
  */
 export function transformProductForDisplay(

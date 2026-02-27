@@ -110,3 +110,41 @@ export async function getProductsFromSanity(
     return [];
   }
 }
+
+const PRODUCT_BY_ID_GROQ = `*[_type == "product" && _id == $id && is_active == true][0] {
+  _id,
+  title_en,
+  title_cz,
+  subtitle_en,
+  subtitle_cz,
+  description_en,
+  description_cz,
+  price,
+  price_currency,
+  image,
+  alt_text_en,
+  alt_text_cz,
+  is_active,
+  display_order
+}`;
+
+/**
+ * Fetch a single product by ID from Sanity.
+ */
+export async function getProductByIdFromSanity(
+  id: string,
+  language: "en" | "cz" = "en"
+): Promise<ProductDisplay | null> {
+  if (!isSanityConfigured()) {
+    return null;
+  }
+  try {
+    const doc = await sanityClient.fetch<SanityProduct | null>(PRODUCT_BY_ID_GROQ, { id });
+    if (!doc) return null;
+    const product = sanityProductToProduct(doc);
+    return transformProductForDisplay(product, language);
+  } catch (error) {
+    console.error("Error fetching product from Sanity:", error);
+    return null;
+  }
+}

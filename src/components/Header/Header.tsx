@@ -75,7 +75,7 @@ const Header = () => {
   const { language, setLanguage, t } = useLanguage();
   const { cartCount } = useCart();
   const pathname = usePathname();
-  const isShopPage = pathname === "/shop" || pathname === "/checkout";
+  const isShopPage = pathname === "/checkout" || pathname.startsWith("/shop");
 
   const toggleMenu = () => {
     setIsMenuOpen((prev) => !prev);
@@ -272,7 +272,7 @@ const Header = () => {
 
               {/* Center bottom – INSTAGRAM (same font as footer text logo) */}
               <a
-                href="https://instagram.com"
+                href="https://www.instagram.com/speedcoffeehouse?igsh=MTQ1MmN1dG4yajkzaQ=="
                 target="_blank"
                 rel="noopener noreferrer"
                 className={`absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 font-agright ${fontWeights.agright.normal} text-dark tracking-tight ${lineHeights.tight} text-xl sm:text-2xl hover:text-accent transition-colors`}
@@ -288,7 +288,7 @@ const Header = () => {
                   <button
                     type="button"
                     onClick={() => handleLanguageChange("en")}
-                    className={`px-4 py-2 rounded font-manuka font-normal uppercase transition-colors ${
+                    className={`px-4 py-2 rounded font-manrope font-normal uppercase transition-colors ${
                       language === "en"
                         ? "bg-dark text-beige"
                         : "bg-beige text-dark border-2 border-dark hover:bg-dark hover:text-beige"
@@ -299,7 +299,7 @@ const Header = () => {
                   <button
                     type="button"
                     onClick={() => handleLanguageChange("cz")}
-                    className={`px-4 py-2 rounded font-manuka font-normal uppercase transition-colors ${
+                    className={`px-4 py-2 rounded font-manrope font-normal uppercase transition-colors ${
                       language === "cz"
                         ? "bg-dark text-beige"
                         : "bg-beige text-dark border-2 border-dark hover:bg-dark hover:text-beige"

@@ -1,8 +1,8 @@
 "use server";
 
 import { isSanityConfigured } from "@/lib/sanity/client";
-import { getProductsFromSanity } from "@/lib/sanity/products";
-import { getProducts, transformProductForDisplay } from "@/lib/supabase/products";
+import { getProductsFromSanity, getProductByIdFromSanity } from "@/lib/sanity/products";
+import { getProducts, getProductById, transformProductForDisplay } from "@/lib/supabase/products";
 import type { ProductDisplay } from "@/types/product";
 
 /**
@@ -19,5 +19,25 @@ export async function fetchProducts(language: "en" | "cz" = "en"): Promise<Produ
   } catch (error) {
     console.error("Error fetching products:", error);
     return [];
+  }
+}
+
+/**
+ * Fetch a single product by ID for the product detail page.
+ */
+export async function fetchProduct(
+  id: string,
+  language: "en" | "cz" = "en"
+): Promise<ProductDisplay | null> {
+  try {
+    if (isSanityConfigured()) {
+      return await getProductByIdFromSanity(id, language);
+    }
+    const product = await getProductById(id);
+    if (!product) return null;
+    return transformProductForDisplay(product, language);
+  } catch (error) {
+    console.error("Error fetching product:", error);
+    return null;
   }
 }

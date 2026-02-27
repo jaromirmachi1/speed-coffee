@@ -12,10 +12,7 @@ interface IntroLoaderProps {
 const IntroLoader = ({ onComplete, duration = 3500 }: IntroLoaderProps) => {
   // Check sessionStorage synchronously before first render
   const sessionKey = "speed-coffee-intro-seen";
-  
-  // TEMPORARY: Force show intro for testing - REMOVE THIS LINE when done testing
-  if (typeof window !== "undefined") sessionStorage.removeItem(sessionKey);
-  
+
   const hasSeenIntroSync = typeof window !== "undefined" && !!sessionStorage.getItem(sessionKey);
   const prefersReducedMotionSync = typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 

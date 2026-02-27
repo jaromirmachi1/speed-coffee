@@ -1,15 +1,31 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import Home from "@/components-pages/Home/Home";
 import { useSpeedCoffeeMotion } from "@/hooks/useSpeedCoffeeMotion";
 import { useCustomCursor } from "@/hooks/useCustomCursor";
 import IntroLoader from "@/components/IntroLoader";
 import { motion } from "framer-motion";
 
+const INTRO_SEEN_KEY = "speed-coffee-intro-seen";
+
 export default function Page() {
   const rootRef = useRef<HTMLDivElement | null>(null);
-  const [introComplete, setIntroComplete] = useState(false);
+  const [introComplete, setIntroComplete] = useState(() =>
+    typeof window !== "undefined"
+      ? !!sessionStorage.getItem(INTRO_SEEN_KEY)
+      : false,
+  );
+
+  // Ensure we sync when navigating back to home (e.g. logo click)
+  useEffect(() => {
+    if (
+      typeof window !== "undefined" &&
+      sessionStorage.getItem(INTRO_SEEN_KEY)
+    ) {
+      setIntroComplete(true);
+    }
+  }, []);
 
   // Initialize custom cursor
   useCustomCursor({

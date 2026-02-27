@@ -14,7 +14,7 @@ const Hero = () => {
   const imageRef = useImageReveal();
 
   return (
-    <section className="bg-beige -mt-8">
+    <section className="bg-beige -mt-10">
       <Container>
         <div className="pt-0 pb-0 hidden sm:block">
           <TextReveal animateOnScroll={false} delay={0.3}>
@@ -34,7 +34,7 @@ const Hero = () => {
               className="rounded-2xl overflow-hidden shadow-lg h-[85vh] md:h-[calc(100vh-300px)] w-full max-w-md mx-auto md:max-w-none md:mx-0"
             >
               <img
-                src={typeof headerph === 'string' ? headerph : headerph.src}
+                src={typeof headerph === "string" ? headerph : headerph.src}
                 alt="Speed Coffee mobile van with chalkboard sign"
                 className="w-full h-full object-cover lg:object-[center_center]"
                 loading="eager"
