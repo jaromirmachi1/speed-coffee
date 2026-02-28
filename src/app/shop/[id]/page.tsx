@@ -18,6 +18,7 @@ import {
   lineHeights,
 } from "@/lib/constants/typography";
 import { motion } from "framer-motion";
+import { FaLeaf, FaBolt, FaMugHot } from "react-icons/fa6";
 
 export default function ProductPage() {
   const params = useParams();
@@ -187,11 +188,54 @@ export default function ProductPage() {
                 </motion.p>
               )}
 
-              {/* Price + CTA block */}
+              {/* Advantages */}
               <motion.div
                 variants={itemVariants}
-                className="mt-auto pt-6 border-t border-dark/10"
+                className="flex flex-col gap-4 sm:gap-5 mb-8"
               >
+                <div className="flex items-start gap-3 sm:gap-4 p-3 sm:p-4 rounded-xl bg-white/50 border border-dark/5">
+                  <span className="flex-shrink-0 w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-matcha/20 flex items-center justify-center text-matcha text-lg sm:text-xl" aria-hidden>
+                    <FaLeaf className="w-5 h-5 sm:w-6 sm:h-6" />
+                  </span>
+                  <div>
+                    <p className="font-manrope font-bold text-dark text-sm sm:text-base uppercase tracking-wide mb-0.5">
+                      {t("products.advantages.greenTea.title")}
+                    </p>
+                    <p className="font-manrope text-dark/70 text-xs sm:text-sm leading-relaxed">
+                      {t("products.advantages.greenTea.text")}
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3 sm:gap-4 p-3 sm:p-4 rounded-xl bg-white/50 border border-dark/5">
+                  <span className="flex-shrink-0 w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-accent/15 flex items-center justify-center text-accent text-lg sm:text-xl" aria-hidden>
+                    <FaBolt className="w-5 h-5 sm:w-6 sm:h-6" />
+                  </span>
+                  <div>
+                    <p className="font-manrope font-bold text-dark text-sm sm:text-base uppercase tracking-wide mb-0.5">
+                      {t("products.advantages.caffeine.title")}
+                    </p>
+                    <p className="font-manrope text-dark/70 text-xs sm:text-sm leading-relaxed">
+                      {t("products.advantages.caffeine.text")}
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3 sm:gap-4 p-3 sm:p-4 rounded-xl bg-white/50 border border-dark/5">
+                  <span className="flex-shrink-0 w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-matcha/25 flex items-center justify-center text-matcha text-lg sm:text-xl" aria-hidden>
+                    <FaMugHot className="w-5 h-5 sm:w-6 sm:h-6" />
+                  </span>
+                  <div>
+                    <p className="font-manrope font-bold text-dark text-sm sm:text-base uppercase tracking-wide mb-0.5">
+                      {t("products.advantages.matcha.title")}
+                    </p>
+                    <p className="font-manrope text-dark/70 text-xs sm:text-sm leading-relaxed">
+                      {t("products.advantages.matcha.text")}
+                    </p>
+                  </div>
+                </div>
+              </motion.div>
+
+              {/* Price + CTA block – no motion so it’s always visible */}
+              <div className="pt-6 mt-2 border-t border-dark/10">
                 <div className="flex flex-wrap items-center gap-5 sm:gap-8">
                   <p className="font-manrope font-bold text-dark text-2xl sm:text-3xl md:text-4xl tabular-nums">
                     {product!.price}
@@ -206,7 +250,7 @@ export default function ProductPage() {
                     {t("products.buyNow")}
                   </motion.button>
                 </div>
-              </motion.div>
+              </div>
             </motion.div>
           </motion.article>
         </Container>

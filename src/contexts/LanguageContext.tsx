@@ -93,6 +93,14 @@ export const LanguageProvider = ({ children }: LanguageProviderProps) => {
       "products.appleGinger.price": "€5.00",
       "products.buyNow": "BUY NOW",
 
+      // Product advantages (product page)
+      "products.advantages.greenTea.title": "Green tea",
+      "products.advantages.greenTea.text": "Natural antioxidants and a gentle lift without the jitters.",
+      "products.advantages.caffeine.title": "Natural caffeine",
+      "products.advantages.caffeine.text": "Smooth energy from quality sources to keep you focused.",
+      "products.advantages.matcha.title": "Matcha quality",
+      "products.advantages.matcha.text": "Premium grade for a rich, balanced taste and lasting calm energy.",
+
       // Cart modal
       "cart.addedToBasket": "Added to your basket",
       "cart.modalMessage": "Keep shopping or go to checkout?",
@@ -161,6 +169,14 @@ export const LanguageProvider = ({ children }: LanguageProviderProps) => {
       "products.matcha.price": "120 Kč",
       "products.appleGinger.price": "130 Kč",
       "products.buyNow": "KOUPIT",
+
+      // Product advantages (product page)
+      "products.advantages.greenTea.title": "Zelený čaj",
+      "products.advantages.greenTea.text": "Přírodní antioxidanty a jemná povzbuzení bez nervozity.",
+      "products.advantages.caffeine.title": "Přírodní kofein",
+      "products.advantages.caffeine.text": "Plynulá energie z kvalitních zdrojů pro soustředění.",
+      "products.advantages.matcha.title": "Kvalita matcha",
+      "products.advantages.matcha.text": "Prémiová jakost pro plnou, vyváženou chuť a klidnou energii.",
 
       // Cart modal
       "cart.addedToBasket": "Přidáno do košíku",
