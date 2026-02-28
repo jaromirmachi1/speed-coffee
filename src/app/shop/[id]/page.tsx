@@ -159,83 +159,89 @@ export default function ProductPage() {
               variants={containerVariants}
               initial="hidden"
               animate="visible"
-              className="flex flex-col lg:col-span-6 lg:col-start-7 order-1 lg:order-2 lg:pt-4"
+              className="flex flex-col lg:col-span-6 lg:col-start-7 order-1 lg:order-2 lg:pt-6 lg:gap-0"
             >
               <motion.span
                 variants={itemVariants}
-                className="font-manrope text-[10px] sm:text-xs uppercase tracking-[0.25em] text-accent mb-3 block"
+                className="font-manrope text-[10px] sm:text-xs uppercase tracking-[0.25em] text-accent mb-4 md:mb-5 lg:mb-6 block"
               >
                 Product
               </motion.span>
               <motion.h1
                 variants={itemVariants}
-                className={`font-agright ${fontWeights.agright.normal} text-dark leading-[0.95] tracking-tight ${typography.agright.productTitle} mb-4`}
+                className={`font-agright ${fontWeights.agright.normal} text-dark leading-[0.95] tracking-tight ${typography.agright.productTitle} mb-6 md:mb-8 lg:mb-10`}
               >
                 {product!.title}
               </motion.h1>
               <motion.p
                 variants={itemVariants}
-                className={`font-manrope ${fontWeights.manrope.bold} text-dark/80 uppercase tracking-[0.15em] text-sm sm:text-base mb-6 ${lineHeights.relaxed}`}
+                className={`font-manrope ${fontWeights.manrope.bold} text-dark/80 uppercase tracking-[0.15em] text-sm sm:text-base mb-8 md:mb-10 lg:mb-12 leading-relaxed ${lineHeights.relaxed}`}
               >
                 {product!.subtitle}
               </motion.p>
               {product!.description && (
                 <motion.p
                   variants={itemVariants}
-                  className={`font-manrope ${fontWeights.manrope.normal} text-dark/70 ${lineHeights.relaxed} text-sm sm:text-base max-w-md leading-relaxed mb-8`}
+                  className={`font-manrope ${fontWeights.manrope.normal} text-dark/70 ${lineHeights.relaxed} text-sm sm:text-base leading-relaxed mb-8 md:mb-12 lg:mb-14`}
                 >
                   {product!.description}
                 </motion.p>
               )}
 
-              {/* Advantages */}
+              {/* Advantages – minimal, editorial, artsy */}
               <motion.div
                 variants={itemVariants}
-                className="flex flex-col gap-4 sm:gap-5 mb-8"
+                className="mb-10 md:mb-14 lg:mb-16 relative pl-4 sm:pl-5 border-l border-dark/10"
               >
-                <div className="flex items-start gap-3 sm:gap-4 p-3 sm:p-4 rounded-xl bg-white/50 border border-dark/5">
-                  <span className="flex-shrink-0 w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-matcha/20 flex items-center justify-center text-matcha text-lg sm:text-xl" aria-hidden>
-                    <FaLeaf className="w-5 h-5 sm:w-6 sm:h-6" />
-                  </span>
-                  <div>
-                    <p className="font-manrope font-bold text-dark text-sm sm:text-base uppercase tracking-wide mb-0.5">
-                      {t("products.advantages.greenTea.title")}
-                    </p>
-                    <p className="font-manrope text-dark/70 text-xs sm:text-sm leading-relaxed">
-                      {t("products.advantages.greenTea.text")}
-                    </p>
+                {/* Accent cap on the left rule */}
+                <span className="absolute left-0 top-0 w-px h-5 sm:h-6 bg-accent/50" aria-hidden />
+                <div className="flex flex-col gap-0">
+                  <div className="flex items-start gap-4 py-5 sm:py-6 md:py-7 lg:py-8 first:pt-6 md:first:pt-8">
+                    <span className="flex-shrink-0 text-dark/30 mt-0.5" aria-hidden>
+                      <FaLeaf className="w-[15px] h-[15px] sm:w-4 sm:h-4" />
+                    </span>
+                    <div>
+                      <p className="font-manrope font-bold text-dark/80 text-[10px] sm:text-[11px] uppercase tracking-[0.25em] mb-1.5">
+                        {t("products.advantages.greenTea.title")}
+                      </p>
+                      <p className="font-manrope font-normal text-dark/50 text-xs sm:text-sm leading-relaxed italic">
+                        {t("products.advantages.greenTea.text")}
+                      </p>
+                    </div>
                   </div>
-                </div>
-                <div className="flex items-start gap-3 sm:gap-4 p-3 sm:p-4 rounded-xl bg-white/50 border border-dark/5">
-                  <span className="flex-shrink-0 w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-accent/15 flex items-center justify-center text-accent text-lg sm:text-xl" aria-hidden>
-                    <FaBolt className="w-5 h-5 sm:w-6 sm:h-6" />
-                  </span>
-                  <div>
-                    <p className="font-manrope font-bold text-dark text-sm sm:text-base uppercase tracking-wide mb-0.5">
-                      {t("products.advantages.caffeine.title")}
-                    </p>
-                    <p className="font-manrope text-dark/70 text-xs sm:text-sm leading-relaxed">
-                      {t("products.advantages.caffeine.text")}
-                    </p>
+                  <span className="block w-full max-w-[48px] h-px bg-dark/[0.06] my-0.5" aria-hidden />
+                  <div className="flex items-start gap-4 py-5 sm:py-6 md:py-7 lg:py-8">
+                    <span className="flex-shrink-0 text-dark/30 mt-0.5" aria-hidden>
+                      <FaBolt className="w-[15px] h-[15px] sm:w-4 sm:h-4" />
+                    </span>
+                    <div>
+                      <p className="font-manrope font-bold text-dark/80 text-[10px] sm:text-[11px] uppercase tracking-[0.25em] mb-1.5">
+                        {t("products.advantages.caffeine.title")}
+                      </p>
+                      <p className="font-manrope font-normal text-dark/50 text-xs sm:text-sm leading-relaxed italic">
+                        {t("products.advantages.caffeine.text")}
+                      </p>
+                    </div>
                   </div>
-                </div>
-                <div className="flex items-start gap-3 sm:gap-4 p-3 sm:p-4 rounded-xl bg-white/50 border border-dark/5">
-                  <span className="flex-shrink-0 w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-matcha/25 flex items-center justify-center text-matcha text-lg sm:text-xl" aria-hidden>
-                    <FaMugHot className="w-5 h-5 sm:w-6 sm:h-6" />
-                  </span>
-                  <div>
-                    <p className="font-manrope font-bold text-dark text-sm sm:text-base uppercase tracking-wide mb-0.5">
-                      {t("products.advantages.matcha.title")}
-                    </p>
-                    <p className="font-manrope text-dark/70 text-xs sm:text-sm leading-relaxed">
-                      {t("products.advantages.matcha.text")}
-                    </p>
+                  <span className="block w-full max-w-[48px] h-px bg-dark/[0.06] my-0.5" aria-hidden />
+                  <div className="flex items-start gap-4 py-5 sm:py-6 md:py-7 lg:py-8 last:pb-0">
+                    <span className="flex-shrink-0 text-dark/30 mt-0.5" aria-hidden>
+                      <FaMugHot className="w-[15px] h-[15px] sm:w-4 sm:h-4" />
+                    </span>
+                    <div>
+                      <p className="font-manrope font-bold text-dark/80 text-[10px] sm:text-[11px] uppercase tracking-[0.25em] mb-1.5">
+                        {t("products.advantages.matcha.title")}
+                      </p>
+                      <p className="font-manrope font-normal text-dark/50 text-xs sm:text-sm leading-relaxed italic">
+                        {t("products.advantages.matcha.text")}
+                      </p>
+                    </div>
                   </div>
                 </div>
               </motion.div>
 
               {/* Price + CTA block – no motion so it’s always visible */}
-              <div className="pt-6 mt-2 border-t border-dark/10">
+              <div className="pt-6 mt-2 md:pt-8 md:mt-4 lg:pt-10 lg:mt-6 border-t border-dark/10">
                 <div className="flex flex-wrap items-center gap-5 sm:gap-8">
                   <p className="font-manrope font-bold text-dark text-2xl sm:text-3xl md:text-4xl tabular-nums">
                     {product!.price}
@@ -243,9 +249,9 @@ export default function ProductPage() {
                   <motion.button
                     type="button"
                     onClick={handleAddToCart}
-                    className="min-w-[200px] sm:min-w-[220px] px-8 py-4 font-manrope font-bold bg-dark text-beige rounded-full hover:bg-dark/90 transition-colors uppercase tracking-[0.12em] text-sm border-2 border-dark focus:outline-none focus:ring-2 focus:ring-accent/50 focus:ring-offset-2 focus:ring-offset-beige"
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
+                    className="w-full px-8 py-4 font-manrope font-semibold text-dark rounded-full bg-transparent border-2 border-dark hover:bg-white hover:text-dark hover:border-white transition-all duration-200 uppercase tracking-[0.2em] text-sm focus:outline-none focus:ring-2 focus:ring-dark/30 focus:ring-offset-2 focus:ring-offset-beige"
+                    whileHover={{ scale: 1.01 }}
+                    whileTap={{ scale: 0.99 }}
                   >
                     {t("products.buyNow")}
                   </motion.button>
