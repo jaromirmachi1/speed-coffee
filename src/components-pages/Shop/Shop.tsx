@@ -140,26 +140,26 @@ const Shop = () => {
 
                   {/* Price + Button stay on shop page */}
                   <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pt-3 px-4 md:px-5 pb-4 md:pb-5 border-t border-dark/10 mt-auto">
-                      {/* Price */}
-                      <div>
-                        <p
-                          className={`font-manrope ${fontWeights.manrope.normal} text-lg md:text-xl text-dark`}
-                        >
-                          {product.price}
-                        </p>
-                      </div>
-
-                      {/* Button */}
-                      <motion.button
-                        type="button"
-                        onClick={() => addItem(product)}
-                        className={`px-4 md:px-5 py-2.5 md:py-3 text-sm font-manrope ${fontWeights.manrope.bold} bg-dark text-beige rounded-full hover:bg-dark/90 transition-colors w-full sm:w-auto`}
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
+                    {/* Price */}
+                    <div>
+                      <p
+                        className={`font-manrope ${fontWeights.manrope.bold} text-lg md:text-xl text-dark`}
                       >
-                        {t("products.buyNow")}
-                      </motion.button>
+                        {product.price}
+                      </p>
                     </div>
+
+                    {/* Button */}
+                    <motion.button
+                      type="button"
+                      onClick={() => addItem(product)}
+                      className={`px-4 md:px-5 py-2.5 md:py-3 text-sm font-manrope ${fontWeights.manrope.bold} bg-dark text-beige rounded-full hover:bg-dark/90 transition-colors w-full sm:w-auto`}
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                    >
+                      {t("products.buyNow")}
+                    </motion.button>
+                  </div>
                 </motion.div>
               ))}
             </div>

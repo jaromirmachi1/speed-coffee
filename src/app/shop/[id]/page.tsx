@@ -98,67 +98,116 @@ export default function ProductPage() {
     );
   }
 
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: { staggerChildren: 0.08, delayChildren: 0.1 },
+    },
+  };
+  const itemVariants = {
+    hidden: { opacity: 0, y: 14 },
+    visible: { opacity: 1, y: 0 },
+  };
+
   return (
     <div ref={rootRef} className="min-h-screen bg-beige flex flex-col">
       <Header />
-      <main className="flex-1 py-8 md:py-12 lg:py-16">
-        <Container className="px-4 sm:px-6 lg:px-8">
-          <Link
-            href="/shop"
-            className="inline-block font-manrope text-dark/80 hover:text-dark text-sm uppercase tracking-wider mb-8 md:mb-10"
+      <main className="flex-1 py-8 md:py-12 lg:py-20">
+        <Container className="px-4 sm:px-6 lg:px-8 max-w-7xl">
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.4 }}
+            className="mb-10 md:mb-14"
           >
-            ← {t("products.title")}
-          </Link>
+            <Link
+              href="/shop"
+              className="group inline-flex items-center gap-2 font-manrope text-dark/60 hover:text-dark text-xs uppercase tracking-[0.2em] transition-colors"
+            >
+              <span className="w-6 h-px bg-dark/30 group-hover:bg-dark transition-colors" />
+              {t("products.title")}
+            </Link>
+          </motion.div>
 
           <motion.article
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 lg:gap-16 items-start"
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+            className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 xl:gap-20 items-start"
           >
-            {/* Image */}
-            <div className="relative aspect-square max-w-lg mx-auto lg:max-w-none w-full rounded-2xl overflow-hidden bg-white/30 border border-dark/10">
-              <img
-                src={product!.image}
-                alt={product!.alt}
-                className="w-full h-full object-cover object-center"
-              />
-            </div>
+            {/* Image – asymmetric, with decorative frame */}
+            <motion.div
+              variants={itemVariants}
+              className="relative lg:col-span-6 lg:col-start-1 order-2 lg:order-1"
+            >
+              <div className="absolute -inset-4 sm:-inset-6 rounded-3xl bg-dark/5 -z-10" />
+              <div className="relative aspect-[4/5] max-w-md mx-auto lg:max-w-none w-full rounded-2xl overflow-hidden shadow-[0_24px_48px_-12px_rgba(34,34,34,0.12)]">
+                <img
+                  src={product!.image}
+                  alt={product!.alt}
+                  className="w-full h-full object-cover object-center"
+                />
+                <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-dark/10 to-transparent pointer-events-none" />
+              </div>
+              <div className="absolute -bottom-2 -right-2 w-24 h-24 rounded-full bg-accent/10 -z-10 hidden sm:block" />
+            </motion.div>
 
-            {/* Content */}
-            <div className="flex flex-col gap-6 md:gap-8">
-              <h1
-                className={`font-manrope font-bold text-dark mb-8 uppercase tracking-tight ${typography.agright.productTitle}`}
+            {/* Content – editorial column */}
+            <motion.div
+              variants={containerVariants}
+              initial="hidden"
+              animate="visible"
+              className="flex flex-col lg:col-span-6 lg:col-start-7 order-1 lg:order-2 lg:pt-4"
+            >
+              <motion.span
+                variants={itemVariants}
+                className="font-manrope text-[10px] sm:text-xs uppercase tracking-[0.25em] text-accent mb-3 block"
+              >
+                Product
+              </motion.span>
+              <motion.h1
+                variants={itemVariants}
+                className={`font-agright ${fontWeights.agright.normal} text-dark leading-[0.95] tracking-tight ${typography.agright.productTitle} mb-4`}
               >
                 {product!.title}
-              </h1>
-              <p
-                className={`font-manrope ${fontWeights.manrope.bold} text-dark/90 mb-8 uppercase tracking-wide ${typography.manrope.productSubtitle}`}
+              </motion.h1>
+              <motion.p
+                variants={itemVariants}
+                className={`font-manrope ${fontWeights.manrope.bold} text-dark/80 uppercase tracking-[0.15em] text-sm sm:text-base mb-6 ${lineHeights.relaxed}`}
               >
                 {product!.subtitle}
-              </p>
+              </motion.p>
               {product!.description && (
-                <p
-                  className={`font-manrope ${fontWeights.manrope.normal} text-dark/80 mb-8 ${lineHeights.relaxed} ${typography.manrope.body}`}
+                <motion.p
+                  variants={itemVariants}
+                  className={`font-manrope ${fontWeights.manrope.normal} text-dark/70 ${lineHeights.relaxed} text-sm sm:text-base max-w-md leading-relaxed mb-8`}
                 >
                   {product!.description}
-                </p>
+                </motion.p>
               )}
-              <p
-                className={`font-manrope ${fontWeights.manrope.bold} text-dark text-2xl md:text-4xl`}
+
+              {/* Price + CTA block */}
+              <motion.div
+                variants={itemVariants}
+                className="mt-auto pt-6 border-t border-dark/10"
               >
-                {product!.price}
-              </p>
-              <motion.button
-                type="button"
-                onClick={handleAddToCart}
-                className="w-full sm:w-auto px-8 py-4 font-manrope font-bold bg-dark text-beige rounded-full hover:bg-dark/90 transition-colors uppercase tracking-wider"
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-              >
-                {t("products.buyNow")}
-              </motion.button>
-            </div>
+                <div className="flex flex-wrap items-center gap-5 sm:gap-8">
+                  <p className="font-manrope font-bold text-dark text-2xl sm:text-3xl md:text-4xl tabular-nums">
+                    {product!.price}
+                  </p>
+                  <motion.button
+                    type="button"
+                    onClick={handleAddToCart}
+                    className="min-w-[200px] sm:min-w-[220px] px-8 py-4 font-manrope font-bold bg-dark text-beige rounded-full hover:bg-dark/90 transition-colors uppercase tracking-[0.12em] text-sm border-2 border-dark focus:outline-none focus:ring-2 focus:ring-accent/50 focus:ring-offset-2 focus:ring-offset-beige"
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                  >
+                    {t("products.buyNow")}
+                  </motion.button>
+                </div>
+              </motion.div>
+            </motion.div>
           </motion.article>
         </Container>
       </main>

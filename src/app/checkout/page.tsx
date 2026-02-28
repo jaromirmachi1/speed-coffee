@@ -14,9 +14,24 @@ import {
 } from "@/lib/constants/typography";
 import { FaTrashCan } from "react-icons/fa6";
 
+const SHIPPING_CZK = 89;
+
+/** Parse display price string to numeric value in CZK (e.g. "120 Kč" -> 120, "€4.50" -> ~122). */
+function priceToCzk(priceStr: string): number {
+  const num = parseFloat(priceStr.replace(/[^\d.,]/g, "").replace(",", ".")) || 0;
+  return priceStr.includes("€") ? Math.round(num * 27) : num;
+}
+
+function formatCzk(value: number): string {
+  return `${value} Kč`;
+}
+
 export default function CheckoutPage() {
   const rootRef = useRef<HTMLDivElement | null>(null);
   const { items, cartCount, removeItem, updateQuantity } = useCart();
+
+  const subtotalCzk = items.reduce((sum, item) => sum + priceToCzk(item.price) * item.quantity, 0);
+  const totalCzk = subtotalCzk + SHIPPING_CZK;
 
   useCustomCursor({
     size: 20,
@@ -85,6 +100,14 @@ export default function CheckoutPage() {
                       {/* Quantity + remove (right) */}
                       <div className="flex items-center gap-3 sm:gap-4 flex-shrink-0">
                         <div className="flex items-center border border-dark/20 rounded-lg overflow-hidden bg-white/60">
+                          <button
+                            type="button"
+                            onClick={() => updateQuantity(item.id, Math.max(1, item.quantity - 1))}
+                            className="flex items-center justify-center w-10 h-10 sm:w-11 sm:h-11 text-dark hover:bg-dark/10 transition-colors font-manrope text-lg font-bold"
+                            aria-label="Decrease quantity"
+                          >
+                            −
+                          </button>
                           <input
                             type="number"
                             min={1}
@@ -92,10 +115,18 @@ export default function CheckoutPage() {
                             value={item.quantity}
                             onChange={(e) => {
                               const v = parseInt(e.target.value, 10);
-                              if (!isNaN(v) && v >= 1) updateQuantity(item.id, v);
+                              if (!isNaN(v) && v >= 1) updateQuantity(item.id, Math.min(99, v));
                             }}
-                            className="w-12 sm:w-14 py-2 text-center font-manrope text-dark bg-transparent border-none focus:outline-none focus:ring-0 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                            className="w-12 sm:w-14 py-2 text-center font-manrope text-dark bg-transparent border-none focus:outline-none focus:ring-0 border-x border-dark/20 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                           />
+                          <button
+                            type="button"
+                            onClick={() => updateQuantity(item.id, Math.min(99, item.quantity + 1))}
+                            className="flex items-center justify-center w-10 h-10 sm:w-11 sm:h-11 text-dark hover:bg-dark/10 transition-colors font-manrope text-lg font-bold"
+                            aria-label="Increase quantity"
+                          >
+                            +
+                          </button>
                         </div>
                         <button
                           type="button"
@@ -121,16 +152,16 @@ export default function CheckoutPage() {
                   </h2>
                   <div className="space-y-2 mb-6">
                     <div className="flex justify-between font-manrope text-dark/80 text-sm">
-                      <span>Subtotal</span>
-                      <span>{cartCount} {cartCount === 1 ? "item" : "items"}</span>
+                      <span>Subtotal ({cartCount} {cartCount === 1 ? "item" : "items"})</span>
+                      <span>{formatCzk(subtotalCzk)}</span>
                     </div>
                     <div className="flex justify-between font-manrope text-dark/80 text-sm">
                       <span>Shipping</span>
-                      <span>—</span>
+                      <span>{formatCzk(SHIPPING_CZK)}</span>
                     </div>
                     <div className="flex justify-between font-manrope font-bold text-dark pt-2 border-t border-dark/10">
                       <span>Total</span>
-                      <span>—</span>
+                      <span>{formatCzk(totalCzk)}</span>
                     </div>
                   </div>
                   <Link
