@@ -194,10 +194,16 @@ export default function ProductPage() {
                 className="mb-10 md:mb-14 lg:mb-16 relative pl-4 sm:pl-5 border-l border-dark/10"
               >
                 {/* Accent cap on the left rule */}
-                <span className="absolute left-0 top-0 w-px h-5 sm:h-6 bg-accent/50" aria-hidden />
+                <span
+                  className="absolute left-0 top-0 w-px h-5 sm:h-6 bg-accent/50"
+                  aria-hidden
+                />
                 <div className="flex flex-col gap-0">
                   <div className="flex items-start gap-4 py-5 sm:py-6 md:py-7 lg:py-8 first:pt-6 md:first:pt-8">
-                    <span className="flex-shrink-0 text-dark/30 mt-0.5" aria-hidden>
+                    <span
+                      className="flex-shrink-0 text-dark/30 mt-0.5"
+                      aria-hidden
+                    >
                       <FaLeaf className="w-[15px] h-[15px] sm:w-4 sm:h-4" />
                     </span>
                     <div>
@@ -209,9 +215,15 @@ export default function ProductPage() {
                       </p>
                     </div>
                   </div>
-                  <span className="block w-full max-w-[48px] h-px bg-dark/[0.06] my-0.5" aria-hidden />
+                  <span
+                    className="block w-full max-w-[48px] h-px bg-dark/[0.06] my-0.5"
+                    aria-hidden
+                  />
                   <div className="flex items-start gap-4 py-5 sm:py-6 md:py-7 lg:py-8">
-                    <span className="flex-shrink-0 text-dark/30 mt-0.5" aria-hidden>
+                    <span
+                      className="flex-shrink-0 text-dark/30 mt-0.5"
+                      aria-hidden
+                    >
                       <FaBolt className="w-[15px] h-[15px] sm:w-4 sm:h-4" />
                     </span>
                     <div>
@@ -223,9 +235,15 @@ export default function ProductPage() {
                       </p>
                     </div>
                   </div>
-                  <span className="block w-full max-w-[48px] h-px bg-dark/[0.06] my-0.5" aria-hidden />
+                  <span
+                    className="block w-full max-w-[48px] h-px bg-dark/[0.06] my-0.5"
+                    aria-hidden
+                  />
                   <div className="flex items-start gap-4 py-5 sm:py-6 md:py-7 lg:py-8 last:pb-0">
-                    <span className="flex-shrink-0 text-dark/30 mt-0.5" aria-hidden>
+                    <span
+                      className="flex-shrink-0 text-dark/30 mt-0.5"
+                      aria-hidden
+                    >
                       <FaMugHot className="w-[15px] h-[15px] sm:w-4 sm:h-4" />
                     </span>
                     <div>

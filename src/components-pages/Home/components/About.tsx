@@ -4,7 +4,7 @@ import TextRevealLines from "@/lib/TextRevealLines";
 import Container from "@/components/Container";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useEffect, useRef, useState } from "react";
-import aboutImg from "@/assets/images/openSc.png";
+import aboutImg from "@/assets/images/openSc.webp";
 import {
   typography,
   fontWeights,
@@ -23,7 +23,7 @@ const About = () => {
           setIsVisible(true);
         }
       },
-      { threshold: 0.2 }
+      { threshold: 0.2 },
     );
 
     if (imgRef.current) {
@@ -63,14 +63,14 @@ const About = () => {
 
           <div
             ref={imgRef}
-            className={`rounded-lg overflow-hidden shadow-lg max-w-4xl md:ml-auto transition-all duration-[600ms] ease-out ${
+            className={`rounded-lg overflow-hidden shadow-lg max-w-2xl md:ml-auto transition-all duration-[600ms] ease-out ${
               isVisible
                 ? "opacity-100 translate-y-0"
                 : "opacity-0 translate-y-5"
             }`}
           >
             <img
-              src={typeof aboutImg === 'string' ? aboutImg : aboutImg.src}
+              src={typeof aboutImg === "string" ? aboutImg : aboutImg.src}
               alt="Barista holding coffee cups and pastries"
               className="w-full h-auto object-cover"
               loading="lazy"

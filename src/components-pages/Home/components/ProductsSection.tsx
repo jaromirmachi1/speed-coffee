@@ -5,6 +5,7 @@ import TextRevealLines from "@/lib/TextRevealLines";
 import { motion, useMotionValue } from "framer-motion";
 import { useEffect, useRef } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
+import Link from "next/link";
 import scAppleGinger from "@/assets/images/ScAppleGinger.webp";
 import scMatchaCan from "@/assets/images/ScMatchaCan.webp";
 import scCoffeeProduct from "@/assets/images/ScCoffeeProduct.webp";
@@ -39,7 +40,7 @@ const ProductsSection = () => {
         const fadeStart = 0.7;
         const fadeProgress = Math.max(
           0,
-          Math.min(1, (p - fadeStart) / (1 - fadeStart))
+          Math.min(1, (p - fadeStart) / (1 - fadeStart)),
         );
 
         // Smooth fade animation (easeOut)
@@ -110,17 +111,22 @@ const ProductsSection = () => {
                     </TextRevealLines>
                   </div>
                   <div className="pt-4">
-                    <button
-                      className={`px-6 md:px-8 py-2 md:py-3 ${typography.manrope.button} border-2 border-white text-dark font-manrope ${fontWeights.manrope.bold} rounded-3xl hover:bg-white hover:text-dark transition-colors`}
+                    <Link
+                      href="/shop"
+                      className={`inline-flex items-center justify-center px-6 md:px-8 py-2 md:py-3 ${typography.manrope.button} border-2 border-white text-dark font-manrope ${fontWeights.manrope.bold} rounded-3xl hover:bg-white hover:text-dark transition-colors`}
                     >
                       {t("products.buyNow")}
-                    </button>
+                    </Link>
                   </div>
                 </div>
               </div>
               <div className="order-1 md:order-2 flex justify-center ">
                 <motion.img
-                  src={typeof scCoffeeProduct === 'string' ? scCoffeeProduct : scCoffeeProduct.src}
+                  src={
+                    typeof scCoffeeProduct === "string"
+                      ? scCoffeeProduct
+                      : scCoffeeProduct.src
+                  }
                   alt="Speed Coffee product"
                   className="w-full max-w-[300px] sm:max-w-[400px] md:max-w-[500px] h-auto object-contain"
                   initial={{
@@ -149,7 +155,11 @@ const ProductsSection = () => {
             <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-center">
               <div className="order-1 flex justify-center md:justify-center">
                 <motion.img
-                  src={typeof scMatchaCan === 'string' ? scMatchaCan : scMatchaCan.src}
+                  src={
+                    typeof scMatchaCan === "string"
+                      ? scMatchaCan
+                      : scMatchaCan.src
+                  }
                   alt="Matcha product"
                   className="w-full max-w-[300px] sm:max-w-[400px] md:max-w-[500px] h-auto object-contain"
                   initial={{
@@ -200,11 +210,12 @@ const ProductsSection = () => {
                     </TextRevealLines>
                   </div>
                   <div className="pt-4">
-                    <button
-                      className={`px-6 md:px-8 py-2 md:py-3 ${typography.manrope.button} border-2 border-white text-dark font-manrope ${fontWeights.manrope.bold} rounded-3xl hover:bg-white hover:text-dark transition-colors`}
+                    <Link
+                      href="/shop"
+                      className={`inline-flex items-center justify-center px-6 md:px-8 py-2 md:py-3 ${typography.manrope.button} border-2 border-white text-dark font-manrope ${fontWeights.manrope.bold} rounded-3xl hover:bg-white hover:text-dark transition-colors`}
                     >
                       {t("products.buyNow")}
-                    </button>
+                    </Link>
                   </div>
                 </div>
               </div>
@@ -238,17 +249,22 @@ const ProductsSection = () => {
                     </TextRevealLines>
                   </div>
                   <div className="pt-4">
-                    <button
-                      className={`px-6 md:px-8 py-2 md:py-3 ${typography.manrope.button} border-2 border-white text-dark font-manrope ${fontWeights.manrope.bold} rounded-3xl hover:bg-white hover:text-dark transition-colors`}
+                    <Link
+                      href="/shop"
+                      className={`inline-flex items-center justify-center px-6 md:px-8 py-2 md:py-3 ${typography.manrope.button} border-2 border-white text-dark font-manrope ${fontWeights.manrope.bold} rounded-3xl hover:bg-white hover:text-dark transition-colors`}
                     >
                       {t("products.buyNow")}
-                    </button>
+                    </Link>
                   </div>
                 </div>
               </div>
               <div className="order-1 md:order-2 flex justify-center">
                 <motion.img
-                  src={typeof scAppleGinger === 'string' ? scAppleGinger : scAppleGinger.src}
+                  src={
+                    typeof scAppleGinger === "string"
+                      ? scAppleGinger
+                      : scAppleGinger.src
+                  }
                   alt="Apple & Ginger product"
                   className="w-full max-w-[300px] sm:max-w-[400px] md:max-w-[500px] h-auto object-contain"
                   initial={{

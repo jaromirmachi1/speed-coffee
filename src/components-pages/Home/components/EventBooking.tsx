@@ -23,7 +23,7 @@ const EventBooking = () => {
           setIsVisible(true);
         }
       },
-      { threshold: 0.2 }
+      { threshold: 0.2 },
     );
 
     if (imgRef.current) {
@@ -75,14 +75,14 @@ const EventBooking = () => {
 
           <div
             ref={imgRef}
-            className={`rounded-lg overflow-hidden shadow-lg max-w-4xl md:ml-auto transition-all duration-[600ms] ease-out ${
+            className={`rounded-lg overflow-hidden shadow-lg max-w-5xl md:ml-auto transition-all duration-[600ms] ease-out ${
               isVisible
                 ? "opacity-100 translate-y-0"
                 : "opacity-0 translate-y-5"
             }`}
           >
             <img
-              src={typeof coffeeVan === 'string' ? coffeeVan : coffeeVan.src}
+              src={typeof coffeeVan === "string" ? coffeeVan : coffeeVan.src}
               alt="Outdoor event with coffee van and people"
               className="w-full h-auto object-cover"
               loading="lazy"
