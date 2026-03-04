@@ -46,7 +46,15 @@ export function transformProductForDisplay(
 ): ProductDisplay {
   const currencySymbol = product.price_currency === "EUR" ? "€" : product.price_currency;
   const price = `${currencySymbol}${product.price.toFixed(2)}`;
-  
+
+  const advantages =
+    product.advantages?.map((a) => ({
+      title: language === "cz" ? a.title_cz : a.title_en,
+      text: language === "cz" ? a.description_cz : a.description_en,
+    })) ?? [];
+
+  const gallery = product.gallery_urls;
+
   // For CZ, convert EUR to CZK (approximate conversion, you may want to use a real API)
   if (language === "cz" && product.price_currency === "EUR") {
     const czkPrice = Math.round(product.price * 27); // Approximate 1 EUR = 27 CZK
@@ -58,6 +66,8 @@ export function transformProductForDisplay(
       price: `${czkPrice} Kč`,
       image: product.image_url,
       alt: product.alt_text_cz,
+      advantages,
+      gallery,
     };
   }
 
@@ -69,5 +79,7 @@ export function transformProductForDisplay(
     price,
     image: product.image_url,
     alt: product.alt_text_en,
+    advantages,
+    gallery,
   };
 }

@@ -63,7 +63,7 @@ const About = () => {
 
           <div
             ref={imgRef}
-            className={`rounded-lg overflow-hidden shadow-lg max-w-2xl md:ml-auto transition-all duration-[600ms] ease-out ${
+            className={`rounded-lg overflow-hidden shadow-lg max-w-xl md:ml-auto transition-all duration-[600ms] ease-out ${
               isVisible
                 ? "opacity-100 translate-y-0"
                 : "opacity-0 translate-y-5"

@@ -27,6 +27,7 @@ export default function ProductPage() {
   const { language, t } = useLanguage();
   const { addItem } = useCart();
   const [product, setProduct] = useState<ProductDisplay | null>(null);
+  const [activeImageIndex, setActiveImageIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
 
   const id = typeof params.id === "string" ? params.id : null;
@@ -140,18 +141,44 @@ export default function ProductPage() {
             {/* Image – asymmetric, with decorative frame */}
             <motion.div
               variants={itemVariants}
-              className="relative lg:col-span-6 lg:col-start-1 order-2 lg:order-1"
+              className="relative lg:col-span-6 lg:col-start-1 order-2 lg:order-1 flex justify-center lg:justify-start"
             >
-              <div className="absolute -inset-4 sm:-inset-6 rounded-3xl bg-dark/5 -z-10" />
-              <div className="relative aspect-[4/5] max-w-md mx-auto lg:max-w-none w-full rounded-2xl overflow-hidden shadow-[0_24px_48px_-12px_rgba(34,34,34,0.12)]">
-                <img
-                  src={product!.image}
-                  alt={product!.alt}
-                  className="w-full h-full object-cover object-center"
-                />
-                <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-dark/10 to-transparent pointer-events-none" />
+              <div className="relative max-w-md sm:max-w-lg lg:max-w-xl xl:max-w-2xl w-full">
+                <div className="aspect-[4/5] rounded-2xl overflow-hidden">
+                  <img
+                    src={
+                      (product?.gallery && product.gallery[activeImageIndex]) ??
+                      product!.image
+                    }
+                    alt={product!.alt}
+                    className="w-full h-full object-cover object-center"
+                  />
+                  <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t pointer-events-none" />
+                </div>
+                {product?.gallery && product.gallery.length > 1 && (
+                  <div className="mt-4 flex gap-3 justify-center">
+                    {product.gallery.slice(0, 5).map((src, index) => (
+                      <button
+                        key={src + index}
+                        type="button"
+                        onClick={() => setActiveImageIndex(index)}
+                        className={`relative w-14 h-14 sm:w-16 sm:h-16 rounded-xl overflow-hidden border transition-colors ${
+                          activeImageIndex === index
+                            ? "border-dark"
+                            : "border-dark/10 hover:border-dark/40"
+                        }`}
+                        aria-label={`View product image ${index + 1}`}
+                      >
+                        <img
+                          src={src}
+                          alt=""
+                          className="w-full h-full object-cover object-center"
+                        />
+                      </button>
+                    ))}
+                  </div>
+                )}
               </div>
-              <div className="absolute -bottom-2 -right-2 w-24 h-24 rounded-full bg-accent/10 -z-10 hidden sm:block" />
             </motion.div>
 
             {/* Content – editorial column */}
@@ -188,7 +215,7 @@ export default function ProductPage() {
                 </motion.p>
               )}
 
-              {/* Advantages – minimal, editorial, artsy */}
+              {/* Advantages – from Sanity when available, otherwise fallback copy */}
               <motion.div
                 variants={itemVariants}
                 className="mb-10 md:mb-14 lg:mb-16 relative pl-4 sm:pl-5 border-l border-dark/10"
@@ -199,62 +226,53 @@ export default function ProductPage() {
                   aria-hidden
                 />
                 <div className="flex flex-col gap-0">
-                  <div className="flex items-start gap-4 py-5 sm:py-6 md:py-7 lg:py-8 first:pt-6 md:first:pt-8">
-                    <span
-                      className="flex-shrink-0 text-dark/30 mt-0.5"
-                      aria-hidden
-                    >
-                      <FaLeaf className="w-[15px] h-[15px] sm:w-4 sm:h-4" />
-                    </span>
-                    <div>
-                      <p className="font-manrope font-bold text-dark/80 text-[10px] sm:text-[11px] uppercase tracking-[0.25em] mb-1.5">
-                        {t("products.advantages.greenTea.title")}
-                      </p>
-                      <p className="font-manrope font-normal text-dark/50 text-xs sm:text-sm leading-relaxed italic">
-                        {t("products.advantages.greenTea.text")}
-                      </p>
-                    </div>
-                  </div>
-                  <span
-                    className="block w-full max-w-[48px] h-px bg-dark/[0.06] my-0.5"
-                    aria-hidden
-                  />
-                  <div className="flex items-start gap-4 py-5 sm:py-6 md:py-7 lg:py-8">
-                    <span
-                      className="flex-shrink-0 text-dark/30 mt-0.5"
-                      aria-hidden
-                    >
-                      <FaBolt className="w-[15px] h-[15px] sm:w-4 sm:h-4" />
-                    </span>
-                    <div>
-                      <p className="font-manrope font-bold text-dark/80 text-[10px] sm:text-[11px] uppercase tracking-[0.25em] mb-1.5">
-                        {t("products.advantages.caffeine.title")}
-                      </p>
-                      <p className="font-manrope font-normal text-dark/50 text-xs sm:text-sm leading-relaxed italic">
-                        {t("products.advantages.caffeine.text")}
-                      </p>
-                    </div>
-                  </div>
-                  <span
-                    className="block w-full max-w-[48px] h-px bg-dark/[0.06] my-0.5"
-                    aria-hidden
-                  />
-                  <div className="flex items-start gap-4 py-5 sm:py-6 md:py-7 lg:py-8 last:pb-0">
-                    <span
-                      className="flex-shrink-0 text-dark/30 mt-0.5"
-                      aria-hidden
-                    >
-                      <FaMugHot className="w-[15px] h-[15px] sm:w-4 sm:h-4" />
-                    </span>
-                    <div>
-                      <p className="font-manrope font-bold text-dark/80 text-[10px] sm:text-[11px] uppercase tracking-[0.25em] mb-1.5">
-                        {t("products.advantages.matcha.title")}
-                      </p>
-                      <p className="font-manrope font-normal text-dark/50 text-xs sm:text-sm leading-relaxed italic">
-                        {t("products.advantages.matcha.text")}
-                      </p>
-                    </div>
-                  </div>
+                  {(product?.advantages && product.advantages.length > 0
+                    ? product.advantages
+                    : [
+                        {
+                          title: t("products.advantages.greenTea.title"),
+                          text: t("products.advantages.greenTea.text"),
+                        },
+                        {
+                          title: t("products.advantages.caffeine.title"),
+                          text: t("products.advantages.caffeine.text"),
+                        },
+                        {
+                          title: t("products.advantages.matcha.title"),
+                          text: t("products.advantages.matcha.text"),
+                        },
+                      ]
+                  ).map((adv, index) => {
+                    const Icon =
+                      index % 3 === 0
+                        ? FaLeaf
+                        : index % 3 === 1
+                          ? FaBolt
+                          : FaMugHot;
+                    return (
+                      <div
+                        key={adv.title + index}
+                        className={`flex items-start gap-4 py-5 sm:py-6 md:py-7 lg:py-8 ${
+                          index === 0 ? "first:pt-6 md:first:pt-8" : ""
+                        } ${index === (product?.advantages?.length ?? 3) - 1 ? "last:pb-0" : ""}`}
+                      >
+                        <span
+                          className="flex-shrink-0 text-dark/30 mt-0.5"
+                          aria-hidden
+                        >
+                          <Icon className="w-[15px] h-[15px] sm:w-4 sm:h-4" />
+                        </span>
+                        <div>
+                          <p className="font-manrope font-bold text-dark/80 text-[10px] sm:text-[11px] uppercase tracking-[0.25em] mb-1.5">
+                            {adv.title}
+                          </p>
+                          <p className="font-manrope font-normal text-dark/50 text-xs sm:text-sm leading-relaxed italic">
+                            {adv.text}
+                          </p>
+                        </div>
+                      </div>
+                    );
+                  })}
                 </div>
               </motion.div>
 

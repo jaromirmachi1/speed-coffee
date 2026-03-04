@@ -15,6 +15,14 @@ export interface Product {
   display_order: number;
   created_at: string;
   updated_at: string;
+  // Optional fields used when product comes from Sanity
+  advantages?: {
+    title_en: string;
+    title_cz: string;
+    description_en: string;
+    description_cz: string;
+  }[];
+  gallery_urls?: string[];
 }
 
 export interface ProductDisplay {
@@ -25,4 +33,9 @@ export interface ProductDisplay {
   price: string;
   image: string;
   alt: string;
+  advantages?: {
+    title: string;
+    text: string;
+  }[];
+  gallery?: string[];
 }
