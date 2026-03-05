@@ -49,7 +49,7 @@ export default function ProductPage() {
     async function load() {
       try {
         setIsLoading(true);
-        const p = await fetchProduct(id, language);
+        const p = await fetchProduct(id!, language);
         setProduct(p);
       } catch (e) {
         console.error(e);
