@@ -179,9 +179,33 @@ const Header = () => {
               transition={{ duration: 0.35, ease: "easeOut" }}
             />
 
-            {/* Content: close button, then logo + links with staggered reveal */}
+            {/* Content: mobile = [EN/CZ left] [close right]; desktop = [close left]. Logo + links below. */}
             <div className="relative flex flex-col min-h-full pt-6 px-4 sm:px-6 lg:px-8">
-              <div className="flex justify-start">
+              <div className="flex items-center justify-between sm:justify-start">
+                <div className="flex gap-2 sm:hidden">
+                  <button
+                    type="button"
+                    onClick={() => handleLanguageChange("en")}
+                    className={`px-2.5 py-1.5 text-xs rounded font-manrope font-normal uppercase transition-colors ${
+                      language === "en"
+                        ? "bg-dark text-beige"
+                        : "bg-beige text-dark border-2 border-dark hover:bg-dark hover:text-beige"
+                    }`}
+                  >
+                    EN
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleLanguageChange("cz")}
+                    className={`px-2.5 py-1.5 text-xs rounded font-manrope font-normal uppercase transition-colors ${
+                      language === "cz"
+                        ? "bg-dark text-beige"
+                        : "bg-beige text-dark border-2 border-dark hover:bg-dark hover:text-beige"
+                    }`}
+                  >
+                    CZ
+                  </button>
+                </div>
                 <MenuToggle isOpen={isMenuOpen} onClick={toggleMenu} />
               </div>
               <motion.div
@@ -282,13 +306,13 @@ const Header = () => {
                 <span className="w-px h-6 bg-dark/10" aria-hidden />
               </a>
 
-              {/* Language switcher – bottom right */}
-              <div className="absolute bottom-6 right-4 sm:right-6 lg:right-8 flex flex-col items-end gap-[0px]">
+              {/* Language switcher – bottom right, desktop/tablet only (mobile uses top row) */}
+              <div className="hidden sm:flex absolute bottom-6 right-6 lg:right-8 flex-col items-end gap-0">
                 <div className="flex gap-4">
                   <button
                     type="button"
                     onClick={() => handleLanguageChange("en")}
-                    className={`px-4 py-2 rounded font-manrope font-normal uppercase transition-colors ${
+                    className={`px-4 py-2 rounded font-manrope font-normal uppercase transition-colors text-base ${
                       language === "en"
                         ? "bg-dark text-beige"
                         : "bg-beige text-dark border-2 border-dark hover:bg-dark hover:text-beige"
@@ -299,7 +323,7 @@ const Header = () => {
                   <button
                     type="button"
                     onClick={() => handleLanguageChange("cz")}
-                    className={`px-4 py-2 rounded font-manrope font-normal uppercase transition-colors ${
+                    className={`px-4 py-2 rounded font-manrope font-normal uppercase transition-colors text-base ${
                       language === "cz"
                         ? "bg-dark text-beige"
                         : "bg-beige text-dark border-2 border-dark hover:bg-dark hover:text-beige"
