@@ -1,12 +1,6 @@
 "use client";
 
-import {
-  useEffect,
-  useLayoutEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 
 function usePrefersReducedMotion(): boolean {
   const [reduced, setReduced] = useState(false);
@@ -65,13 +59,12 @@ export default function ParallaxScroller({
   const prefersReducedMotion = usePrefersReducedMotion();
 
   const viewportRef = useRef<HTMLDivElement | null>(null);
-  const rowElsRef = useRef<Array<HTMLDivElement | null>>([]); // [layerIndex]
-  const trackElsRef = useRef<Array<Array<HTMLDivElement | null>>>([]); // [layerIndex][trackIndex]
+  const rowElsRef = useRef<Array<HTMLDivElement | null>>([]);
+  const trackElsRef = useRef<Array<Array<HTMLDivElement | null>>>([]);
 
-  // Independent X positions for each track: [layerIndex][trackIndex]
-  const trackXRef = useRef<Array<[number, number]>>([]); // [trackA, trackB]
-  const trackWidthsRef = useRef<number[]>([]); // Width of first track for each layer
-  const rowHeightsRef = useRef<number[]>([]); // Height of first track for each layer
+  const trackXRef = useRef<Array<[number, number]>>([]);
+  const trackWidthsRef = useRef<number[]>([]);
+  const rowHeightsRef = useRef<number[]>([]);
 
   const normalizedLayers = useMemo(() => {
     return layers.map((l) => ({
@@ -82,7 +75,6 @@ export default function ParallaxScroller({
     }));
   }, [layers]);
 
-  // Measure track size and set row height so CSS gap/margins work.
   useLayoutEffect(() => {
     const viewport = viewportRef.current;
     if (!viewport) return;
@@ -90,7 +82,11 @@ export default function ParallaxScroller({
     const measure = () => {
       const { width: vw } = viewport.getBoundingClientRect();
 
-      for (let layerIdx = 0; layerIdx < normalizedLayers.length; layerIdx += 1) {
+      for (
+        let layerIdx = 0;
+        layerIdx < normalizedLayers.length;
+        layerIdx += 1
+      ) {
         const row = rowElsRef.current[layerIdx];
         const firstTrack = trackElsRef.current[layerIdx]?.[0];
         if (!row || !firstTrack) continue;
@@ -102,18 +98,20 @@ export default function ParallaxScroller({
         trackWidthsRef.current[layerIdx] = w;
         rowHeightsRef.current[layerIdx] = h;
 
-        // Critical: give the row a real height, otherwise rows overlap forever.
         row.style.height = `${h}px`;
       }
 
-      // Initialize track positions after we know widths.
       trackXRef.current = normalizedLayers.map((_, i) => {
         const trackWidth = trackWidthsRef.current[i] || vw;
         return [0, trackWidth];
       });
 
       // Apply initial X transforms
-      for (let layerIdx = 0; layerIdx < normalizedLayers.length; layerIdx += 1) {
+      for (
+        let layerIdx = 0;
+        layerIdx < normalizedLayers.length;
+        layerIdx += 1
+      ) {
         const tracks = trackElsRef.current[layerIdx] || [];
         if (!tracks[0] || !tracks[1]) continue;
         const [trackAX, trackBX] = trackXRef.current[layerIdx] || [0, 0];
@@ -122,7 +120,6 @@ export default function ParallaxScroller({
       }
     };
 
-    // Run once, then keep in sync on resizes.
     measure();
     const ro = new ResizeObserver(measure);
     ro.observe(viewport);
@@ -135,12 +132,10 @@ export default function ParallaxScroller({
     return () => ro.disconnect();
   }, [normalizedLayers]);
 
-  // Main animation loop (single rAF for all rows)
   useEffect(() => {
     const viewport = viewportRef.current;
     if (!viewport) return;
 
-    // Reduced motion: no loop, no velocity boost
     if (prefersReducedMotion) {
       const onScroll = () => {
         const scrollY = window.scrollY || 0;
@@ -175,26 +170,22 @@ export default function ParallaxScroller({
       const dt = Math.min(0.05, Math.max(0.001, (t - lastT) / 1000));
       lastT = t;
 
-      // Calculate scroll velocity with smooth decay
       const curScrollY = window.scrollY || 0;
       const rawVel = (curScrollY - lastScrollY) / dt; // px/sec
       lastScrollY = curScrollY;
 
-      // Smooth velocity (low-pass filter for inertia)
       vel = vel * 0.85 + rawVel * 0.15;
       const velBoostRaw = Math.max(
         -maxVelocityBoost,
-        Math.min(maxVelocityBoost, vel * velocityFactor)
+        Math.min(maxVelocityBoost, vel * velocityFactor),
       );
 
-      // Only apply scroll-velocity boost when section is in view
       const r = viewport.getBoundingClientRect();
       const inView = r.top < window.innerHeight && r.bottom > 0;
       const velBoost = inView ? velBoostRaw : 0;
 
       const viewportWidth = Math.max(1, viewport.getBoundingClientRect().width);
 
-      // Animate each layer
       for (
         let layerIdx = 0;
         layerIdx < normalizedLayers.length;
@@ -207,45 +198,28 @@ export default function ParallaxScroller({
         const depth = layer.depth;
         const trackWidth = trackWidthsRef.current[layerIdx] || viewportWidth;
 
-        // Calculate movement: base speed + scroll velocity boost
-        // Positive baseSpeed = going right (x decreases/becomes negative)
-        // Negative baseSpeed = going left (x increases/becomes positive)
         const base = -layer.baseSpeed * depth; // px/sec
         const dx = (base + velBoost * depth) * dt;
 
-        // Get current independent track positions
         let [trackAX, trackBX] = trackXRef.current[layerIdx] || [0, trackWidth];
 
-        // Update both track positions independently
         trackAX += dx;
         trackBX += dx;
-
-        // Wrap logic: reposition before gap becomes visible
-        // Critical: wrap condition is (x <= -trackWidth + viewportWidth)
-        // This ensures we reposition before the track fully exits viewport
         if (layer.baseSpeed > 0) {
-          // Going right: tracks move left (x decreases)
-          // When trackA exits left, reposition it behind trackB
           if (trackAX <= -trackWidth + viewportWidth) {
             trackAX = trackBX + trackWidth;
           }
-          // When trackB exits left, reposition it behind trackA
           if (trackBX <= -trackWidth + viewportWidth) {
             trackBX = trackAX + trackWidth;
           }
         } else {
-          // Going left: tracks move right (x increases)
-          // When trackA exits right, reposition it behind trackB
           if (trackAX >= viewportWidth) {
             trackAX = trackBX - trackWidth;
           }
-          // When trackB exits right, reposition it behind trackA
           if (trackBX >= viewportWidth) {
             trackBX = trackAX - trackWidth;
           }
         }
-
-        // Store updated positions
         trackXRef.current[layerIdx] = [trackAX, trackBX];
 
         tracks[0].style.transform = `translate3d(${trackAX}px, 0, 0)`;
@@ -283,7 +257,9 @@ export default function ParallaxScroller({
             className="parallax-row relative w-full"
             style={{
               willChange: "transform",
-              transform: layer.yOffset ? `translateY(${layer.yOffset}px)` : undefined,
+              transform: layer.yOffset
+                ? `translateY(${layer.yOffset}px)`
+                : undefined,
             }}
           >
             {/* Exactly TWO tracks per layer - each with independent position */}

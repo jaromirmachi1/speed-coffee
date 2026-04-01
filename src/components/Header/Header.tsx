@@ -75,7 +75,10 @@ const Header = () => {
   const { language, setLanguage, t } = useLanguage();
   const { cartCount } = useCart();
   const pathname = usePathname();
-  const isShopPage = pathname === "/checkout" || pathname.startsWith("/shop");
+  const isShopPage =
+    pathname === "/checkout" ||
+    pathname.startsWith("/shop") ||
+    pathname === "/form";
 
   const toggleMenu = () => {
     setIsMenuOpen((prev) => !prev);
@@ -132,8 +135,12 @@ const Header = () => {
               )}
               <div className="flex-1" />
               <div className="flex items-center gap-4 md:gap-6">
-                <NavLink href="#events">{t("nav.events")}</NavLink>
-                <NavLink href="#reserve">{t("nav.reserve")}</NavLink>
+                <NavLink href={isShopPage ? "/#events" : "#events"}>
+                  {t("nav.events")}
+                </NavLink>
+                <NavLink href={isShopPage ? "/#reserve" : "#reserve"}>
+                  {t("nav.reserve")}
+                </NavLink>
                 <NavLink
                   href={isShopPage ? "/checkout" : "/shop"}
                   className={`relative inline-flex ${isShopPage ? "items-center" : "items-baseline"}`}
@@ -247,7 +254,11 @@ const Header = () => {
                   }}
                   transition={{ duration: 0.4, ease: "easeOut" }}
                 >
-                  <NavLink href="#events" onClick={closeMenu} isMobile={false}>
+                  <NavLink
+                    href={isShopPage ? "/#events" : "#events"}
+                    onClick={closeMenu}
+                    isMobile={false}
+                  >
                     {t("nav.events")}
                   </NavLink>
                 </motion.div>
@@ -258,7 +269,11 @@ const Header = () => {
                   }}
                   transition={{ duration: 0.4, ease: "easeOut" }}
                 >
-                  <NavLink href="#reserve" onClick={closeMenu} isMobile={false}>
+                  <NavLink
+                    href={isShopPage ? "/#reserve" : "#reserve"}
+                    onClick={closeMenu}
+                    isMobile={false}
+                  >
                     {t("nav.reserve")}
                   </NavLink>
                 </motion.div>
