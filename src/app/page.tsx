@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState, useLayoutEffect, useCallback } from "react";
 import Home from "@/components-pages/Home/Home";
 import { useSpeedCoffeeMotion } from "@/hooks/useSpeedCoffeeMotion";
 import { useCustomCursor } from "@/hooks/useCustomCursor";
@@ -9,22 +9,33 @@ import { motion } from "framer-motion";
 
 const INTRO_SEEN_KEY = "speed-coffee-intro-seen";
 
+declare global {
+  interface Window {
+    __SPEED_COFFEE_HOME_READY__?: boolean;
+  }
+}
+
 export default function Page() {
   const rootRef = useRef<HTMLDivElement | null>(null);
-  const [introComplete, setIntroComplete] = useState(() =>
-    typeof window !== "undefined"
-      ? !!sessionStorage.getItem(INTRO_SEEN_KEY)
-      : false,
+  /**
+   * First full load: false on server and on first client paint (matches SSR).
+   * After the first layout effect on this origin, skip the shell on remounts (e.g. client nav back to /).
+   */
+  const [clientReady, setClientReady] = useState(
+    () => typeof window !== "undefined" && !!window.__SPEED_COFFEE_HOME_READY__,
   );
+  const [introComplete, setIntroComplete] = useState(false);
 
-  // Ensure we sync when navigating back to home (e.g. logo click)
-  useEffect(() => {
-    if (
-      typeof window !== "undefined" &&
-      sessionStorage.getItem(INTRO_SEEN_KEY)
-    ) {
+  const handleIntroComplete = useCallback(() => {
+    setIntroComplete(true);
+  }, []);
+
+  useLayoutEffect(() => {
+    window.__SPEED_COFFEE_HOME_READY__ = true;
+    if (sessionStorage.getItem(INTRO_SEEN_KEY)) {
       setIntroComplete(true);
     }
+    setClientReady(true);
   }, []);
 
   // Initialize custom cursor
@@ -36,12 +47,24 @@ export default function Page() {
     smoothing: 0.15,
   });
 
-  // Initialize smooth scroll - pass introComplete so hook re-runs when element mounts
-  useSpeedCoffeeMotion(rootRef, introComplete);
+  // Lenis/GSAP only when the home shell is mounted
+  useSpeedCoffeeMotion(rootRef, clientReady && introComplete);
+
+  if (!clientReady) {
+    return (
+      <div
+        className="min-h-screen bg-beige"
+        aria-busy="true"
+        aria-label="Loading"
+      />
+    );
+  }
 
   return (
     <>
-      <IntroLoader onComplete={() => setIntroComplete(true)} duration={3500} />
+      {!introComplete && (
+        <IntroLoader onComplete={handleIntroComplete} duration={3500} />
+      )}
       {introComplete && (
         <motion.div
           ref={rootRef}
