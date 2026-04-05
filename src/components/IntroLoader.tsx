@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useLayoutEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import starSvg from "@/assets/images/star1.svg";
 
@@ -19,38 +19,54 @@ const IntroLoader = ({ onComplete, duration = 3500 }: IntroLoaderProps) => {
   const [isVisible, setIsVisible] = useState(!hasSeenIntroSync && !prefersReducedMotionSync);
   const [shouldReduceMotion] = useState(prefersReducedMotionSync);
   const [hasSeenIntro] = useState(hasSeenIntroSync);
+  /** After exit animation finishes we unmount; avoids nuking AnimatePresence before exit runs */
+  const [introExited, setIntroExited] = useState(false);
+
+  const onCompleteRef = useRef(onComplete);
+  onCompleteRef.current = onComplete;
+
+  // Skip paths: notify parent before paint so home is not blank for returning visitors
+  useLayoutEffect(() => {
+    if (hasSeenIntroSync || prefersReducedMotionSync) {
+      if (prefersReducedMotionSync && !hasSeenIntroSync) {
+        sessionStorage.setItem(sessionKey, "true");
+      }
+      onCompleteRef.current?.();
+    }
+  }, [hasSeenIntroSync, prefersReducedMotionSync, sessionKey]);
 
   useEffect(() => {
-    // If already seen or reduced motion, skip immediately
     if (hasSeenIntroSync || prefersReducedMotionSync) {
-      setIsVisible(false);
-      onComplete?.();
       return;
     }
 
-    // Mark as seen in session
-    sessionStorage.setItem(sessionKey, "true");
+    // Do not set sessionStorage until the intro finishes. Setting it here caused
+    // React Strict Mode's remount (dev) to see "already seen" and skip the loader.
 
-    // Fade out after duration
     const timer = setTimeout(() => {
       setIsVisible(false);
-      onComplete?.();
     }, duration);
 
     return () => {
       clearTimeout(timer);
     };
-  }, [duration, onComplete, hasSeenIntroSync, prefersReducedMotionSync]);
+  }, [duration, hasSeenIntroSync, prefersReducedMotionSync, sessionKey]);
 
-  // Skip animation if reduced motion is preferred or already seen
-  if (shouldReduceMotion || hasSeenIntro || !isVisible) {
+  const handleExitComplete = () => {
+    sessionStorage.setItem(sessionKey, "true");
+    onCompleteRef.current?.();
+    setIntroExited(true);
+  };
+
+  if (shouldReduceMotion || hasSeenIntro || introExited) {
     return null;
   }
 
   return (
-    <AnimatePresence>
+    <AnimatePresence mode="wait" onExitComplete={handleExitComplete}>
       {isVisible && (
         <motion.div
+          key="speed-coffee-intro"
           className="fixed inset-0 z-[9999] bg-beige flex items-center justify-center overflow-hidden"
           initial={{ opacity: 1, backdropFilter: "blur(0px)" }}
           exit={{ 

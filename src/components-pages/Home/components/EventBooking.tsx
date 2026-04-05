@@ -4,6 +4,7 @@ import Container from "@/components/Container";
 import TextRevealLines from "@/lib/TextRevealLines";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import coffeeVan from "@/assets/images/coffeeVan.png";
 import {
   typography,
@@ -102,12 +103,13 @@ const EventBooking = () => {
           >
             {t("event.bookUs")}
           </p>
-          <button
-            className={`px-6 md:px-8 py-2 md:py-3 ${typography.manrope.button} border-2 border-white text-dark font-manrope ${fontWeights.manrope.bold} rounded-3xl hover:bg-white hover:text-dark transition-colors`}
+          <Link
+            href="/form"
+            className={`inline-flex items-center justify-center px-6 md:px-8 py-2 md:py-3 ${typography.manrope.button} border-2 border-white text-dark font-manrope ${fontWeights.manrope.bold} rounded-3xl hover:bg-white hover:text-dark transition-colors`}
             style={{ fontFamily: "Manrope, sans-serif" }}
           >
             {t("event.here")}
-          </button>
+          </Link>
         </div>
       </Container>
     </section>
