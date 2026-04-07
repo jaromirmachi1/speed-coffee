@@ -6,7 +6,6 @@ import Container from "@/components/Container";
 import { motion } from "framer-motion";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useCart } from "@/contexts/CartContext";
-import { fetchProducts } from "@/app/actions/products";
 import type { ProductDisplay } from "@/types/product";
 import {
   typography,
@@ -23,8 +22,12 @@ const Shop = () => {
     async function loadProducts() {
       try {
         setIsLoading(true);
-        const fetchedProducts = await fetchProducts(language);
-        setProducts(fetchedProducts);
+        const res = await fetch(`/api/products?lang=${language}`, { cache: "no-store" });
+        const data = await res.json();
+        if (!res.ok || !data?.ok) {
+          throw new Error(data?.error || "Failed to fetch products");
+        }
+        setProducts(Array.isArray(data.products) ? data.products : []);
       } catch (error) {
         console.error("Failed to load products:", error);
         // Fallback to empty array
