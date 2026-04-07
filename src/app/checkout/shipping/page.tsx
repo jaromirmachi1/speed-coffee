@@ -42,6 +42,7 @@ export default function ShippingPage() {
   const stripeConfirmRef = useRef<{ confirm: () => Promise<{ error?: { message?: string } }> } | null>(null);
   const router = useRouter();
   const { items, cartCount, clearCart } = useCart();
+  const isStoreOpen = process.env.NEXT_PUBLIC_STORE_OPEN !== "false";
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState<"stripe" | "delivery" | "bank">("stripe");
   const [stripeClientSecret, setStripeClientSecret] = useState<string | null>(null);
@@ -193,6 +194,35 @@ export default function ShippingPage() {
                 Continue shopping
               </Link>
             </p>
+          </Container>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+
+  if (!isStoreOpen) {
+    return (
+      <div ref={rootRef} className="min-h-screen bg-beige flex flex-col">
+        <Header />
+        <main className="flex-1 py-16 md:py-24">
+          <Container className="px-4 sm:px-6 lg:px-8 max-w-3xl">
+            <div className="p-6 md:p-8 bg-white/40 rounded-2xl border border-dark/10">
+              <h1
+                className={`${typography.agright.sectionHeading} font-agright ${fontWeights.agright.normal} text-dark mb-4`}
+              >
+                E-shop not open yet
+              </h1>
+              <p className="font-manrope text-dark/80">
+                We are currently testing checkout and payments. Public ordering will open soon.
+              </p>
+              <Link
+                href="/shop"
+                className={`inline-block mt-6 py-3 px-6 ${typography.manrope.button} font-manrope ${fontWeights.manrope.bold} rounded-full bg-dark text-beige hover:bg-dark/90 transition-colors`}
+              >
+                Back to shop
+              </Link>
+            </div>
           </Container>
         </main>
         <Footer />
