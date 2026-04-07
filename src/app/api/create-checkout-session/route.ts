@@ -14,10 +14,15 @@ function czkToStripeAmount(czk: number): number {
   return Math.round(czk * 100);
 }
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
+function getStripe(): Stripe | null {
+  const key = process.env.STRIPE_SECRET_KEY;
+  if (!key) return null;
+  return new Stripe(key);
+}
 
 export async function POST(request: NextRequest) {
-  if (!process.env.STRIPE_SECRET_KEY) {
+  const stripe = getStripe();
+  if (!stripe) {
     return NextResponse.json(
       { error: "Stripe is not configured. Set STRIPE_SECRET_KEY." },
       { status: 500 }
@@ -43,7 +48,7 @@ export async function POST(request: NextRequest) {
     const success = successUrl || `${origin}/checkout/success?session_id={CHECKOUT_SESSION_ID}`;
     const cancel = cancelUrl || `${origin}/checkout/shipping`;
 
-    const line_items: Stripe.Checkout.SessionCreateParams.LineItem[] = items.map((item) => {
+    const line_items = items.map((item) => {
       const unitAmountCzk = priceToCzk(item.price);
       return {
         price_data: {
@@ -62,8 +67,8 @@ export async function POST(request: NextRequest) {
       price_data: {
         currency: "czk",
         product_data: {
-          name: "Shipping",
-          description: "Standard delivery",
+          name: "Shipping (standard delivery)",
+          images: undefined,
         },
         unit_amount: czkToStripeAmount(SHIPPING_CZK),
       },

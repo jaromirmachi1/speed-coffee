@@ -14,10 +14,15 @@ function czkToStripeAmount(czk: number): number {
   return Math.round(czk * 100);
 }
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
+function getStripe(): Stripe | null {
+  const key = process.env.STRIPE_SECRET_KEY;
+  if (!key) return null;
+  return new Stripe(key);
+}
 
 export async function POST(request: NextRequest) {
-  if (!process.env.STRIPE_SECRET_KEY) {
+  const stripe = getStripe();
+  if (!stripe) {
     return NextResponse.json(
       { error: "Stripe is not configured. Set STRIPE_SECRET_KEY." },
       { status: 500 }

@@ -32,11 +32,16 @@ function formatCzk(value: number): string {
   return `${value} Kč`;
 }
 
+function parsePaymentIntentId(clientSecret: string): string | null {
+  const match = clientSecret.match(/^(pi_[^_]+)_secret_/);
+  return match?.[1] ?? null;
+}
+
 export default function ShippingPage() {
   const rootRef = useRef<HTMLDivElement | null>(null);
   const stripeConfirmRef = useRef<{ confirm: () => Promise<{ error?: { message?: string } }> } | null>(null);
   const router = useRouter();
-  const { items, cartCount } = useCart();
+  const { items, cartCount, clearCart } = useCart();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState<"stripe" | "delivery" | "bank">("stripe");
   const [stripeClientSecret, setStripeClientSecret] = useState<string | null>(null);
@@ -94,14 +99,49 @@ export default function ShippingPage() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (cartCount === 0) return;
+    const formData = new FormData(e.currentTarget);
+    const customer = {
+      name: String(formData.get("name") || "").trim(),
+      email: String(formData.get("email") || "").trim(),
+      phone: String(formData.get("phone") || "").trim(),
+      street: String(formData.get("street") || "").trim(),
+      city: String(formData.get("city") || "").trim(),
+      postalCode: String(formData.get("postalCode") || "").trim(),
+      country: String(formData.get("country") || "").trim(),
+    };
+    const normalizedItems = items.map((item) => ({
+      id: item.id,
+      title: item.title,
+      price: item.price,
+      quantity: item.quantity,
+    }));
 
     if (paymentMethod === "stripe") {
       if (!stripeClientSecret || !stripePromise) {
         alert("Payment form is still loading. Please wait.");
         return;
       }
+      const paymentIntentId = parsePaymentIntentId(stripeClientSecret);
+      if (!paymentIntentId) {
+        alert("Payment intent is invalid. Please refresh and try again.");
+        return;
+      }
       setIsSubmitting(true);
       try {
+        const attachRes = await fetch("/api/attach-payment-data", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            paymentIntentId,
+            customer,
+            items: normalizedItems,
+          }),
+        });
+        if (!attachRes.ok) {
+          const attachData = await attachRes.json().catch(() => ({}));
+          throw new Error(attachData.error || "Failed to prepare payment data.");
+        }
+
         const result = await stripeConfirmRef.current?.confirm();
         if (result?.error) {
           setIsSubmitting(false);
@@ -117,11 +157,28 @@ export default function ShippingPage() {
       return;
     }
 
-    // Pay on delivery or bank transfer: no Stripe, just confirm
+    // Pay on delivery or bank transfer: create pending order in CMS
     setIsSubmitting(true);
-    await new Promise((r) => setTimeout(r, 800));
-    setIsSubmitting(false);
-    router.push("/checkout/success");
+    try {
+      const res = await fetch("/api/orders/manual", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          paymentMethod,
+          customer,
+          items: normalizedItems,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok || !data.orderNumber) {
+        throw new Error(data?.error || "Could not create order.");
+      }
+      clearCart();
+      router.push(`/checkout/success?manual=1&order_number=${encodeURIComponent(data.orderNumber)}`);
+    } catch (error) {
+      setIsSubmitting(false);
+      alert(error instanceof Error ? error.message : "Could not place order. Please try again.");
+    }
   };
 
   if (cartCount === 0) {

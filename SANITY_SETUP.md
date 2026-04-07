@@ -18,22 +18,33 @@ NEXT_PUBLIC_SANITY_DATASET=production
 
 Restart the Next.js dev server after changing env vars.
 
-## 3. Run Sanity Studio to manage content
+## 3. Admin panel (embedded Studio — “Shopify-like” back office)
+
+**Sanity Studio is your admin:** one place to manage **products**, **orders**, and anything else you model in Sanity. It is not Shopify (no built-in payments dashboard, shipping labels, or app store), but it covers **catalog + order records** tied to this site.
+
+### Option A — Same app as the storefront (recommended)
+
+1. Run the Next.js app: `npm run dev`
+2. Open **`http://localhost:3000/studio`**
+3. Sign in with your **Sanity account** (only people invited to the project can edit)
+
+The Studio is embedded at `/studio` (`src/app/studio/[[...tool]]/`). The desk shows **Products** and **Orders** first (`src/sanity/adminStructure.ts`).
+
+After you deploy, add your production URL to **CORS** in [sanity.io/manage](https://www.sanity.io/manage) → your project → API → CORS origins (e.g. `https://your-domain.com`).
+
+### Option B — Standalone Studio (CLI)
 
 From the project root:
 
 ```bash
-npx sanity dev
+npm run studio
 ```
 
-If the CLI can’t find your project, set the env vars for the shell (e.g. `export NEXT_PUBLIC_SANITY_PROJECT_ID=...`) or put them in a `.env` file in the project root, since the Sanity CLI may not load `.env.local`.
+(`sanity dev` with `.env.local`.) With `basePath: '/studio'` in `sanity.config.ts`, open **`http://localhost:3333/studio`** (not the site root).
 
-This starts Sanity Studio (usually at `http://localhost:3333`). There you can:
+If the CLI can’t find your project, set env vars in the shell or use a root `.env` file, since the Sanity CLI may not load `.env.local`.
 
-- Create and edit **Product** documents.
-- Set titles and descriptions in EN and CZ, price, currency, image, alt text, display order, and active flag.
-
-Schema is in `schemas/product.ts`; the app uses it for the GROQ query and for Studio.
+Schema lives under `schemas/`; the storefront reads products (and order lookup reads orders) via the Sanity API.
 
 ## 4. Product schema (reference)
 
@@ -52,6 +63,27 @@ The shop shows only documents with **Active** checked, ordered by **Display orde
 
 Remove or comment out the Sanity env vars in `.env.local`. The app will fall back to Supabase for products.
 
-## Optional: embed Studio in the app
+## 6. Orders and “Track order” (`/orders`)
 
-To serve Sanity Studio under a route (e.g. `/studio`), you can add a Next.js route that renders the Studio. See [Sanity docs – Embedding the Studio](https://www.sanity.io/docs/embedding-the-studio) and the `next-sanity` package for the recommended setup.
+Order documents are defined in `schemas/order.ts` (same Studio as products). Customers can look up an order at **`/orders`** using:
+
+- **Order number** (e.g. `SC-1001`) – must match the `orderNumber` field in Sanity.
+- **Email** – must match `customerEmail` on that order (case-insensitive).
+
+The lookup runs only on the **server** (`/api/order-lookup`) so your GROQ query is not exposed in the browser.
+
+**Creating orders today:** add **Order** documents manually in Studio (or automate later with a Stripe webhook). Fill in order number, status, customer email, shipping address, line items (product references), and totals.
+
+**If the dataset is private** (recommended when storing customer data), create a read token in [sanity.io/manage](https://www.sanity.io/manage) → Project → API → Tokens, then add to `.env.local` (server-only, never `NEXT_PUBLIC_`):
+
+```env
+SANITY_API_READ_TOKEN=your_read_token
+```
+
+Restart Next.js after adding it. Public datasets can work without a token for server-side reads, but locking the dataset and using a token is safer.
+
+## 7. Payments and “full Shopify”
+
+**Stripe** remains where you reconcile cards, refunds, and webhooks. **Sanity** is the operational admin for **what you sell** and **order status / details** you choose to store. For analytics, tax, and multi-channel retail at Shopify’s level, you would either adopt a platform like Shopify or add more integrations (Stripe Dashboard, custom dashboards, etc.).
+
+Further reading: [Embedding the Studio](https://www.sanity.io/docs/embedding-the-studio).

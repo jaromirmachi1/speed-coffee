@@ -144,7 +144,9 @@ const TextReveal = ({
   );
 
   if (React.Children.count(children) === 1) {
-    return React.cloneElement(children, { ref: containerRef } as any);
+    return React.cloneElement(children, {
+      ref: containerRef,
+    } as { ref: React.Ref<HTMLElement> });
   }
 
   return (

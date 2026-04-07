@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useImperativeHandle, forwardRef } from "react";
+import { useImperativeHandle, forwardRef } from "react";
 import { PaymentElement, useStripe, useElements } from "@stripe/react-stripe-js";
 
 export interface StripePaymentFormHandle {

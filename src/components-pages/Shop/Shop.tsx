@@ -11,7 +11,6 @@ import type { ProductDisplay } from "@/types/product";
 import {
   typography,
   fontWeights,
-  lineHeights,
 } from "@/lib/constants/typography";
 
 const Shop = () => {
@@ -40,7 +39,7 @@ const Shop = () => {
 
   if (isLoading) {
     return (
-      <section className="bg-beige py-16 md:py-24 lg:py-32 min-h-screen">
+      <section className="bg-beige py-16 md:py-24 lg:py-32">
         <Container className="px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-center min-h-[400px]">
             <p className="text-dark font-manrope">Loading products...</p>
@@ -51,7 +50,7 @@ const Shop = () => {
   }
 
   return (
-    <section className="bg-beige py-16 md:py-24 lg:py-32 min-h-screen">
+    <section className="bg-beige py-16 md:py-24 lg:py-32">
       <Container className="px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -65,10 +64,28 @@ const Shop = () => {
           </h2>
 
           {products.length === 0 ? (
-            <div className="text-center py-12">
+            <div className="text-center py-12 max-w-lg mx-auto space-y-3">
               <p className="text-dark font-manrope">
                 No products available at the moment.
               </p>
+              {!process.env.NEXT_PUBLIC_SANITY_PROJECT_ID ? (
+                <p className="text-dark/60 font-manrope text-sm">
+                  Set{" "}
+                  <code className="text-xs bg-dark/5 px-1.5 py-0.5 rounded">
+                    NEXT_PUBLIC_SANITY_PROJECT_ID
+                  </code>{" "}
+                  (and optionally{" "}
+                  <code className="text-xs bg-dark/5 px-1.5 py-0.5 rounded">
+                    NEXT_PUBLIC_SANITY_DATASET
+                  </code>
+                  ) in{" "}
+                  <code className="text-xs bg-dark/5 px-1.5 py-0.5 rounded">
+                    .env.local
+                  </code>
+                  , then add active products in Sanity Studio. See{" "}
+                  <span className="font-manrope font-semibold">SANITY_SETUP.md</span>.
+                </p>
+              ) : null}
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5 lg:gap-6">
