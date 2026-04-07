@@ -1,13 +1,14 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import Header from "@/components/Header/Header";
 import Footer from "@/components/Footer";
 import Container from "@/components/Container";
 import { useCart } from "@/contexts/CartContext";
 import { useCustomCursor } from "@/hooks/useCustomCursor";
 import { useSpeedCoffeeMotion } from "@/hooks/useSpeedCoffeeMotion";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import {
   typography,
   fontWeights,
@@ -28,7 +29,10 @@ function formatCzk(value: number): string {
 
 export default function CheckoutPage() {
   const rootRef = useRef<HTMLDivElement | null>(null);
+  const router = useRouter();
+  const [storeNotice, setStoreNotice] = useState<string | null>(null);
   const { items, cartCount, removeItem, updateQuantity } = useCart();
+  const isStoreOpen = process.env.NEXT_PUBLIC_STORE_OPEN !== "false";
 
   const subtotalCzk = items.reduce((sum, item) => sum + priceToCzk(item.price) * item.quantity, 0);
   const totalCzk = subtotalCzk + SHIPPING_CZK;
@@ -164,12 +168,26 @@ export default function CheckoutPage() {
                       <span>{formatCzk(totalCzk)}</span>
                     </div>
                   </div>
-                  <Link
-                    href="/checkout/shipping"
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (!isStoreOpen) {
+                        setStoreNotice(
+                          "The e-shop is currently in testing mode and not open for public orders yet."
+                        );
+                        return;
+                      }
+                      router.push("/checkout/shipping");
+                    }}
                     className={`block w-full text-center py-3 px-6 ${typography.manrope.button} font-manrope ${fontWeights.manrope.bold} rounded-full bg-dark text-beige hover:bg-dark/90 transition-colors`}
                   >
                     Proceed to checkout
-                  </Link>
+                  </button>
+                  {storeNotice ? (
+                    <p className="mt-3 text-xs font-manrope text-dark/70 text-center">
+                      {storeNotice}
+                    </p>
+                  ) : null}
                 </div>
               </div>
             </div>
