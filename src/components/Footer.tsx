@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { motion } from "framer-motion";
 import { useLanguage } from "@/contexts/LanguageContext";
 import {
@@ -52,11 +53,19 @@ const Footer = () => {
             viewport={{ once: true }}
             transition={{ duration: 0.6, ease: "easeOut", delay: 0.4 }}
           >
-            <p
-              className={`${typography.manrope.footerSmall} font-manrope ${fontWeights.manrope.light} text-white`}
-            >
-              © {new Date().getFullYear()}
-            </p>
+            <div className="space-y-2">
+              <p
+                className={`${typography.manrope.footerSmall} font-manrope ${fontWeights.manrope.light} text-white`}
+              >
+                © {new Date().getFullYear()}
+              </p>
+              <Link
+                href="/orders"
+                className={`${typography.manrope.footerSmall} font-manrope ${fontWeights.manrope.light} text-white/90 underline underline-offset-2 hover:text-white inline-block`}
+              >
+                {t("footer.trackOrder")}
+              </Link>
+            </div>
           </motion.div>
 
           {/* Bottom Center - Social Media Icons */}

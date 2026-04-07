@@ -101,6 +101,16 @@ export const LanguageProvider = ({ children }: LanguageProviderProps) => {
       "products.advantages.matcha.title": "Matcha quality",
       "products.advantages.matcha.text": "Premium grade for a rich, balanced taste and lasting calm energy.",
 
+      // Checkout success
+      "checkout.success.title": "Thank you for your order",
+      "checkout.success.paid":
+        "Your payment was successful. We'll send you a confirmation email and ship your order soon.",
+      "checkout.success.other":
+        "We've received your order. You can pay on delivery or by bank transfer as agreed.",
+      "checkout.success.trackOrder": "Track order status",
+      "checkout.success.continueShopping": "Continue shopping",
+      "checkout.success.backHome": "Back to home",
+
       // Cart modal
       "cart.addedToBasket": "Added to your basket",
       "cart.modalMessage": "Keep shopping or go to checkout?",
@@ -131,6 +141,35 @@ export const LanguageProvider = ({ children }: LanguageProviderProps) => {
 
       // Footer
       "footer.madeBy": "Made by UITherapy",
+      "footer.trackOrder": "Track order",
+
+      // Order tracking (Sanity CMS)
+      "orders.title": "Track your order",
+      "orders.intro":
+        "Enter the order number from your confirmation email and the email address you used at checkout. Order details are managed in Sanity Studio.",
+      "orders.orderNumber": "Order number",
+      "orders.orderNumberPlaceholder": "e.g. SC-1001",
+      "orders.email": "Email",
+      "orders.emailPlaceholder": "you@example.com",
+      "orders.submit": "Look up order",
+      "orders.searching": "Searching…",
+      "orders.resultTitle": "Order",
+      "orders.placedOn": "Placed on",
+      "orders.customer": "Customer",
+      "orders.shipping": "Shipping address",
+      "orders.items": "Items",
+      "orders.total": "Total",
+      "orders.backShop": "Back to shop",
+      "orders.cmsNote":
+        "Orders are stored in your Sanity project. Create or update them in Studio; you can connect Stripe webhooks later to create orders automatically.",
+      "orders.status.pending": "Pending",
+      "orders.status.paid": "Paid",
+      "orders.status.fulfilled": "Shipped / fulfilled",
+      "orders.status.cancelled": "Cancelled",
+      "orders.error.unavailable": "Order lookup is not configured. Add Sanity project ID (and read token if the dataset is private).",
+      "orders.error.invalid": "Please enter a valid order number and email.",
+      "orders.error.notFound": "No order matches those details. Check the number and email or contact us.",
+      "orders.error.generic": "Something went wrong. Try again later.",
     },
     cz: {
       // Navigation
@@ -178,6 +217,16 @@ export const LanguageProvider = ({ children }: LanguageProviderProps) => {
       "products.advantages.matcha.title": "Kvalita matcha",
       "products.advantages.matcha.text": "Prémiová jakost pro plnou, vyváženou chuť a klidnou energii.",
 
+      // Checkout success
+      "checkout.success.title": "Děkujeme za objednávku",
+      "checkout.success.paid":
+        "Platba proběhla v pořádku. Pošleme potvrzení e-mailem a brzy objednávku odešleme.",
+      "checkout.success.other":
+        "Objednávku jsme přijali. Platbu můžete provést při doručení nebo převodem podle domluvy.",
+      "checkout.success.trackOrder": "Stav objednávky",
+      "checkout.success.continueShopping": "Pokračovat v nákupu",
+      "checkout.success.backHome": "Zpět na úvod",
+
       // Cart modal
       "cart.addedToBasket": "Přidáno do košíku",
       "cart.modalMessage": "Pokračovat v nákupu nebo přejít k platbě?",
@@ -208,6 +257,35 @@ export const LanguageProvider = ({ children }: LanguageProviderProps) => {
 
       // Footer
       "footer.madeBy": "Vytvořeno UITherapy",
+      "footer.trackOrder": "Sledovat objednávku",
+
+      // Order tracking (Sanity CMS)
+      "orders.title": "Sledování objednávky",
+      "orders.intro":
+        "Zadejte číslo objednávky z potvrzovacího e-mailu a e-mail použitý při objednávce. Údaje spravujete v Sanity Studio.",
+      "orders.orderNumber": "Číslo objednávky",
+      "orders.orderNumberPlaceholder": "např. SC-1001",
+      "orders.email": "E-mail",
+      "orders.emailPlaceholder": "vy@example.com",
+      "orders.submit": "Vyhledat objednávku",
+      "orders.searching": "Hledám…",
+      "orders.resultTitle": "Objednávka",
+      "orders.placedOn": "Vytvořeno",
+      "orders.customer": "Zákazník",
+      "orders.shipping": "Doručovací adresa",
+      "orders.items": "Položky",
+      "orders.total": "Celkem",
+      "orders.backShop": "Zpět do obchodu",
+      "orders.cmsNote":
+        "Objednávky jsou v projektu Sanity. Vytvářejte je nebo upravujte ve Studiu; později lze připojit Stripe webhook pro automatické zakládání.",
+      "orders.status.pending": "Čeká na zpracování",
+      "orders.status.paid": "Zaplaceno",
+      "orders.status.fulfilled": "Odesláno",
+      "orders.status.cancelled": "Zrušeno",
+      "orders.error.unavailable": "Vyhledávání objednávek není nastaveno. Doplňte Sanity project ID (a read token u soukromého datasetu).",
+      "orders.error.invalid": "Zadejte platné číslo objednávky a e-mail.",
+      "orders.error.notFound": "Objednávku nenacházíme. Zkontrolujte údaje nebo nás kontaktujte.",
+      "orders.error.generic": "Něco se pokazilo. Zkuste to později.",
     },
   };
 

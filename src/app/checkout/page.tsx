@@ -165,7 +165,7 @@ export default function CheckoutPage() {
                     </div>
                   </div>
                   <Link
-                    href="#"
+                    href="/checkout/shipping"
                     className={`block w-full text-center py-3 px-6 ${typography.manrope.button} font-manrope ${fontWeights.manrope.bold} rounded-full bg-dark text-beige hover:bg-dark/90 transition-colors`}
                   >
                     Proceed to checkout

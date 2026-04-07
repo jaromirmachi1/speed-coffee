@@ -7,6 +7,7 @@ import Header from "@/components/Header/Header";
 import Footer from "@/components/Footer";
 import Container from "@/components/Container";
 import { useCart } from "@/contexts/CartContext";
+import { useLanguage } from "@/contexts/LanguageContext";
 import { useCustomCursor } from "@/hooks/useCustomCursor";
 import { useSpeedCoffeeMotion } from "@/hooks/useSpeedCoffeeMotion";
 import { typography, fontWeights } from "@/lib/constants/typography";
@@ -15,11 +16,14 @@ function CheckoutSuccessContent() {
   const rootRef = useRef<HTMLDivElement | null>(null);
   const searchParams = useSearchParams();
   const { clearCart } = useCart();
+  const { t } = useLanguage();
   const sessionId = searchParams.get("session_id");
   const paymentIntent = searchParams.get("payment_intent");
   const redirectStatus = searchParams.get("redirect_status");
+  const manual = searchParams.get("manual");
   const paidWithStripe =
     !!sessionId || (!!paymentIntent && redirectStatus === "succeeded");
+  const shouldClearCart = paidWithStripe || manual === "1";
 
   useCustomCursor({
     size: 20,
@@ -31,8 +35,8 @@ function CheckoutSuccessContent() {
   useSpeedCoffeeMotion(rootRef, true);
 
   useEffect(() => {
-    if (paidWithStripe) clearCart();
-  }, [paidWithStripe, clearCart]);
+    if (shouldClearCart) clearCart();
+  }, [shouldClearCart, clearCart]);
 
   return (
     <div ref={rootRef} className="min-h-screen bg-beige flex flex-col">
@@ -42,27 +46,33 @@ function CheckoutSuccessContent() {
           <h1
             className={`${typography.agright.sectionHeading} font-agright ${fontWeights.agright.normal} text-dark mb-6`}
           >
-            Thank you for your order
+            {t("checkout.success.title")}
           </h1>
           <p
             className={`font-manrope ${typography.manrope.body} text-dark/80 mb-10`}
           >
-            {paidWithStripe
-              ? "Your payment was successful. We'll send you a confirmation email and ship your order soon."
-              : "We've received your order. You can pay on delivery or by bank transfer as agreed."}
+            {paidWithStripe || manual === "1"
+              ? t("checkout.success.paid")
+              : t("checkout.success.other")}
           </p>
           <div className="flex flex-wrap justify-center gap-4">
             <Link
-              href="/shop"
+              href="/orders"
               className={`inline-block py-3 px-6 ${typography.manrope.button} font-manrope ${fontWeights.manrope.bold} rounded-full bg-dark text-beige hover:bg-dark/90 transition-colors`}
             >
-              Continue shopping
+              {t("checkout.success.trackOrder")}
+            </Link>
+            <Link
+              href="/shop"
+              className={`inline-block py-3 px-6 ${typography.manrope.button} font-manrope ${fontWeights.manrope.bold} rounded-full border-2 border-dark text-dark hover:bg-dark hover:text-beige transition-colors`}
+            >
+              {t("checkout.success.continueShopping")}
             </Link>
             <Link
               href="/"
               className={`inline-block py-3 px-6 ${typography.manrope.button} font-manrope ${fontWeights.manrope.bold} rounded-full border-2 border-dark text-dark hover:bg-dark hover:text-beige transition-colors`}
             >
-              Back to home
+              {t("checkout.success.backHome")}
             </Link>
           </div>
         </Container>

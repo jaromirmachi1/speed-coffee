@@ -77,8 +77,10 @@ const Header = () => {
   const pathname = usePathname();
   const isShopPage =
     pathname === "/checkout" ||
+    pathname.startsWith("/checkout/") ||
     pathname.startsWith("/shop") ||
-    pathname === "/form";
+    pathname === "/form" ||
+    pathname.startsWith("/orders");
 
   const toggleMenu = () => {
     setIsMenuOpen((prev) => !prev);
