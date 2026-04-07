@@ -2,7 +2,6 @@
 
 import { isSanityConfigured } from "@/lib/sanity/client";
 import { getProductsFromSanity, getProductByIdFromSanity } from "@/lib/sanity/products";
-import { getProducts, getProductById, transformProductForDisplay } from "@/lib/supabase/products";
 import type { ProductDisplay } from "@/types/product";
 
 /**
@@ -14,6 +13,7 @@ export async function fetchProducts(language: "en" | "cz" = "en"): Promise<Produ
     if (isSanityConfigured()) {
       return await getProductsFromSanity(language);
     }
+    const { getProducts, transformProductForDisplay } = await import("@/lib/supabase/products");
     const products = await getProducts();
     return products.map((product) => transformProductForDisplay(product, language));
   } catch (error) {
@@ -33,6 +33,7 @@ export async function fetchProduct(
     if (isSanityConfigured()) {
       return await getProductByIdFromSanity(id, language);
     }
+    const { getProductById, transformProductForDisplay } = await import("@/lib/supabase/products");
     const product = await getProductById(id);
     if (!product) return null;
     return transformProductForDisplay(product, language);
