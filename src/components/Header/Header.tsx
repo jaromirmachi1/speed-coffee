@@ -140,7 +140,7 @@ const Header = () => {
                 <NavLink href={isShopPage ? "/#events" : "#events"}>
                   {t("nav.events")}
                 </NavLink>
-                <NavLink href={isShopPage ? "/#reserve" : "#reserve"}>
+                <NavLink href="/form">
                   {t("nav.reserve")}
                 </NavLink>
                 <NavLink
@@ -271,11 +271,7 @@ const Header = () => {
                   }}
                   transition={{ duration: 0.4, ease: "easeOut" }}
                 >
-                  <NavLink
-                    href={isShopPage ? "/#reserve" : "#reserve"}
-                    onClick={closeMenu}
-                    isMobile={false}
-                  >
+                  <NavLink href="/form" onClick={closeMenu} isMobile={false}>
                     {t("nav.reserve")}
                   </NavLink>
                 </motion.div>

@@ -164,7 +164,7 @@ export default function ProductPage() {
             {/* Image – asymmetric, with decorative frame */}
             <motion.div
               variants={itemVariants}
-              className="relative lg:col-span-6 lg:col-start-1 order-2 lg:order-1 flex justify-center lg:justify-start"
+              className="relative lg:col-span-6 lg:col-start-1 order-1 lg:order-1 flex justify-center lg:justify-start"
             >
               <div className="relative max-w-md sm:max-w-lg lg:max-w-xl xl:max-w-2xl w-full">
                 <div className="aspect-[4/5] rounded-2xl overflow-hidden">
@@ -209,7 +209,7 @@ export default function ProductPage() {
               variants={containerVariants}
               initial="hidden"
               animate="visible"
-              className="flex flex-col lg:col-span-6 lg:col-start-7 order-1 lg:order-2 lg:pt-6 lg:gap-0"
+              className="flex flex-col lg:col-span-6 lg:col-start-7 order-2 lg:order-2 lg:pt-6 lg:gap-0"
             >
               <motion.span
                 variants={itemVariants}

@@ -1,6 +1,7 @@
 "use client";
 
 import headerph from "@/assets/images/mainPh.webp";
+import aboutImg from "@/assets/images/openSc.webp";
 import TextReveal from "@/lib/TextReveal";
 import Container from "@/components/Container";
 import { useImageReveal } from "../hooks/useImageReveal";
@@ -33,12 +34,18 @@ const Hero = () => {
               ref={imageRef}
               className="rounded-2xl overflow-hidden shadow-lg h-[85vh] md:h-[calc(100vh-300px)] w-full max-w-md mx-auto md:max-w-none md:mx-0"
             >
-              <img
-                src={typeof headerph === "string" ? headerph : headerph.src}
-                alt="Speed Coffee mobile van with chalkboard sign"
-                className="w-full h-full object-cover lg:object-[center_center]"
-                loading="eager"
-              />
+              <picture>
+                <source
+                  media="(max-width: 639px)"
+                  srcSet={typeof aboutImg === "string" ? aboutImg : aboutImg.src}
+                />
+                <img
+                  src={typeof headerph === "string" ? headerph : headerph.src}
+                  alt="Speed Coffee mobile van with chalkboard sign"
+                  className="w-full h-full object-cover lg:object-[center_center]"
+                  loading="eager"
+                />
+              </picture>
             </div>
           </div>
         </div>
