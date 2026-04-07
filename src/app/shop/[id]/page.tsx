@@ -18,7 +18,8 @@ import {
   lineHeights,
 } from "@/lib/constants/typography";
 import { motion } from "framer-motion";
-import { FaLeaf, FaBolt, FaMugHot } from "react-icons/fa6";
+import { FaLeaf, FaBolt, FaMugHot, FaFire, FaDroplet, FaSnowflake } from "react-icons/fa6";
+import { GiChocolateBar, GiCoffeePot } from "react-icons/gi";
 
 export default function ProductPage() {
   const params = useParams();
@@ -28,6 +29,7 @@ export default function ProductPage() {
   const { addItem } = useCart();
   const [product, setProduct] = useState<ProductDisplay | null>(null);
   const [activeImageIndex, setActiveImageIndex] = useState(0);
+  const [selectedVariantKey, setSelectedVariantKey] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   const id = typeof params.id === "string" ? params.id : null;
@@ -51,6 +53,7 @@ export default function ProductPage() {
         setIsLoading(true);
         const p = await fetchProduct(id!, language);
         setProduct(p);
+        setSelectedVariantKey(p?.variants?.[0]?.key ?? null);
       } catch (e) {
         console.error(e);
         setProduct(null);
@@ -63,7 +66,17 @@ export default function ProductPage() {
 
   const handleAddToCart = () => {
     if (product) {
-      addItem(product);
+      const selectedVariant = product.variants?.find((v) => v.key === selectedVariantKey) ?? null;
+      addItem(
+        selectedVariant
+          ? {
+              ...product,
+              price: selectedVariant.price,
+              selected_variant_key: selectedVariant.key,
+              selected_variant_title: selectedVariant.title,
+            }
+          : product
+      );
       router.push("/checkout");
     }
   };
@@ -111,6 +124,16 @@ export default function ProductPage() {
     hidden: { opacity: 0, y: 14 },
     visible: { opacity: 1, y: 0 },
   };
+  const iconMap = {
+    leaf: FaLeaf,
+    bolt: FaBolt,
+    mug: FaMugHot,
+    coffee_pot: GiCoffeePot,
+    chocolate_bar: GiChocolateBar,
+    fire: FaFire,
+    droplet: FaDroplet,
+    snowflake: FaSnowflake,
+  } as const;
 
   return (
     <div ref={rootRef} className="min-h-screen bg-beige flex flex-col">
@@ -244,11 +267,12 @@ export default function ProductPage() {
                       ]
                   ).map((adv, index) => {
                     const Icon =
-                      index % 3 === 0
+                      (adv.icon_key && iconMap[adv.icon_key as keyof typeof iconMap]) ||
+                      (index % 3 === 0
                         ? FaLeaf
                         : index % 3 === 1
                           ? FaBolt
-                          : FaMugHot;
+                          : FaMugHot);
                     return (
                       <div
                         key={adv.title + index}
@@ -276,11 +300,38 @@ export default function ProductPage() {
                 </div>
               </motion.div>
 
+              {product?.variants && product.variants.length > 0 ? (
+                <motion.div variants={itemVariants} className="mb-8 md:mb-10">
+                  <p className="font-manrope font-bold text-dark/70 text-xs uppercase tracking-[0.2em] mb-3">
+                    Choose variant
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    {product.variants.map((variant) => (
+                      <button
+                        key={variant.key}
+                        type="button"
+                        onClick={() => setSelectedVariantKey(variant.key)}
+                        className={`px-4 py-2 rounded-full border text-sm font-manrope transition-colors ${
+                          selectedVariantKey === variant.key
+                            ? "bg-dark text-beige border-dark"
+                            : "bg-transparent text-dark border-dark/30 hover:border-dark"
+                        }`}
+                      >
+                        {variant.title} - {variant.price}
+                      </button>
+                    ))}
+                  </div>
+                </motion.div>
+              ) : null}
+
               {/* Price + CTA block – no motion so it’s always visible */}
               <div className="pt-6 mt-2 md:pt-8 md:mt-4 lg:pt-10 lg:mt-6 border-t border-dark/10">
                 <div className="flex flex-wrap items-center gap-5 sm:gap-8">
                   <p className="font-manrope font-bold text-dark text-2xl sm:text-3xl md:text-4xl tabular-nums">
-                    {product!.price}
+                    {product?.variants && product.variants.length > 0
+                      ? (product.variants.find((v) => v.key === selectedVariantKey)?.price ??
+                        product!.variants[0].price)
+                      : product!.price}
                   </p>
                   <motion.button
                     type="button"

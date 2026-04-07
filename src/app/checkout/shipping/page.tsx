@@ -111,8 +111,8 @@ export default function ShippingPage() {
       country: String(formData.get("country") || "").trim(),
     };
     const normalizedItems = items.map((item) => ({
-      id: item.id,
-      title: item.title,
+      id: item.product_id ?? item.id,
+      title: item.selected_variant_title ? `${item.title} (${item.selected_variant_title})` : item.title,
       price: item.price,
       quantity: item.quantity,
     }));

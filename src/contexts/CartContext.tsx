@@ -34,16 +34,28 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const cartCount = items.reduce((sum, item) => sum + item.quantity, 0);
 
   const addItem = useCallback((product: ProductDisplay, quantity = 1) => {
+    const cartKey =
+      product.selected_variant_key && product.product_id
+        ? `${product.product_id}::${product.selected_variant_key}`
+        : product.id;
     setItems((prev) => {
-      const existing = prev.find((i) => i.id === product.id);
+      const existing = prev.find((i) => i.id === cartKey);
       if (existing) {
         return prev.map((i) =>
-          i.id === product.id
+          i.id === cartKey
             ? { ...i, quantity: i.quantity + quantity }
             : i
         );
       }
-      return [...prev, { ...product, quantity }];
+      return [
+        ...prev,
+        {
+          ...product,
+          id: cartKey,
+          product_id: product.product_id ?? product.id,
+          quantity,
+        },
+      ];
     });
     setLastAddedItem(product);
     setIsCartModalOpen(true);

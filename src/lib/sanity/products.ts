@@ -18,7 +18,8 @@ const PRODUCTS_GROQ = `*[_type == "product" && is_active == true] | order(displa
   alt_text_cz,
   is_active,
   display_order,
-  advantages
+  advantages,
+  variants
 }`;
 
 type SanityProduct = {
@@ -42,6 +43,14 @@ type SanityProduct = {
     title_cz?: string;
     description_en?: string;
     description_cz?: string;
+    icon_key?: string;
+  }[];
+  variants?: {
+    key?: string;
+    title_en?: string;
+    title_cz?: string;
+    price?: number;
+    currency?: string;
   }[];
 };
 
@@ -61,7 +70,18 @@ function sanityProductToProduct(doc: SanityProduct): Product {
       title_cz: a.title_cz ?? "",
       description_en: a.description_en ?? "",
       description_cz: a.description_cz ?? "",
+      icon_key: a.icon_key ?? "leaf",
     })) ?? [];
+  const variants =
+    doc.variants
+      ?.filter((v) => v.key && typeof v.price === "number")
+      .map((v) => ({
+        key: v.key as string,
+        title_en: v.title_en ?? "",
+        title_cz: v.title_cz ?? "",
+        price: v.price as number,
+        currency: v.currency ?? doc.price_currency ?? "EUR",
+      })) ?? [];
 
   return {
     id: doc._id,
@@ -79,6 +99,7 @@ function sanityProductToProduct(doc: SanityProduct): Product {
     is_active: doc.is_active,
     display_order: doc.display_order ?? 0,
     advantages,
+    variants,
     gallery_urls: galleryUrls,
     created_at: "",
     updated_at: "",
@@ -96,6 +117,21 @@ function transformProductForDisplay(
     product.advantages?.map((a) => ({
       title: language === "cz" ? a.title_cz : a.title_en,
       text: language === "cz" ? a.description_cz : a.description_en,
+      icon_key: a.icon_key,
+    })) ?? [];
+  const toDisplayPrice = (amount: number, currency: string): string => {
+    if (language === "cz" && currency === "EUR") return `${Math.round(amount * 27)} Kč`;
+    if (currency === "CZK") return `${Math.round(amount)} Kč`;
+    if (currency === "EUR") return `€${amount.toFixed(2)}`;
+    return `${currency}${amount.toFixed(2)}`;
+  };
+  const variants =
+    product.variants?.map((v) => ({
+      key: v.key,
+      title: language === "cz" ? v.title_cz : v.title_en,
+      price: toDisplayPrice(v.price, v.currency ?? product.price_currency),
+      raw_price: v.price,
+      currency: v.currency ?? product.price_currency,
     })) ?? [];
 
   const gallery = product.gallery_urls;
@@ -104,6 +140,7 @@ function transformProductForDisplay(
     const czkPrice = Math.round(product.price * 27);
     return {
       id: product.id,
+      product_id: product.id,
       title: product.title_cz,
       subtitle: product.subtitle_cz,
       description: product.description_cz,
@@ -111,12 +148,14 @@ function transformProductForDisplay(
       image: product.image_url,
       alt: product.alt_text_cz,
       advantages,
+      variants,
       gallery,
     };
   }
 
   return {
     id: product.id,
+    product_id: product.id,
     title: product.title_en,
     subtitle: product.subtitle_en,
     description: product.description_en,
@@ -124,6 +163,7 @@ function transformProductForDisplay(
     image: product.image_url,
     alt: product.alt_text_en,
     advantages,
+    variants,
     gallery,
   };
 }
@@ -163,7 +203,8 @@ const PRODUCT_BY_ID_GROQ = `*[_type == "product" && _id == $id && is_active == t
   alt_text_cz,
   is_active,
   display_order,
-  advantages
+  advantages,
+  variants
 }`;
 
 /**

@@ -14,13 +14,8 @@ import { defineType, defineField } from "sanity";
  * - Fill in:
  *   - Title (EN) / Title (CZ) – short label (e.g. "Green tea", "Natural caffeine").
  *   - Description (EN) / Description (CZ) – one short sentence for each language.
- * - On the frontend we do NOT pick icons from Sanity. React Icons are assigned
- *   by position (1st, 2nd, 3rd, …) in the list:
- *   - 1st → leaf icon
- *   - 2nd → bolt icon
- *   - 3rd → mug icon
- *   - 4th+ repeat this pattern.
- *   So in Studio you only manage the text; icons are handled in code.
+ * - You can also pick an icon per advantage via "Icon".
+ *   The frontend maps this key to a React Icon component.
  */
 
 export const productSchema = defineType({
@@ -133,11 +128,106 @@ export const productSchema = defineType({
               title: "Description (CZ)",
               type: "text",
             },
+            {
+              name: "icon_key",
+              title: "Icon",
+              type: "string",
+              options: {
+                list: [
+                  { title: "Leaf", value: "leaf" },
+                  { title: "Bolt", value: "bolt" },
+                  { title: "Mug", value: "mug" },
+                  { title: "Coffee Pot", value: "coffee_pot" },
+                  { title: "Chocolate Bar", value: "chocolate_bar" },
+                  { title: "Fire", value: "fire" },
+                  { title: "Droplet", value: "droplet" },
+                  { title: "Snowflake", value: "snowflake" },
+                ],
+              },
+              initialValue: "leaf",
+            },
           ],
         },
       ],
       description:
         "Short bullet advantages for this product. These are shown with icons on the product detail page.",
+    }),
+    defineField({
+      name: "variants",
+      title: "Variants",
+      type: "array",
+      of: [
+        {
+          name: "variant",
+          title: "Variant",
+          type: "object",
+          fields: [
+            {
+              name: "key",
+              title: "Key",
+              type: "string",
+              description: "Stable key for this variant (e.g. 250ml, can-330).",
+              validation: (Rule: { required: () => unknown }) => Rule.required(),
+            },
+            {
+              name: "title_en",
+              title: "Title (EN)",
+              type: "string",
+              validation: (Rule: { required: () => unknown }) => Rule.required(),
+            },
+            {
+              name: "title_cz",
+              title: "Title (CZ)",
+              type: "string",
+              validation: (Rule: { required: () => unknown }) => Rule.required(),
+            },
+            {
+              name: "price",
+              title: "Price",
+              type: "number",
+              validation: (Rule: { required: () => { min: (n: number) => unknown } }) =>
+                Rule.required().min(0),
+            },
+            {
+              name: "currency",
+              title: "Currency",
+              type: "string",
+              options: {
+                list: [
+                  { title: "EUR", value: "EUR" },
+                  { title: "CZK", value: "CZK" },
+                ],
+              },
+              initialValue: "EUR",
+            },
+          ],
+          preview: {
+            select: {
+              title: "title_en",
+              subtitle: "price",
+              currency: "currency",
+            },
+            prepare({
+              title,
+              subtitle,
+              currency,
+            }: {
+              title?: string;
+              subtitle?: number;
+              currency?: string;
+            }) {
+              return {
+                title: title || "Variant",
+                subtitle:
+                  typeof subtitle === "number"
+                    ? `${currency || "EUR"} ${subtitle.toFixed(2)}`
+                    : "No price",
+              };
+            },
+          },
+        },
+      ],
+      description: "Optional: define product variants with their own titles and prices.",
     }),
     defineField({
       name: "is_active",
