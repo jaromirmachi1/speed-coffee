@@ -93,6 +93,7 @@ export default function CheckoutPage() {
                           className={`font-manrope ${fontWeights.manrope.normal} text-dark ${typography.manrope.body} truncate`}
                         >
                           {item.title}
+                          {item.selected_variant_title ? ` (${item.selected_variant_title})` : ""}
                         </p>
                         <p
                           className={`font-manrope ${fontWeights.manrope.bold} text-dark mt-1 ${typography.manrope.body}`}

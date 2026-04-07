@@ -73,6 +73,9 @@ export default function CartModal() {
                       style={{ fontSize: "1.1rem" }}
                     >
                       {lastAddedItem.title}
+                      {lastAddedItem.selected_variant_title
+                        ? ` (${lastAddedItem.selected_variant_title})`
+                        : ""}
                     </p>
                     <p className={`font-manrope ${fontWeights.manrope.bold} text-dark mt-1`}>
                       {lastAddedItem.price}
