@@ -157,38 +157,37 @@ export const productSchema = defineType({
       title: "Variants",
       type: "array",
       of: [
-        {
+        defineField({
           name: "variant",
           title: "Variant",
           type: "object",
           fields: [
-            {
+            defineField({
               name: "key",
               title: "Key",
               type: "string",
               description: "Stable key for this variant (e.g. 250ml, can-330).",
-              validation: (Rule: { required: () => unknown }) => Rule.required(),
-            },
-            {
+              validation: (Rule) => Rule.required(),
+            }),
+            defineField({
               name: "title_en",
               title: "Title (EN)",
               type: "string",
-              validation: (Rule: { required: () => unknown }) => Rule.required(),
-            },
-            {
+              validation: (Rule) => Rule.required(),
+            }),
+            defineField({
               name: "title_cz",
               title: "Title (CZ)",
               type: "string",
-              validation: (Rule: { required: () => unknown }) => Rule.required(),
-            },
-            {
+              validation: (Rule) => Rule.required(),
+            }),
+            defineField({
               name: "price",
               title: "Price",
               type: "number",
-              validation: (Rule: { required: () => { min: (n: number) => unknown } }) =>
-                Rule.required().min(0),
-            },
-            {
+              validation: (Rule) => Rule.required().min(0),
+            }),
+            defineField({
               name: "currency",
               title: "Currency",
               type: "string",
@@ -199,7 +198,7 @@ export const productSchema = defineType({
                 ],
               },
               initialValue: "EUR",
-            },
+            }),
           ],
           preview: {
             select: {
@@ -207,15 +206,7 @@ export const productSchema = defineType({
               subtitle: "price",
               currency: "currency",
             },
-            prepare({
-              title,
-              subtitle,
-              currency,
-            }: {
-              title?: string;
-              subtitle?: number;
-              currency?: string;
-            }) {
+            prepare({ title, subtitle, currency }) {
               return {
                 title: title || "Variant",
                 subtitle:
@@ -225,7 +216,7 @@ export const productSchema = defineType({
               };
             },
           },
-        },
+        }),
       ],
       description: "Optional: define product variants with their own titles and prices.",
     }),
