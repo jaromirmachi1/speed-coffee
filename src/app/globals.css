@@ -82,12 +82,12 @@
     @apply px-4 sm:px-6 lg:px-8;
   }
 
-  /* Hero intro highlight – accent brown (survives TextRevealLines DOM rebuild) */
+  /* Hero intro highlight – accent brown */
   .hero-intro-highlight {
     color: #8b5a3c !important;
   }
 
-  /* Force full width for HeroIntro text on mobile to fix TextRevealLines measurement */
+  /* Force full width for HeroIntro text on mobile */
   @media (max-width: 767px) {
     .hero-intro-text {
       width: 100% !important;

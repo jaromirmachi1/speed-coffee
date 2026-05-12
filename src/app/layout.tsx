@@ -15,7 +15,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="cs" suppressHydrationWarning>
       <head>
         <link rel="icon" type="image/svg+xml" href="/ScFavicon.svg" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -60,7 +60,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body>
+      <body suppressHydrationWarning>
         <LanguageProvider>
           <CartProvider>
             {children}

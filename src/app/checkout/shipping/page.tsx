@@ -78,7 +78,7 @@ export default function ShippingPage() {
           }),
         });
         const data = await res.json();
-        if (!cancelled && data.clientSecret) setStripeClientSecret(data.clientSecret);
+        if (!cancelled && res.ok && data.clientSecret) setStripeClientSecret(data.clientSecret);
       } catch {
         // ignore
       }

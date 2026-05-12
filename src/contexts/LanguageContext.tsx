@@ -17,7 +17,7 @@ interface LanguageContextType {
 }
 
 const LanguageContext = createContext<LanguageContextType | undefined>(
-  undefined
+  undefined,
 );
 
 export const useLanguage = () => {
@@ -33,24 +33,23 @@ interface LanguageProviderProps {
 }
 
 export const LanguageProvider = ({ children }: LanguageProviderProps) => {
-  const [language, setLanguageState] = useState<Language>(() => {
-    // Get language from localStorage or default to English
-    if (typeof window === "undefined") return "en";
-    const saved = localStorage.getItem("language") as Language;
-    // Only use saved language if it's valid, otherwise default to English
-    return saved === "cz" || saved === "en" ? saved : "en";
-  });
+  const [language, setLanguageState] = useState<Language>("cz");
 
   const setLanguage = (lang: Language) => {
     setLanguageState(lang);
     localStorage.setItem("language", lang);
-    // Update HTML lang attribute
-    document.documentElement.lang = lang;
+    document.documentElement.lang = lang === "en" ? "en" : "cs";
   };
 
   useEffect(() => {
-    // Set initial HTML lang attribute
-    document.documentElement.lang = language;
+    const saved = localStorage.getItem("language") as Language;
+    if (saved === "cz" || saved === "en") {
+      setLanguageState(saved);
+    }
+  }, []);
+
+  useEffect(() => {
+    document.documentElement.lang = language === "en" ? "en" : "cs";
   }, [language]);
 
   // Import translations
@@ -95,11 +94,14 @@ export const LanguageProvider = ({ children }: LanguageProviderProps) => {
 
       // Product advantages (product page)
       "products.advantages.greenTea.title": "Green tea",
-      "products.advantages.greenTea.text": "Natural antioxidants and a gentle lift without the jitters.",
+      "products.advantages.greenTea.text":
+        "Natural antioxidants and a gentle lift without the jitters.",
       "products.advantages.caffeine.title": "Natural caffeine",
-      "products.advantages.caffeine.text": "Smooth energy from quality sources to keep you focused.",
+      "products.advantages.caffeine.text":
+        "Smooth energy from quality sources to keep you focused.",
       "products.advantages.matcha.title": "Matcha quality",
-      "products.advantages.matcha.text": "Premium grade for a rich, balanced taste and lasting calm energy.",
+      "products.advantages.matcha.text":
+        "Premium grade for a rich, balanced taste and lasting calm energy.",
 
       // Checkout success
       "checkout.success.title": "Thank you for your order",
@@ -124,11 +126,6 @@ export const LanguageProvider = ({ children }: LanguageProviderProps) => {
       "locations.weekdaysHours": "7:30 - 19:00",
       "locations.weekends": "WEEKENDS",
       "locations.weekendsHours": "9:00 - 19:00",
-
-      // Matcha
-      "matcha.fallenFor": "Fallen for",
-      "matcha.title": "MATCHA",
-      "matcha.yet": "yet?",
 
       // Event Booking
       "event.title": "ANY EVENT YOU WANT US TO BE AT?",
@@ -166,9 +163,11 @@ export const LanguageProvider = ({ children }: LanguageProviderProps) => {
       "orders.status.paid": "Paid",
       "orders.status.fulfilled": "Shipped / fulfilled",
       "orders.status.cancelled": "Cancelled",
-      "orders.error.unavailable": "Order lookup is not configured. Add Sanity project ID (and read token if the dataset is private).",
+      "orders.error.unavailable":
+        "Order lookup is not configured. Add Sanity project ID (and read token if the dataset is private).",
       "orders.error.invalid": "Please enter a valid order number and email.",
-      "orders.error.notFound": "No order matches those details. Check the number and email or contact us.",
+      "orders.error.notFound":
+        "No order matches those details. Check the number and email or contact us.",
       "orders.error.generic": "Something went wrong. Try again later.",
     },
     cz: {
@@ -211,11 +210,14 @@ export const LanguageProvider = ({ children }: LanguageProviderProps) => {
 
       // Product advantages (product page)
       "products.advantages.greenTea.title": "Zelený čaj",
-      "products.advantages.greenTea.text": "Přírodní antioxidanty a jemná povzbuzení bez nervozity.",
+      "products.advantages.greenTea.text":
+        "Přírodní antioxidanty a jemná povzbuzení bez nervozity.",
       "products.advantages.caffeine.title": "Přírodní kofein",
-      "products.advantages.caffeine.text": "Plynulá energie z kvalitních zdrojů pro soustředění.",
+      "products.advantages.caffeine.text":
+        "Plynulá energie z kvalitních zdrojů pro soustředění.",
       "products.advantages.matcha.title": "Kvalita matcha",
-      "products.advantages.matcha.text": "Prémiová jakost pro plnou, vyváženou chuť a klidnou energii.",
+      "products.advantages.matcha.text":
+        "Prémiová jakost pro plnou, vyváženou chuť a klidnou energii.",
 
       // Checkout success
       "checkout.success.title": "Děkujeme za objednávku",
@@ -240,11 +242,6 @@ export const LanguageProvider = ({ children }: LanguageProviderProps) => {
       "locations.weekdaysHours": "8:00 - 18:00",
       "locations.weekends": "VÍKENDY",
       "locations.weekendsHours": "9:00 - 19:00",
-
-      // Matcha
-      "matcha.fallenFor": "Zamilovali jste si",
-      "matcha.title": "MATCHA",
-      "matcha.yet": "už?",
 
       // Event Booking
       "event.title": "MÁTE AKCI, KDE BYSTE NÁS CHTĚLI VIDĚT?",
@@ -282,9 +279,11 @@ export const LanguageProvider = ({ children }: LanguageProviderProps) => {
       "orders.status.paid": "Zaplaceno",
       "orders.status.fulfilled": "Odesláno",
       "orders.status.cancelled": "Zrušeno",
-      "orders.error.unavailable": "Vyhledávání objednávek není nastaveno. Doplňte Sanity project ID (a read token u soukromého datasetu).",
+      "orders.error.unavailable":
+        "Vyhledávání objednávek není nastaveno. Doplňte Sanity project ID (a read token u soukromého datasetu).",
       "orders.error.invalid": "Zadejte platné číslo objednávky a e-mail.",
-      "orders.error.notFound": "Objednávku nenacházíme. Zkontrolujte údaje nebo nás kontaktujte.",
+      "orders.error.notFound":
+        "Objednávku nenacházíme. Zkontrolujte údaje nebo nás kontaktujte.",
       "orders.error.generic": "Něco se pokazilo. Zkuste to později.",
     },
   };

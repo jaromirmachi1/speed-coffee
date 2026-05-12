@@ -102,6 +102,19 @@ const TextRevealLines = ({
 
         const tempDiv = document.createElement("div");
         const computed = window.getComputedStyle(element);
+        const isHeroIntro = element.classList.contains("hero-intro-text");
+        const applyLineContainerStyles = (lineContainer: HTMLElement) => {
+          lineContainer.style.display = "block";
+          lineContainer.style.overflow = "hidden";
+          lineContainer.style.position = "relative";
+          lineContainer.style.lineHeight = computed.lineHeight;
+
+          if (isHeroIntro) {
+            const fontSizePx = parseFloat(computed.fontSize) || 16;
+            lineContainer.style.minHeight = `${fontSizePx * 1.12}px`;
+            lineContainer.style.paddingBlock = "0.07em";
+          }
+        };
         tempDiv.style.cssText = `
           position: absolute;
           visibility: hidden;
@@ -149,13 +162,16 @@ const TextRevealLines = ({
           if (testWidth > containerWidth && currentUnits.length > 0) {
             const lineContainer = document.createElement("span");
             lineContainer.className = "text-reveal-line";
-            lineContainer.style.display = "block";
-            lineContainer.style.overflow = "hidden";
-            lineContainer.style.position = "relative";
+            applyLineContainerStyles(lineContainer);
 
             const lineInner = document.createElement("span");
             lineInner.style.display = "inline-block";
             lineInner.style.width = "100%";
+            if (isHeroIntro) {
+              lineInner.style.lineHeight = computed.lineHeight;
+              lineInner.style.paddingTop = "0.05em";
+              lineInner.style.paddingBottom = "0.06em";
+            }
             lineInner.innerHTML = buildHTML(currentUnits);
             lineContainer.appendChild(lineInner);
 
@@ -169,13 +185,16 @@ const TextRevealLines = ({
           if (index === units.length - 1 && currentUnits.length > 0) {
             const lineContainer = document.createElement("span");
             lineContainer.className = "text-reveal-line";
-            lineContainer.style.display = "block";
-            lineContainer.style.overflow = "hidden";
-            lineContainer.style.position = "relative";
+            applyLineContainerStyles(lineContainer);
 
             const lineInner = document.createElement("span");
             lineInner.style.display = "inline-block";
             lineInner.style.width = "100%";
+            if (isHeroIntro) {
+              lineInner.style.lineHeight = computed.lineHeight;
+              lineInner.style.paddingTop = "0.05em";
+              lineInner.style.paddingBottom = "0.06em";
+            }
             lineInner.innerHTML = buildHTML(currentUnits);
             lineContainer.appendChild(lineInner);
 
