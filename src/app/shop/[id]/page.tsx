@@ -65,20 +65,21 @@ export default function ProductPage() {
   }, [id, language]);
 
   const handleAddToCart = () => {
-    if (product) {
-      const selectedVariant = product.variants?.find((v) => v.key === selectedVariantKey) ?? null;
-      addItem(
-        selectedVariant
-          ? {
-              ...product,
-              price: selectedVariant.price,
-              selected_variant_key: selectedVariant.key,
-              selected_variant_title: selectedVariant.title,
-            }
-          : product
-      );
-      router.push("/checkout");
-    }
+    if (!product) return;
+
+    const selectedVariant =
+      product.variants?.find((v) => v.key === selectedVariantKey) ?? null;
+    addItem(
+      selectedVariant
+        ? {
+            ...product,
+            price: selectedVariant.price,
+            selected_variant_key: selectedVariant.key,
+            selected_variant_title: selectedVariant.title,
+          }
+        : product,
+    );
+    router.push("/checkout");
   };
 
   if (!id || (!isLoading && !product)) {

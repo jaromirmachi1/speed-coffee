@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import nodemailer from "nodemailer";
+import { getMailConfig, sendMail } from "@/lib/email/mailer";
 
 interface RentalInquiryPayload {
   name: string;
@@ -24,32 +24,13 @@ export async function POST(request: Request) {
       );
     }
 
-    const {
-      SMTP_HOST,
-      SMTP_PORT,
-      SMTP_USER,
-      SMTP_PASS,
-      CONTACT_TO,
-      CONTACT_FROM,
-    } = process.env;
-
-    if (!SMTP_HOST || !SMTP_PORT || !SMTP_USER || !SMTP_PASS || !CONTACT_TO) {
+    if (!getMailConfig() || !process.env.CONTACT_TO) {
       console.error("Missing SMTP configuration environment variables.");
       return NextResponse.json(
         { error: "Email service is not configured." },
         { status: 500 },
       );
     }
-
-    const transporter = nodemailer.createTransport({
-      host: SMTP_HOST,
-      port: Number(SMTP_PORT),
-      secure: Number(SMTP_PORT) === 465,
-      auth: {
-        user: SMTP_USER,
-        pass: SMTP_PASS,
-      },
-    });
 
     const subject = `New rental inquiry (${body.variant === "trailer" ? "Coffee trailer" : "Event in Speed Coffee House"})`;
 
@@ -71,9 +52,8 @@ export async function POST(request: Request) {
       body.note || "-",
     ];
 
-    await transporter.sendMail({
-      from: CONTACT_FROM || SMTP_USER,
-      to: CONTACT_TO,
+    await sendMail({
+      to: process.env.CONTACT_TO,
       subject,
       text: lines.join("\n"),
     });

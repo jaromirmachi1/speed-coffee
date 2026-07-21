@@ -58,6 +58,8 @@ export const LanguageProvider = ({ children }: LanguageProviderProps) => {
       // Navigation
       "nav.events": "EVENTS",
       "nav.reserve": "RESERVE",
+      "nav.contact": "CONTACT",
+      "nav.cookies": "COOKIES",
       "nav.shop": "SHOP",
 
       // Hero
@@ -108,7 +110,10 @@ export const LanguageProvider = ({ children }: LanguageProviderProps) => {
       "checkout.success.paid":
         "Your payment was successful. We'll send you a confirmation email and ship your order soon.",
       "checkout.success.other":
-        "We've received your order. You can pay on delivery or by bank transfer as agreed.",
+        "We've received your order. You can pay on delivery as agreed.",
+      "checkout.success.orderNumber": "Order number:",
+      "checkout.success.orderPending":
+        "Your order is being confirmed. Check your email or track it on the orders page in a moment.",
       "checkout.success.trackOrder": "Track order status",
       "checkout.success.continueShopping": "Continue shopping",
       "checkout.success.backHome": "Back to home",
@@ -139,6 +144,8 @@ export const LanguageProvider = ({ children }: LanguageProviderProps) => {
       // Footer
       "footer.madeBy": "Made by UITherapy",
       "footer.trackOrder": "Track order",
+      "footer.gdpr": "GDPR",
+      "footer.cookies": "Cookies",
 
       // Order tracking (Sanity CMS)
       "orders.title": "Track your order",
@@ -158,7 +165,7 @@ export const LanguageProvider = ({ children }: LanguageProviderProps) => {
       "orders.total": "Total",
       "orders.backShop": "Back to shop",
       "orders.cmsNote":
-        "Orders are stored in your Sanity project. Create or update them in Studio; you can connect Stripe webhooks later to create orders automatically.",
+        "Orders are stored in Sanity. Manage them in Studio under Orders.",
       "orders.status.pending": "Pending",
       "orders.status.paid": "Paid",
       "orders.status.fulfilled": "Shipped / fulfilled",
@@ -169,11 +176,48 @@ export const LanguageProvider = ({ children }: LanguageProviderProps) => {
       "orders.error.notFound":
         "No order matches those details. Check the number and email or contact us.",
       "orders.error.generic": "Something went wrong. Try again later.",
+
+      // Contact page
+      "contact.title": "Contact us",
+      "contact.intro":
+        "For events, wholesale, collaborations, or support, send us a message and we will get back to you soon.",
+      "contact.emailLabel": "Email",
+      "contact.phoneLabel": "Phone",
+      "contact.instagramLabel": "Instagram",
+      "contact.addressLabel": "Registered seat",
+      "contact.addressValue":
+        "Špitálka 547/5a, Zábrdovice, Brno, Jihomoravský kraj",
+      "contact.legalTitle": "Business details (ARES)",
+      "contact.businessNameLabel": "Entrepreneur",
+      "contact.icoLabel": "IČO",
+      "contact.taxOfficeLabel": "Tax office",
+      "contact.legalFormLabel": "Legal form",
+
+      // Cookies page
+      "cookies.title": "Cookies policy",
+      "cookies.updated": "Last updated",
+      "cookies.updatedDate": "21 July 2026",
+      "cookies.intro":
+        "This website uses cookies to keep essential features working, improve performance, and understand traffic.",
+      "cookies.essentialTitle": "Essential cookies",
+      "cookies.essentialText":
+        "Required for core functionality such as language selection and secure checkout flow.",
+      "cookies.analyticsTitle": "Analytics cookies",
+      "cookies.analyticsText":
+        "Help us understand how visitors use the site so we can improve content and user experience.",
+      "cookies.marketingTitle": "Marketing cookies",
+      "cookies.marketingText":
+        "Can be used by third-party services to measure campaign performance and show relevant content.",
+      "cookies.manageTitle": "Managing cookies",
+      "cookies.manageText":
+        "You can control or delete cookies in your browser settings at any time.",
     },
     cz: {
       // Navigation
       "nav.events": "AKCE",
       "nav.reserve": "REZERVACE",
+      "nav.contact": "KONTAKT",
+      "nav.cookies": "COOKIES",
       "nav.shop": "OBCHOD",
 
       // Hero
@@ -224,7 +268,10 @@ export const LanguageProvider = ({ children }: LanguageProviderProps) => {
       "checkout.success.paid":
         "Platba proběhla v pořádku. Pošleme potvrzení e-mailem a brzy objednávku odešleme.",
       "checkout.success.other":
-        "Objednávku jsme přijali. Platbu můžete provést při doručení nebo převodem podle domluvy.",
+        "Objednávku jsme přijali. Platbu můžete provést při doručení.",
+      "checkout.success.orderNumber": "Číslo objednávky:",
+      "checkout.success.orderPending":
+        "Objednávku právě potvrzujeme. Za chvíli ji najdete v e-mailu nebo na stránce sledování objednávek.",
       "checkout.success.trackOrder": "Stav objednávky",
       "checkout.success.continueShopping": "Pokračovat v nákupu",
       "checkout.success.backHome": "Zpět na úvod",
@@ -255,6 +302,8 @@ export const LanguageProvider = ({ children }: LanguageProviderProps) => {
       // Footer
       "footer.madeBy": "Vytvořeno UITherapy",
       "footer.trackOrder": "Sledovat objednávku",
+      "footer.gdpr": "GDPR",
+      "footer.cookies": "Cookies",
 
       // Order tracking (Sanity CMS)
       "orders.title": "Sledování objednávky",
@@ -274,7 +323,7 @@ export const LanguageProvider = ({ children }: LanguageProviderProps) => {
       "orders.total": "Celkem",
       "orders.backShop": "Zpět do obchodu",
       "orders.cmsNote":
-        "Objednávky jsou v projektu Sanity. Vytvářejte je nebo upravujte ve Studiu; později lze připojit Stripe webhook pro automatické zakládání.",
+        "Objednávky jsou uložené v Sanity. Spravujte je ve Studiu v sekci Orders.",
       "orders.status.pending": "Čeká na zpracování",
       "orders.status.paid": "Zaplaceno",
       "orders.status.fulfilled": "Odesláno",
@@ -285,6 +334,41 @@ export const LanguageProvider = ({ children }: LanguageProviderProps) => {
       "orders.error.notFound":
         "Objednávku nenacházíme. Zkontrolujte údaje nebo nás kontaktujte.",
       "orders.error.generic": "Něco se pokazilo. Zkuste to později.",
+
+      // Contact page
+      "contact.title": "Kontaktujte nás",
+      "contact.intro":
+        "Pro akce, velkoobchod, spolupráce nebo podporu nám napište a co nejdříve se ozveme.",
+      "contact.emailLabel": "E-mail",
+      "contact.phoneLabel": "Telefon",
+      "contact.instagramLabel": "Instagram",
+      "contact.addressLabel": "Sídlo",
+      "contact.addressValue":
+        "Špitálka 547/5a, Zábrdovice, Brno, Jihomoravský kraj",
+      "contact.legalTitle": "Podnikatelské údaje (ARES)",
+      "contact.businessNameLabel": "Podnikatel",
+      "contact.icoLabel": "IČO",
+      "contact.taxOfficeLabel": "Finanční úřad",
+      "contact.legalFormLabel": "Právní forma",
+
+      // Cookies page
+      "cookies.title": "Zásady cookies",
+      "cookies.updated": "Poslední aktualizace",
+      "cookies.updatedDate": "21. července 2026",
+      "cookies.intro":
+        "Tento web používá cookies pro správné fungování, zlepšení výkonu a porozumění návštěvnosti.",
+      "cookies.essentialTitle": "Nezbytné cookies",
+      "cookies.essentialText":
+        "Jsou nutné pro základní funkce, například volbu jazyka a bezpečný průchod objednávkou.",
+      "cookies.analyticsTitle": "Analytické cookies",
+      "cookies.analyticsText":
+        "Pomáhají nám pochopit, jak návštěvníci web používají, abychom mohli zlepšovat obsah a uživatelský zážitek.",
+      "cookies.marketingTitle": "Marketingové cookies",
+      "cookies.marketingText":
+        "Mohou být používány službami třetích stran pro měření kampaní a zobrazování relevantního obsahu.",
+      "cookies.manageTitle": "Správa cookies",
+      "cookies.manageText":
+        "Cookies můžete kdykoli spravovat nebo smazat v nastavení svého prohlížeče.",
     },
   };
 

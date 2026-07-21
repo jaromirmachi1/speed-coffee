@@ -1,17 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createOrderRecord, sendOrderEmail } from "@/lib/orders/createOrder";
-
-const SHIPPING_CZK = 89;
-
-function priceToCzk(priceStr: string): number {
-  const num = parseFloat(priceStr.replace(/[^\d.,]/g, "").replace(",", ".")) || 0;
-  return priceStr.includes("€") ? Math.round(num * 27) : num;
-}
+import { orderTotalCzk, priceToCzk } from "@/lib/checkout/pricing";
 
 export async function POST(request: NextRequest) {
   try {
     const body = (await request.json()) as {
-      paymentMethod: "delivery" | "bank";
+      paymentMethod: "delivery";
       items: Array<{ id: string; title: string; price: string; quantity: number }>;
       customer: {
         name: string;
@@ -40,7 +34,10 @@ export async function POST(request: NextRequest) {
     }
 
     const totalCzk =
-      body.items.reduce((sum, item) => sum + priceToCzk(item.price) * item.quantity, 0) + SHIPPING_CZK;
+      orderTotalCzk(
+        body.items.reduce((sum, item) => sum + priceToCzk(item.price) * item.quantity, 0),
+        body.paymentMethod
+      );
 
     await sendOrderEmail({
       to: body.customer.email,

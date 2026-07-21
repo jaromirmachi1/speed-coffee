@@ -221,12 +221,6 @@ export const productSchema = defineType({
       description: "Optional: define product variants with their own titles and prices.",
     }),
     defineField({
-      name: "is_active",
-      title: "Active",
-      type: "boolean",
-      initialValue: true,
-    }),
-    defineField({
       name: "display_order",
       title: "Display order",
       type: "number",

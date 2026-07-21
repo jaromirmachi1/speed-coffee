@@ -1,7 +1,11 @@
-import nodemailer from "nodemailer";
+import { sendMail } from "@/lib/email/mailer";
+import { buildOrderConfirmationEmail } from "@/lib/email/orderConfirmation";
 import { getSanityServerClient, getSanityServerWriteClient } from "@/lib/sanity/server-client";
-
-const SHIPPING_CZK = 89;
+import {
+  priceToCzk,
+  orderTotalCzk,
+  type CheckoutPaymentMethod,
+} from "@/lib/checkout/pricing";
 
 export type CheckoutItem = {
   id: string;
@@ -23,15 +27,10 @@ export type CheckoutCustomer = {
 export type CreateOrderInput = {
   items: CheckoutItem[];
   customer: CheckoutCustomer;
-  paymentMethod: "stripe" | "delivery" | "bank";
+  paymentMethod: CheckoutPaymentMethod;
   stripePaymentId?: string;
   status?: "pending" | "paid" | "fulfilled" | "cancelled";
 };
-
-function priceToCzk(priceStr: string): number {
-  const num = parseFloat(priceStr.replace(/[^\d.,]/g, "").replace(",", ".")) || 0;
-  return priceStr.includes("€") ? Math.round(num * 27) : num;
-}
 
 function makeOrderNumber(): string {
   const rand = Math.floor(1000 + Math.random() * 9000);
@@ -71,7 +70,7 @@ export async function createOrderRecord(input: CreateOrderInput): Promise<{ orde
   if (!input.customer.name?.trim() || !input.customer.email?.trim()) return null;
 
   const subtotal = items.reduce((sum, item) => sum + priceToCzk(item.price) * item.quantity, 0);
-  const total = subtotal + SHIPPING_CZK;
+  const total = orderTotalCzk(subtotal, input.paymentMethod);
   const orderNumber = makeOrderNumber();
 
   const sanityItems = items.map((item) => ({
@@ -104,28 +103,21 @@ export async function sendOrderEmail(params: {
   paymentMethod: string;
   totalCzk: number;
 }): Promise<void> {
-  const { SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS, CONTACT_FROM } = process.env;
-  if (!SMTP_HOST || !SMTP_PORT || !SMTP_USER || !SMTP_PASS || !params.to) return;
+  if (!params.to) return;
 
-  const transporter = nodemailer.createTransport({
-    host: SMTP_HOST,
-    port: Number(SMTP_PORT),
-    secure: Number(SMTP_PORT) === 465,
-    auth: { user: SMTP_USER, pass: SMTP_PASS },
-  });
+  try {
+    const { subject, text } = buildOrderConfirmationEmail({
+      orderNumber: params.orderNumber,
+      paymentMethod: params.paymentMethod,
+      totalCzk: params.totalCzk,
+    });
 
-  await transporter.sendMail({
-    from: CONTACT_FROM || SMTP_USER,
-    to: params.to,
-    subject: `Speed Coffee order confirmation (${params.orderNumber})`,
-    text: [
-      `Thank you for your order!`,
-      ``,
-      `Order number: ${params.orderNumber}`,
-      `Payment method: ${params.paymentMethod}`,
-      `Total: ${params.totalCzk} CZK`,
-      ``,
-      `You can track your order at: /orders`,
-    ].join("\n"),
-  });
+    await sendMail({
+      to: params.to,
+      subject,
+      text,
+    });
+  } catch (error) {
+    console.error("Order confirmation email failed:", error);
+  }
 }

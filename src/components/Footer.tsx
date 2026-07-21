@@ -65,6 +65,22 @@ const Footer = () => {
               >
                 {t("footer.trackOrder")}
               </Link>
+              <div className="mt-2">
+                <Link
+                  href="/cookies"
+                  className={`${typography.manrope.footerSmall} font-manrope ${fontWeights.manrope.light} text-white/90 underline underline-offset-2 hover:text-white inline-block`}
+                >
+                  {t("footer.gdpr")}
+                </Link>
+              </div>
+              <div className="mt-1">
+                <Link
+                  href="/cookies"
+                  className={`${typography.manrope.footerSmall} font-manrope ${fontWeights.manrope.light} text-white/90 underline underline-offset-2 hover:text-white inline-block`}
+                >
+                  {t("footer.cookies")}
+                </Link>
+              </div>
             </div>
           </motion.div>
 
