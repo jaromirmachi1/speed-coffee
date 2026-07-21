@@ -20,7 +20,7 @@ const Locations = () => {
         <div className="grid md:grid-cols-2 gap-6 md:gap-12 items-center">
           <div className="relative max-w-xl md:max-w-2xl lg:max-w-4xl mx-auto md:mx-0 order-2 md:order-1">
             <motion.img
-              src={typeof Img2and3 === 'string' ? Img2and3 : Img2and3.src}
+              src={typeof Img2and3 === "string" ? Img2and3 : Img2and3.src}
               alt="Speed Coffee sign and drinks"
               className="w-full h-auto object-cover"
               loading="lazy"
@@ -31,7 +31,7 @@ const Locations = () => {
             />
           </div>
 
-          <div className="text-center max-w-2xl mx-auto order-1 md:order-2">
+          <div className="text-center w-full max-w-3xl mx-auto order-1 md:order-2">
             <h2
               className={`${typography.agright.sectionHeading} font-agright ${fontWeights.agright.normal} text-dark ${lineHeights.custom.sectionHeading} mb-4 md:mb-6`}
               style={{ lineHeight: 1 }}
@@ -66,78 +66,66 @@ const Locations = () => {
                     {t("locations.openingHours")}
                   </h3>
                 </TextRevealLines>
-                <div className="space-y-5 md:space-y-6 flex flex-col items-center">
+                <div className="space-y-5 md:space-y-6 flex flex-col items-center w-full max-w-md mx-auto">
                   <motion.div
-                    className="inline-flex flex-col items-center justify-center gap-3 md:gap-8 pb-5 md:pb-6 border-b border-dark/10 w-fit"
+                    className="flex w-full min-w-[14rem] max-w-md flex-col items-center justify-center gap-2 pb-5 md:pb-6 border-b border-dark/10"
                     initial={{ opacity: 0, y: 10 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.6, delay: 0.15, ease: "easeOut" }}
                   >
-                    <TextRevealLines delay={0.15}>
-                      <div className="flex flex-col items-center">
-                        <span
-                          className={`${typography.manrope.body} font-manrope ${fontWeights.manrope.bold} text-dark uppercase tracking-wide mb-1`}
-                          style={{
-                            fontFamily: "Manrope, sans-serif",
-                            fontWeight: 700,
-                            lineHeight: 1.0,
-                            letterSpacing: "0.08em",
-                            fontSize: "0.875rem",
-                          }}
-                        >
-                          {t("locations.weekdays")}
-                        </span>
-                        <span
-                          className={`${typography.manrope.body} font-manrope ${fontWeights.manrope.normal} text-dark`}
-                          style={{
-                            fontFamily: "Manrope, sans-serif",
-                            fontWeight: 400,
-                            lineHeight: 1.2,
-                            letterSpacing: "0.02em",
-                            fontSize: "1rem",
-                          }}
-                        >
-                          {t("locations.weekdaysHours")}
-                        </span>
-                      </div>
-                    </TextRevealLines>
+                    <span
+                      className={`${typography.manrope.body} font-manrope ${fontWeights.manrope.bold} text-dark uppercase tracking-wide whitespace-nowrap`}
+                      style={{
+                        fontFamily: "Manrope, sans-serif",
+                        fontWeight: 700,
+                        lineHeight: 1.0,
+                        letterSpacing: "0.08em",
+                      }}
+                    >
+                      {t("locations.weekdays")}
+                    </span>
+                    <span
+                      className={`${typography.manrope.body} font-manrope ${fontWeights.manrope.normal} text-dark whitespace-nowrap`}
+                      style={{
+                        fontFamily: "Manrope, sans-serif",
+                        fontWeight: 400,
+                        lineHeight: 1.2,
+                        letterSpacing: "0.02em",
+                      }}
+                    >
+                      {t("locations.weekdaysHours")}
+                    </span>
                   </motion.div>
                   <motion.div
-                    className="inline-flex flex-col items-center justify-center gap-3 md:gap-8 w-fit"
+                    className="flex w-full min-w-[14rem] max-w-md flex-col items-center justify-center gap-2"
                     initial={{ opacity: 0, y: 10 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.6, delay: 0.25, ease: "easeOut" }}
                   >
-                    <TextRevealLines delay={0.2}>
-                      <div className="flex flex-col items-center">
-                        <span
-                          className={`${typography.manrope.body} font-manrope ${fontWeights.manrope.bold} text-dark uppercase tracking-wide mb-1`}
-                          style={{
-                            fontFamily: "Manrope, sans-serif",
-                            fontWeight: 700,
-                            lineHeight: 1.0,
-                            letterSpacing: "0.08em",
-                            fontSize: "0.875rem",
-                          }}
-                        >
-                          {t("locations.weekends")}
-                        </span>
-                        <span
-                          className={`${typography.manrope.body} font-manrope ${fontWeights.manrope.normal} text-dark`}
-                          style={{
-                            fontFamily: "Manrope, sans-serif",
-                            fontWeight: 400,
-                            lineHeight: 1.2,
-                            letterSpacing: "0.02em",
-                            fontSize: "1rem",
-                          }}
-                        >
-                          {t("locations.weekendsHours")}
-                        </span>
-                      </div>
-                    </TextRevealLines>
+                    <span
+                      className={`${typography.manrope.body} font-manrope ${fontWeights.manrope.bold} text-dark uppercase tracking-wide whitespace-nowrap`}
+                      style={{
+                        fontFamily: "Manrope, sans-serif",
+                        fontWeight: 700,
+                        lineHeight: 1.0,
+                        letterSpacing: "0.08em",
+                      }}
+                    >
+                      {t("locations.weekends")}
+                    </span>
+                    <span
+                      className={`${typography.manrope.body} font-manrope ${fontWeights.manrope.normal} text-dark whitespace-nowrap`}
+                      style={{
+                        fontFamily: "Manrope, sans-serif",
+                        fontWeight: 400,
+                        lineHeight: 1.2,
+                        letterSpacing: "0.02em",
+                      }}
+                    >
+                      {t("locations.weekendsHours")}
+                    </span>
                   </motion.div>
                 </div>
               </div>

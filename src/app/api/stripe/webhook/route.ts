@@ -5,18 +5,12 @@ import {
   sendOrderEmail,
   type CheckoutItem,
 } from "@/lib/orders/createOrder";
-
-const SHIPPING_CZK = 89;
+import { orderTotalCzk, priceToCzk } from "@/lib/checkout/pricing";
 
 function getStripe(): Stripe | null {
   const key = process.env.STRIPE_SECRET_KEY;
   if (!key) return null;
   return new Stripe(key);
-}
-
-function priceToCzk(priceStr: string): number {
-  const num = parseFloat(priceStr.replace(/[^\d.,]/g, "").replace(",", ".")) || 0;
-  return priceStr.includes("€") ? Math.round(num * 27) : num;
 }
 
 export async function POST(request: Request) {
@@ -74,7 +68,8 @@ export async function POST(request: Request) {
 
     if (!created) return new Response("Order creation failed", { status: 500 });
 
-    const totalCzk = items.reduce((sum, item) => sum + priceToCzk(item.price) * item.quantity, 0) + SHIPPING_CZK;
+    const subtotalCzk = items.reduce((sum, item) => sum + priceToCzk(item.price) * item.quantity, 0);
+    const totalCzk = orderTotalCzk(subtotalCzk, "stripe");
     await sendOrderEmail({
       to: customer.email,
       orderNumber: created.orderNumber,

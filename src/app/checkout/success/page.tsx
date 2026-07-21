@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useEffect, useRef } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import Header from "@/components/Header/Header";
@@ -21,9 +21,13 @@ function CheckoutSuccessContent() {
   const paymentIntent = searchParams.get("payment_intent");
   const redirectStatus = searchParams.get("redirect_status");
   const manual = searchParams.get("manual");
+  const manualOrderNumber = searchParams.get("order_number");
   const paidWithStripe =
     !!sessionId || (!!paymentIntent && redirectStatus === "succeeded");
   const shouldClearCart = paidWithStripe || manual === "1";
+  const [resolvedOrderNumber, setResolvedOrderNumber] = useState<string | null>(
+    manualOrderNumber
+  );
 
   useCustomCursor({
     size: 20,
@@ -38,6 +42,41 @@ function CheckoutSuccessContent() {
     if (shouldClearCart) clearCart();
   }, [shouldClearCart, clearCart]);
 
+  useEffect(() => {
+    if (!paymentIntent || redirectStatus !== "succeeded" || manualOrderNumber) return;
+
+    let cancelled = false;
+    let attempts = 0;
+    const maxAttempts = 12;
+
+    const poll = async () => {
+      if (cancelled || attempts >= maxAttempts) return;
+      attempts += 1;
+      try {
+        const res = await fetch(
+          `/api/orders/by-payment?payment_intent=${encodeURIComponent(paymentIntent)}`
+        );
+        const data = await res.json();
+        if (!cancelled && res.ok && data.orderNumber) {
+          setResolvedOrderNumber(data.orderNumber);
+          return;
+        }
+      } catch {
+        // retry
+      }
+      if (!cancelled && attempts < maxAttempts) {
+        window.setTimeout(poll, 1500);
+      }
+    };
+
+    poll();
+    return () => {
+      cancelled = true;
+    };
+  }, [paymentIntent, redirectStatus, manualOrderNumber]);
+
+  const orderNumber = resolvedOrderNumber ?? manualOrderNumber;
+
   return (
     <div ref={rootRef} className="min-h-screen bg-beige flex flex-col">
       <Header />
@@ -49,12 +88,27 @@ function CheckoutSuccessContent() {
             {t("checkout.success.title")}
           </h1>
           <p
-            className={`font-manrope ${typography.manrope.body} text-dark/80 mb-10`}
+            className={`font-manrope ${typography.manrope.body} text-dark/80 mb-4`}
           >
             {paidWithStripe || manual === "1"
               ? t("checkout.success.paid")
               : t("checkout.success.other")}
           </p>
+          {orderNumber && (
+            <p
+              className={`font-manrope ${typography.manrope.body} text-dark mb-10`}
+            >
+              {t("checkout.success.orderNumber")}{" "}
+              <span className={`${fontWeights.manrope.bold} tracking-wide`}>
+                {orderNumber}
+              </span>
+            </p>
+          )}
+          {!orderNumber && paidWithStripe && (
+            <p className="font-manrope text-sm text-dark/60 mb-10">
+              {t("checkout.success.orderPending")}
+            </p>
+          )}
           <div className="flex flex-wrap justify-center gap-4">
             <Link
               href="/orders"

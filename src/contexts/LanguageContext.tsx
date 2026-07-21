@@ -17,7 +17,7 @@ interface LanguageContextType {
 }
 
 const LanguageContext = createContext<LanguageContextType | undefined>(
-  undefined
+  undefined,
 );
 
 export const useLanguage = () => {
@@ -33,24 +33,23 @@ interface LanguageProviderProps {
 }
 
 export const LanguageProvider = ({ children }: LanguageProviderProps) => {
-  const [language, setLanguageState] = useState<Language>(() => {
-    // Get language from localStorage or default to English
-    if (typeof window === "undefined") return "en";
-    const saved = localStorage.getItem("language") as Language;
-    // Only use saved language if it's valid, otherwise default to English
-    return saved === "cz" || saved === "en" ? saved : "en";
-  });
+  const [language, setLanguageState] = useState<Language>("cz");
 
   const setLanguage = (lang: Language) => {
     setLanguageState(lang);
     localStorage.setItem("language", lang);
-    // Update HTML lang attribute
-    document.documentElement.lang = lang;
+    document.documentElement.lang = lang === "en" ? "en" : "cs";
   };
 
   useEffect(() => {
-    // Set initial HTML lang attribute
-    document.documentElement.lang = language;
+    const saved = localStorage.getItem("language") as Language;
+    if (saved === "cz" || saved === "en") {
+      setLanguageState(saved);
+    }
+  }, []);
+
+  useEffect(() => {
+    document.documentElement.lang = language === "en" ? "en" : "cs";
   }, [language]);
 
   // Import translations
@@ -59,6 +58,8 @@ export const LanguageProvider = ({ children }: LanguageProviderProps) => {
       // Navigation
       "nav.events": "EVENTS",
       "nav.reserve": "RESERVE",
+      "nav.contact": "CONTACT",
+      "nav.cookies": "COOKIES",
       "nav.shop": "SHOP",
 
       // Hero
@@ -95,18 +96,24 @@ export const LanguageProvider = ({ children }: LanguageProviderProps) => {
 
       // Product advantages (product page)
       "products.advantages.greenTea.title": "Green tea",
-      "products.advantages.greenTea.text": "Natural antioxidants and a gentle lift without the jitters.",
+      "products.advantages.greenTea.text":
+        "Natural antioxidants and a gentle lift without the jitters.",
       "products.advantages.caffeine.title": "Natural caffeine",
-      "products.advantages.caffeine.text": "Smooth energy from quality sources to keep you focused.",
+      "products.advantages.caffeine.text":
+        "Smooth energy from quality sources to keep you focused.",
       "products.advantages.matcha.title": "Matcha quality",
-      "products.advantages.matcha.text": "Premium grade for a rich, balanced taste and lasting calm energy.",
+      "products.advantages.matcha.text":
+        "Premium grade for a rich, balanced taste and lasting calm energy.",
 
       // Checkout success
       "checkout.success.title": "Thank you for your order",
       "checkout.success.paid":
         "Your payment was successful. We'll send you a confirmation email and ship your order soon.",
       "checkout.success.other":
-        "We've received your order. You can pay on delivery or by bank transfer as agreed.",
+        "We've received your order. You can pay on delivery as agreed.",
+      "checkout.success.orderNumber": "Order number:",
+      "checkout.success.orderPending":
+        "Your order is being confirmed. Check your email or track it on the orders page in a moment.",
       "checkout.success.trackOrder": "Track order status",
       "checkout.success.continueShopping": "Continue shopping",
       "checkout.success.backHome": "Back to home",
@@ -125,11 +132,6 @@ export const LanguageProvider = ({ children }: LanguageProviderProps) => {
       "locations.weekends": "WEEKENDS",
       "locations.weekendsHours": "9:00 - 19:00",
 
-      // Matcha
-      "matcha.fallenFor": "Fallen for",
-      "matcha.title": "MATCHA",
-      "matcha.yet": "yet?",
-
       // Event Booking
       "event.title": "ANY EVENT YOU WANT US TO BE AT?",
       "event.description1":
@@ -142,6 +144,8 @@ export const LanguageProvider = ({ children }: LanguageProviderProps) => {
       // Footer
       "footer.madeBy": "Made by UITherapy",
       "footer.trackOrder": "Track order",
+      "footer.gdpr": "GDPR",
+      "footer.cookies": "Cookies",
 
       // Order tracking (Sanity CMS)
       "orders.title": "Track your order",
@@ -161,20 +165,59 @@ export const LanguageProvider = ({ children }: LanguageProviderProps) => {
       "orders.total": "Total",
       "orders.backShop": "Back to shop",
       "orders.cmsNote":
-        "Orders are stored in your Sanity project. Create or update them in Studio; you can connect Stripe webhooks later to create orders automatically.",
+        "Orders are stored in Sanity. Manage them in Studio under Orders.",
       "orders.status.pending": "Pending",
       "orders.status.paid": "Paid",
       "orders.status.fulfilled": "Shipped / fulfilled",
       "orders.status.cancelled": "Cancelled",
-      "orders.error.unavailable": "Order lookup is not configured. Add Sanity project ID (and read token if the dataset is private).",
+      "orders.error.unavailable":
+        "Order lookup is not configured. Add Sanity project ID (and read token if the dataset is private).",
       "orders.error.invalid": "Please enter a valid order number and email.",
-      "orders.error.notFound": "No order matches those details. Check the number and email or contact us.",
+      "orders.error.notFound":
+        "No order matches those details. Check the number and email or contact us.",
       "orders.error.generic": "Something went wrong. Try again later.",
+
+      // Contact page
+      "contact.title": "Contact us",
+      "contact.intro":
+        "For events, wholesale, collaborations, or support, send us a message and we will get back to you soon.",
+      "contact.emailLabel": "Email",
+      "contact.phoneLabel": "Phone",
+      "contact.instagramLabel": "Instagram",
+      "contact.addressLabel": "Registered seat",
+      "contact.addressValue":
+        "Špitálka 547/5a, Zábrdovice, Brno, Jihomoravský kraj",
+      "contact.legalTitle": "Business details (ARES)",
+      "contact.businessNameLabel": "Entrepreneur",
+      "contact.icoLabel": "IČO",
+      "contact.taxOfficeLabel": "Tax office",
+      "contact.legalFormLabel": "Legal form",
+
+      // Cookies page
+      "cookies.title": "Cookies policy",
+      "cookies.updated": "Last updated",
+      "cookies.updatedDate": "21 July 2026",
+      "cookies.intro":
+        "This website uses cookies to keep essential features working, improve performance, and understand traffic.",
+      "cookies.essentialTitle": "Essential cookies",
+      "cookies.essentialText":
+        "Required for core functionality such as language selection and secure checkout flow.",
+      "cookies.analyticsTitle": "Analytics cookies",
+      "cookies.analyticsText":
+        "Help us understand how visitors use the site so we can improve content and user experience.",
+      "cookies.marketingTitle": "Marketing cookies",
+      "cookies.marketingText":
+        "Can be used by third-party services to measure campaign performance and show relevant content.",
+      "cookies.manageTitle": "Managing cookies",
+      "cookies.manageText":
+        "You can control or delete cookies in your browser settings at any time.",
     },
     cz: {
       // Navigation
       "nav.events": "AKCE",
       "nav.reserve": "REZERVACE",
+      "nav.contact": "KONTAKT",
+      "nav.cookies": "COOKIES",
       "nav.shop": "OBCHOD",
 
       // Hero
@@ -211,18 +254,24 @@ export const LanguageProvider = ({ children }: LanguageProviderProps) => {
 
       // Product advantages (product page)
       "products.advantages.greenTea.title": "Zelený čaj",
-      "products.advantages.greenTea.text": "Přírodní antioxidanty a jemná povzbuzení bez nervozity.",
+      "products.advantages.greenTea.text":
+        "Přírodní antioxidanty a jemná povzbuzení bez nervozity.",
       "products.advantages.caffeine.title": "Přírodní kofein",
-      "products.advantages.caffeine.text": "Plynulá energie z kvalitních zdrojů pro soustředění.",
+      "products.advantages.caffeine.text":
+        "Plynulá energie z kvalitních zdrojů pro soustředění.",
       "products.advantages.matcha.title": "Kvalita matcha",
-      "products.advantages.matcha.text": "Prémiová jakost pro plnou, vyváženou chuť a klidnou energii.",
+      "products.advantages.matcha.text":
+        "Prémiová jakost pro plnou, vyváženou chuť a klidnou energii.",
 
       // Checkout success
       "checkout.success.title": "Děkujeme za objednávku",
       "checkout.success.paid":
         "Platba proběhla v pořádku. Pošleme potvrzení e-mailem a brzy objednávku odešleme.",
       "checkout.success.other":
-        "Objednávku jsme přijali. Platbu můžete provést při doručení nebo převodem podle domluvy.",
+        "Objednávku jsme přijali. Platbu můžete provést při doručení.",
+      "checkout.success.orderNumber": "Číslo objednávky:",
+      "checkout.success.orderPending":
+        "Objednávku právě potvrzujeme. Za chvíli ji najdete v e-mailu nebo na stránce sledování objednávek.",
       "checkout.success.trackOrder": "Stav objednávky",
       "checkout.success.continueShopping": "Pokračovat v nákupu",
       "checkout.success.backHome": "Zpět na úvod",
@@ -241,11 +290,6 @@ export const LanguageProvider = ({ children }: LanguageProviderProps) => {
       "locations.weekends": "VÍKENDY",
       "locations.weekendsHours": "9:00 - 19:00",
 
-      // Matcha
-      "matcha.fallenFor": "Zamilovali jste si",
-      "matcha.title": "MATCHA",
-      "matcha.yet": "už?",
-
       // Event Booking
       "event.title": "MÁTE AKCI, KDE BYSTE NÁS CHTĚLI VIDĚT?",
       "event.description1":
@@ -258,6 +302,8 @@ export const LanguageProvider = ({ children }: LanguageProviderProps) => {
       // Footer
       "footer.madeBy": "Vytvořeno UITherapy",
       "footer.trackOrder": "Sledovat objednávku",
+      "footer.gdpr": "GDPR",
+      "footer.cookies": "Cookies",
 
       // Order tracking (Sanity CMS)
       "orders.title": "Sledování objednávky",
@@ -277,15 +323,52 @@ export const LanguageProvider = ({ children }: LanguageProviderProps) => {
       "orders.total": "Celkem",
       "orders.backShop": "Zpět do obchodu",
       "orders.cmsNote":
-        "Objednávky jsou v projektu Sanity. Vytvářejte je nebo upravujte ve Studiu; později lze připojit Stripe webhook pro automatické zakládání.",
+        "Objednávky jsou uložené v Sanity. Spravujte je ve Studiu v sekci Orders.",
       "orders.status.pending": "Čeká na zpracování",
       "orders.status.paid": "Zaplaceno",
       "orders.status.fulfilled": "Odesláno",
       "orders.status.cancelled": "Zrušeno",
-      "orders.error.unavailable": "Vyhledávání objednávek není nastaveno. Doplňte Sanity project ID (a read token u soukromého datasetu).",
+      "orders.error.unavailable":
+        "Vyhledávání objednávek není nastaveno. Doplňte Sanity project ID (a read token u soukromého datasetu).",
       "orders.error.invalid": "Zadejte platné číslo objednávky a e-mail.",
-      "orders.error.notFound": "Objednávku nenacházíme. Zkontrolujte údaje nebo nás kontaktujte.",
+      "orders.error.notFound":
+        "Objednávku nenacházíme. Zkontrolujte údaje nebo nás kontaktujte.",
       "orders.error.generic": "Něco se pokazilo. Zkuste to později.",
+
+      // Contact page
+      "contact.title": "Kontaktujte nás",
+      "contact.intro":
+        "Pro akce, velkoobchod, spolupráce nebo podporu nám napište a co nejdříve se ozveme.",
+      "contact.emailLabel": "E-mail",
+      "contact.phoneLabel": "Telefon",
+      "contact.instagramLabel": "Instagram",
+      "contact.addressLabel": "Sídlo",
+      "contact.addressValue":
+        "Špitálka 547/5a, Zábrdovice, Brno, Jihomoravský kraj",
+      "contact.legalTitle": "Podnikatelské údaje (ARES)",
+      "contact.businessNameLabel": "Podnikatel",
+      "contact.icoLabel": "IČO",
+      "contact.taxOfficeLabel": "Finanční úřad",
+      "contact.legalFormLabel": "Právní forma",
+
+      // Cookies page
+      "cookies.title": "Zásady cookies",
+      "cookies.updated": "Poslední aktualizace",
+      "cookies.updatedDate": "21. července 2026",
+      "cookies.intro":
+        "Tento web používá cookies pro správné fungování, zlepšení výkonu a porozumění návštěvnosti.",
+      "cookies.essentialTitle": "Nezbytné cookies",
+      "cookies.essentialText":
+        "Jsou nutné pro základní funkce, například volbu jazyka a bezpečný průchod objednávkou.",
+      "cookies.analyticsTitle": "Analytické cookies",
+      "cookies.analyticsText":
+        "Pomáhají nám pochopit, jak návštěvníci web používají, abychom mohli zlepšovat obsah a uživatelský zážitek.",
+      "cookies.marketingTitle": "Marketingové cookies",
+      "cookies.marketingText":
+        "Mohou být používány službami třetích stran pro měření kampaní a zobrazování relevantního obsahu.",
+      "cookies.manageTitle": "Správa cookies",
+      "cookies.manageText":
+        "Cookies můžete kdykoli spravovat nebo smazat v nastavení svého prohlížeče.",
     },
   };
 

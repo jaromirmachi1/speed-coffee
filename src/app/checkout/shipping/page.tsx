@@ -16,21 +16,17 @@ import {
   typography,
   fontWeights,
 } from "@/lib/constants/typography";
-
-const SHIPPING_CZK = 89;
+import {
+  SHIPPING_CZK,
+  POD_FEE_CZK,
+  priceToCzk,
+  formatCzk,
+  orderTotalCzk,
+} from "@/lib/checkout/pricing";
 
 const stripePromise = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
   ? loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY)
   : null;
-
-function priceToCzk(priceStr: string): number {
-  const num = parseFloat(priceStr.replace(/[^\d.,]/g, "").replace(",", ".")) || 0;
-  return priceStr.includes("€") ? Math.round(num * 27) : num;
-}
-
-function formatCzk(value: number): string {
-  return `${value} Kč`;
-}
 
 function parsePaymentIntentId(clientSecret: string): string | null {
   const match = clientSecret.match(/^(pi_[^_]+)_secret_/);
@@ -44,7 +40,7 @@ export default function ShippingPage() {
   const { items, cartCount, clearCart } = useCart();
   const isStoreOpen = process.env.NEXT_PUBLIC_STORE_OPEN !== "false";
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [paymentMethod, setPaymentMethod] = useState<"stripe" | "delivery" | "bank">("stripe");
+  const [paymentMethod, setPaymentMethod] = useState<"stripe" | "delivery">("stripe");
   const [stripeClientSecret, setStripeClientSecret] = useState<string | null>(null);
   const [returnUrl, setReturnUrl] = useState("");
   useEffect(() => {
@@ -52,7 +48,7 @@ export default function ShippingPage() {
   }, []);
 
   const subtotalCzk = items.reduce((sum, item) => sum + priceToCzk(item.price) * item.quantity, 0);
-  const totalCzk = subtotalCzk + SHIPPING_CZK;
+  const totalCzk = orderTotalCzk(subtotalCzk, paymentMethod);
 
   // Reset Stripe client secret when cart total changes so amount stays correct
   useEffect(() => {
@@ -78,7 +74,7 @@ export default function ShippingPage() {
           }),
         });
         const data = await res.json();
-        if (!cancelled && data.clientSecret) setStripeClientSecret(data.clientSecret);
+        if (!cancelled && res.ok && data.clientSecret) setStripeClientSecret(data.clientSecret);
       } catch {
         // ignore
       }
@@ -158,7 +154,7 @@ export default function ShippingPage() {
       return;
     }
 
-    // Pay on delivery or bank transfer: create pending order in CMS
+    // Pay on delivery: create pending order in CMS
     setIsSubmitting(true);
     try {
       const res = await fetch("/api/orders/manual", {
@@ -375,18 +371,9 @@ export default function ShippingPage() {
                       onChange={() => setPaymentMethod("delivery")}
                       className="w-4 h-4 text-accent"
                     />
-                    <span className="font-manrope font-medium text-dark">Pay on delivery (cash or card)</span>
-                  </label>
-                  <label className="flex items-center gap-3 p-4 rounded-xl border-2 border-dark/20 bg-white/60 cursor-pointer hover:border-dark/30 has-[:checked]:border-dark has-[:checked]:bg-white/80">
-                    <input
-                      type="radio"
-                      name="payment"
-                      value="bank"
-                      checked={paymentMethod === "bank"}
-                      onChange={() => setPaymentMethod("bank")}
-                      className="w-4 h-4 text-accent"
-                    />
-                    <span className="font-manrope font-medium text-dark">Bank transfer</span>
+                    <span className="font-manrope font-medium text-dark">
+                      Pay on delivery (cash or card) +{formatCzk(POD_FEE_CZK)}
+                    </span>
                   </label>
                 </div>
               </section>
@@ -419,6 +406,12 @@ export default function ShippingPage() {
                     <span>Shipping</span>
                     <span>{formatCzk(SHIPPING_CZK)}</span>
                   </div>
+                  {paymentMethod === "delivery" && (
+                    <div className="flex justify-between font-manrope text-dark/80 text-sm">
+                      <span>Pay on delivery fee</span>
+                      <span>{formatCzk(POD_FEE_CZK)}</span>
+                    </div>
+                  )}
                   <div className="flex justify-between font-manrope font-bold text-dark pt-2">
                     <span>Total</span>
                     <span>{formatCzk(totalCzk)}</span>

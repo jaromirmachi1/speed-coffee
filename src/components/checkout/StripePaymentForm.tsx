@@ -38,6 +38,7 @@ const StripePaymentForm = forwardRef<StripePaymentFormHandle, StripePaymentFormP
         <PaymentElement
           options={{
             layout: "tabs",
+            paymentMethodOrder: ["card"],
           }}
         />
       </div>

@@ -61,10 +61,6 @@ export type OrderTrackingPayload = {
   items: OrderTrackingLine[];
 };
 
-/**
- * Find an order by number and verify the email matches (case-insensitive).
- * Returns null if not found or email does not match (same response avoids leaking existence).
- */
 export async function lookupOrderForTracking(
   orderNumber: string,
   customerEmail: string
@@ -106,6 +102,24 @@ export async function lookupOrderForTracking(
     };
   } catch (e) {
     console.error("Sanity order lookup failed:", e);
+    return null;
+  }
+}
+
+export async function lookupOrderNumberByPaymentId(
+  paymentId: string
+): Promise<string | null> {
+  const client = getSanityServerClient();
+  if (!client || !paymentId.trim()) return null;
+
+  try {
+    const doc = await client.fetch<{ orderNumber?: string } | null>(
+      `*[_type == "order" && stripeSessionId == $paymentId][0]{ orderNumber }`,
+      { paymentId: paymentId.trim() }
+    );
+    return doc?.orderNumber ?? null;
+  } catch (e) {
+    console.error("Sanity payment lookup failed:", e);
     return null;
   }
 }

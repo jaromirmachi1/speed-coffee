@@ -1,23 +1,17 @@
 "use client";
 
 import { useLanguage } from "@/contexts/LanguageContext";
-import TextRevealLines from "@/lib/TextRevealLines";
-import { fontWeights, lineHeights } from "@/lib/constants/typography";
-import { useEffect, useRef } from "react";
+import { motion } from "framer-motion";
+import { Bebas_Neue } from "next/font/google";
+
+const bebasNeue = Bebas_Neue({
+  weight: "400",
+  subsets: ["latin", "latin-ext"],
+});
 
 const HeroIntro = () => {
   const { t } = useLanguage();
-  const textContainerRef = useRef<HTMLDivElement>(null);
 
-  // Force a resize event after mount to ensure TextRevealLines measures correctly
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      if (textContainerRef.current) {
-        window.dispatchEvent(new Event("resize"));
-      }
-    }, 100);
-    return () => clearTimeout(timer);
-  }, []);
   return (
     // NOTE: use min-height (not fixed height) so font-load reflow can’t push
     // “DISCOVER OUR SPEED” outside the section on some refreshes.
@@ -29,7 +23,6 @@ const HeroIntro = () => {
             style={{ minWidth: 0, width: "100%" }}
           >
             <div
-              ref={textContainerRef}
               className="text-center w-full"
               style={{
                 width: "100%",
@@ -40,33 +33,36 @@ const HeroIntro = () => {
                 flexGrow: 0,
               }}
             >
-              <TextRevealLines>
-                <p
-                  className={`hero-intro-text text-5xl sm:text-4xl md:text-[64px] lg:text-[104px] font-manuka ${fontWeights.manuka.bold} text-dark ${lineHeights.custom.heroIntro}`}
-                  style={{
-                    width: "100%",
-                    maxWidth: "100%",
-                    minWidth: 0,
-                    boxSizing: "border-box",
-                    display: "block",
-                    margin: 0,
-                    padding: 0,
-                  }}
-                >
-                  {t("heroIntro.text")}{" "}
-                  <span className="font-bold hero-intro-highlight">
-                    {t("heroIntro.highlight")}
-                  </span>{" "}
-                  {t("heroIntro.textEnd")}
-                </p>
-              </TextRevealLines>
+              <motion.p
+                className={`hero-intro-text text-5xl sm:text-4xl md:text-[54px] lg:text-[86px] ${bebasNeue.className} text-dark tracking-[-0.01em]`}
+                initial={{ opacity: 0, y: 32 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.35 }}
+                transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                style={{
+                  width: "100%",
+                  maxWidth: "100%",
+                  minWidth: 0,
+                  boxSizing: "border-box",
+                  display: "block",
+                  lineHeight: 1.32,
+                  margin: 0,
+                  padding: 0,
+                }}
+              >
+                {t("heroIntro.text")}{" "}
+                <span className="font-bold hero-intro-highlight">
+                  {t("heroIntro.highlight")}
+                </span>{" "}
+                {t("heroIntro.textEnd")}
+              </motion.p>
             </div>
           </div>
 
           <div className="text-center pb-10">
             <a
               href="#about"
-              className={`inline-block text-4xl sm:text-4xl md:text-4xl lg:text-[64px] font-manuka ${fontWeights.manuka.bold} text-dark hover:text-white transition-colors`}
+              className={`inline-block text-4xl sm:text-4xl md:text-4xl lg:text-[44px] ${bebasNeue.className} text-dark leading-[2] tracking-[-0.01em] hover:text-white transition-colors`}
             >
               {t("hero.discover")}
             </a>

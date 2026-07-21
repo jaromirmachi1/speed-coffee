@@ -2,12 +2,10 @@
 
 import { useEffect, useRef } from "react";
 import Container from "@/components/Container";
-import { useLanguage } from "@/contexts/LanguageContext";
 import matchaSc from "@/assets/images/matchaSc.webp";
 import CoffeeSection, { type CoffeeSectionHandle } from "./CoffeeSection";
 
 const MatchaSection = () => {
-  const { t } = useLanguage();
   const sectionRef = useRef<HTMLElement | null>(null);
   const bgImageRef = useRef<HTMLImageElement | null>(null);
   const textRef = useRef<HTMLHeadingElement | null>(null);
@@ -52,7 +50,7 @@ const MatchaSection = () => {
       // Reduce precision on mobile for better performance
       const precision = isMobile ? 0 : 2;
       bgImage.style.transform = `translate3d(-50%, calc(-50% + ${bgTranslateY.toFixed(
-        precision
+        precision,
       )}px), 0)`;
 
       // 4️⃣ TEXT APPEARANCE: only after scroll begins.
@@ -66,7 +64,8 @@ const MatchaSection = () => {
       let imgRectBottom: number;
       if (isMobile && rectCacheFrame % 3 !== 0) {
         // Use cached value on mobile, only update every 3rd frame
-        imgRectBottom = cachedImgBottom + (bgTranslateY - (cachedImgBottom - vh * 0.5));
+        imgRectBottom =
+          cachedImgBottom + (bgTranslateY - (cachedImgBottom - vh * 0.5));
       } else {
         const imgRect = bgImage.getBoundingClientRect();
         imgRectBottom = imgRect.bottom;
@@ -78,10 +77,12 @@ const MatchaSection = () => {
       const outT = clamp01((-40 - imgRectBottom) / 120);
       const textOpacityOut = 1 - easeOut(outT);
 
-      text.style.opacity = String(Math.round(textOpacityIn * textOpacityOut * 100) / 100);
+      text.style.opacity = String(
+        Math.round(textOpacityIn * textOpacityOut * 100) / 100,
+      );
       // Keep the heading centered (base -50%) while animating only the extra Y offset.
       text.style.transform = `translate3d(-50%, calc(-50% + ${textY.toFixed(
-        precision
+        precision,
       )}px), 0)`;
 
       // Coffee stage is handled by CoffeeSection (separate file).
@@ -164,7 +165,7 @@ const MatchaSection = () => {
         {/* Background mock image (moves bottom -> top on scroll). Replace `src` later. */}
         <img
           ref={bgImageRef}
-          src={typeof matchaSc === 'string' ? matchaSc : matchaSc.src}
+          src={typeof matchaSc === "string" ? matchaSc : matchaSc.src}
           alt=""
           aria-hidden="true"
           className="w-[min(280px,70vw)] md:w-[min(400px,95vw)]"
@@ -215,7 +216,7 @@ const MatchaSection = () => {
               marginBottom: "-0.45em",
             }}
           >
-            {t("matcha.fallenFor")}
+            Fallen for
           </span>
           <span
             className="font-sans font-black"
@@ -226,7 +227,7 @@ const MatchaSection = () => {
               letterSpacing: "0.02em",
             }}
           >
-            {t("matcha.title")}
+            MATCHA
           </span>
           <span
             style={{
@@ -237,7 +238,7 @@ const MatchaSection = () => {
               marginTop: "-0.25em",
             }}
           >
-            {t("matcha.yet")}
+            yet?
           </span>
         </h2>
 

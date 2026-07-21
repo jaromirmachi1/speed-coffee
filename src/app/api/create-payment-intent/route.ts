@@ -1,18 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
-
-const SHIPPING_CZK = 89;
-
-/** Parse display price string to CZK number. */
-function priceToCzk(priceStr: string): number {
-  const num = parseFloat(priceStr.replace(/[^\d.,]/g, "").replace(",", ".")) || 0;
-  return priceStr.includes("€") ? Math.round(num * 27) : num;
-}
-
-/** CZK to Stripe amount (smallest unit: 1 CZK = 100). */
-function czkToStripeAmount(czk: number): number {
-  return Math.round(czk * 100);
-}
+import {
+  SHIPPING_CZK,
+  priceToCzk,
+  czkToStripeAmount,
+} from "@/lib/checkout/pricing";
 
 function getStripe(): Stripe | null {
   const key = process.env.STRIPE_SECRET_KEY;
@@ -56,7 +48,7 @@ export async function POST(request: NextRequest) {
     const paymentIntent = await stripe.paymentIntents.create({
       amount,
       currency: "czk",
-      automatic_payment_methods: { enabled: true },
+      payment_method_types: ["card"],
     });
 
     return NextResponse.json({

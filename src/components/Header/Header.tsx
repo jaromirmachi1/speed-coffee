@@ -80,7 +80,10 @@ const Header = () => {
     pathname.startsWith("/checkout/") ||
     pathname.startsWith("/shop") ||
     pathname === "/form" ||
-    pathname.startsWith("/orders");
+    pathname.startsWith("/orders") ||
+    pathname.startsWith("/contact") ||
+    pathname.startsWith("/cookies");
+  const isHomepage = pathname === "/";
 
   const toggleMenu = () => {
     setIsMenuOpen((prev) => !prev);
@@ -140,9 +143,8 @@ const Header = () => {
                 <NavLink href={isShopPage ? "/#events" : "#events"}>
                   {t("nav.events")}
                 </NavLink>
-                <NavLink href="/form">
-                  {t("nav.reserve")}
-                </NavLink>
+                <NavLink href="/form">{t("nav.reserve")}</NavLink>
+                {!isHomepage && <NavLink href="/contact">{t("nav.contact")}</NavLink>}
                 <NavLink
                   href={isShopPage ? "/checkout" : "/shop"}
                   className={`relative inline-flex ${isShopPage ? "items-center" : "items-baseline"}`}
@@ -273,6 +275,17 @@ const Header = () => {
                 >
                   <NavLink href="/form" onClick={closeMenu} isMobile={false}>
                     {t("nav.reserve")}
+                  </NavLink>
+                </motion.div>
+                <motion.div
+                  variants={{
+                    hidden: { opacity: 0, y: 16 },
+                    visible: { opacity: 1, y: 0 },
+                  }}
+                  transition={{ duration: 0.4, ease: "easeOut" }}
+                >
+                  <NavLink href="/contact" onClick={closeMenu} isMobile={false}>
+                    {t("nav.contact")}
                   </NavLink>
                 </motion.div>
                 <motion.div

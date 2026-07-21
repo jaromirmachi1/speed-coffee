@@ -5,10 +5,37 @@ import {
   useContext,
   useState,
   useCallback,
+  useEffect,
   type ReactNode,
 } from "react";
 import type { ProductDisplay } from "@/types/product";
 import type { CartItem } from "@/types/cart";
+
+const CART_STORAGE_KEY = "speed-coffee-cart";
+
+function loadStoredCart(): CartItem[] {
+  if (typeof window === "undefined") return [];
+  try {
+    const raw = localStorage.getItem(CART_STORAGE_KEY);
+    if (!raw) return [];
+    const parsed = JSON.parse(raw) as unknown;
+    if (!Array.isArray(parsed)) return [];
+    return parsed.filter(
+      (item): item is CartItem =>
+        Boolean(
+          item &&
+            typeof item === "object" &&
+            typeof item.id === "string" &&
+            typeof item.title === "string" &&
+            typeof item.price === "string" &&
+            typeof item.quantity === "number" &&
+            item.quantity > 0
+        )
+    );
+  } catch {
+    return [];
+  }
+}
 
 interface CartContextType {
   items: CartItem[];
@@ -30,6 +57,21 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const [items, setItems] = useState<CartItem[]>([]);
   const [isCartModalOpen, setIsCartModalOpen] = useState(false);
   const [lastAddedItem, setLastAddedItem] = useState<ProductDisplay | null>(null);
+  const [isHydrated, setIsHydrated] = useState(false);
+
+  useEffect(() => {
+    setItems(loadStoredCart());
+    setIsHydrated(true);
+  }, []);
+
+  useEffect(() => {
+    if (!isHydrated) return;
+    if (items.length === 0) {
+      localStorage.removeItem(CART_STORAGE_KEY);
+      return;
+    }
+    localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(items));
+  }, [items, isHydrated]);
 
   const cartCount = items.reduce((sum, item) => sum + item.quantity, 0);
 
@@ -74,6 +116,9 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   const clearCart = useCallback(() => {
     setItems([]);
+    if (typeof window !== "undefined") {
+      localStorage.removeItem(CART_STORAGE_KEY);
+    }
   }, []);
 
   const openCartModal = useCallback(() => setIsCartModalOpen(true), []);
