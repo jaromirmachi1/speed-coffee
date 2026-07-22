@@ -15,7 +15,7 @@ import {
 
 const Home = () => {
   return (
-    <div className="min-h-screen bg-beige overflow-x-hidden">
+    <div className="min-h-screen bg-beige">
       <Header />
       <main>
         <Hero />

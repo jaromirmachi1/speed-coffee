@@ -39,6 +39,11 @@ export const orderSchema = defineType({
       type: "string",
     }),
     defineField({
+      name: "customerPhone",
+      title: "Customer phone",
+      type: "string",
+    }),
+    defineField({
       name: "shippingAddress",
       title: "Shipping address",
       type: "text",
@@ -161,16 +166,19 @@ export const orderSchema = defineType({
       title: "orderNumber",
       subtitle: "status",
       customerName: "customerName",
+      customerPhone: "customerPhone",
       total: "total",
       currency: "currency",
     },
-    prepare({ title, subtitle, customerName, total, currency }) {
+    prepare({ title, subtitle, customerName, customerPhone, total, currency }) {
       const status = subtitle ? subtitle.toUpperCase() : "UNKNOWN";
       const amount =
-        typeof total === "number" ? `${(currency || "EUR")} ${total.toFixed(2)}` : "";
+        typeof total === "number" ? `${(currency || "CZK")} ${total}` : "";
       return {
         title: title || "Order",
-        subtitle: [status, customerName, amount].filter(Boolean).join(" • "),
+        subtitle: [status, customerName, customerPhone, amount]
+          .filter(Boolean)
+          .join(" • "),
       };
     },
   },

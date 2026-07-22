@@ -34,7 +34,7 @@ const HeroIntro = () => {
               }}
             >
               <motion.p
-                className={`hero-intro-text text-5xl sm:text-4xl md:text-[54px] lg:text-[86px] ${bebasNeue.className} text-dark tracking-[-0.01em]`}
+                className={`hero-intro-text text-5xl sm:text-4xl md:text-[54px] lg:text-[86px] ${bebasNeue.className} text-dark tracking-[-0.04em]`}
                 initial={{ opacity: 0, y: 32 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, amount: 0.35 }}
@@ -45,7 +45,7 @@ const HeroIntro = () => {
                   minWidth: 0,
                   boxSizing: "border-box",
                   display: "block",
-                  lineHeight: 1.32,
+                  lineHeight: 1.12,
                   margin: 0,
                   padding: 0,
                 }}
