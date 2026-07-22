@@ -45,7 +45,7 @@ const Shop = () => {
       <section className="bg-beige py-16 md:py-24 lg:py-32">
         <Container className="px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-center min-h-[400px]">
-            <p className="text-dark font-manrope">Loading products...</p>
+            <p className="text-dark font-manrope">{t("shop.loading")}</p>
           </div>
         </Container>
       </section>
@@ -69,7 +69,7 @@ const Shop = () => {
           {products.length === 0 ? (
             <div className="text-center py-12 max-w-lg mx-auto space-y-3">
               <p className="text-dark font-manrope">
-                No products available at the moment.
+                {t("shop.empty")}
               </p>
               {!process.env.NEXT_PUBLIC_SANITY_PROJECT_ID ? (
                 <p className="text-dark/60 font-manrope text-sm">

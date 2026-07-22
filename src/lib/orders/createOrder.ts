@@ -1,3 +1,4 @@
+import { randomUUID } from "node:crypto";
 import { sendMail } from "@/lib/email/mailer";
 import { buildOrderConfirmationEmail } from "@/lib/email/orderConfirmation";
 import { getSanityServerClient, getSanityServerWriteClient } from "@/lib/sanity/server-client";
@@ -9,9 +10,11 @@ import {
 
 export type CheckoutItem = {
   id: string;
+  product_id?: string;
   title: string;
   price: string;
   quantity: number;
+  variantTitle?: string;
 };
 
 export type CheckoutCustomer = {
@@ -51,6 +54,17 @@ function addressToText(customer: CheckoutCustomer): string {
   return [customer.street, line2, customer.country].filter(Boolean).join("\n");
 }
 
+function resolveSanityProductId(item: CheckoutItem): string | undefined {
+  const candidate = item.product_id ?? item.id;
+  if (!candidate) return undefined;
+  return candidate.includes("::") ? candidate.split("::")[0] : candidate;
+}
+
+function parseVariantTitle(title: string): string | undefined {
+  const match = title.match(/\(([^)]+)\)\s*$/);
+  return match?.[1];
+}
+
 export async function orderExistsByPaymentId(paymentId: string): Promise<boolean> {
   const client = getSanityServerClient();
   if (!client || !paymentId) return false;
@@ -73,13 +87,21 @@ export async function createOrderRecord(input: CreateOrderInput): Promise<{ orde
   const total = orderTotalCzk(subtotal, input.paymentMethod);
   const orderNumber = makeOrderNumber();
 
-  const sanityItems = items.map((item) => ({
-    _type: "item",
-    product: item.id ? { _type: "reference", _ref: item.id } : undefined,
-    quantity: item.quantity,
-    unitPrice: priceToCzk(item.price),
-    currency: "CZK",
-  }));
+  const sanityItems = items.map((item) => {
+    const productRef = resolveSanityProductId(item);
+    const variantTitle = item.variantTitle ?? parseVariantTitle(item.title);
+
+    return {
+      _key: randomUUID(),
+      _type: "item",
+      product: productRef ? { _type: "reference", _ref: productRef } : undefined,
+      productTitle: item.title.replace(/\s*\([^)]+\)\s*$/, "").trim() || item.title,
+      variantTitle: variantTitle || undefined,
+      quantity: item.quantity,
+      unitPrice: priceToCzk(item.price),
+      currency: "CZK",
+    };
+  });
 
   await client.create({
     _type: "order",

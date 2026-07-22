@@ -56,6 +56,38 @@ interface MenuToggleProps {
   onClick: () => void;
 }
 
+function CartNavContent({
+  isShopPage,
+  cartCount,
+  shopLabel,
+  badgeClassName = "text-[10px]",
+}: {
+  isShopPage: boolean;
+  cartCount: number;
+  shopLabel: string;
+  badgeClassName?: string;
+}) {
+  if (!isShopPage) {
+    return <>{shopLabel}</>;
+  }
+
+  return (
+    <span className="relative inline-flex h-9 w-9 md:h-10 md:w-10 lg:h-11 lg:w-11 items-center justify-center">
+      <FaBasketShopping
+        className="h-7 w-7 md:h-8 md:w-8 lg:h-9 lg:w-9 text-current transition-colors"
+        aria-hidden
+      />
+      {cartCount > 0 && (
+        <span
+          className={`absolute -top-1 -right-1 flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-[#BEA791] px-1 font-manrope font-bold leading-none text-dark ${badgeClassName}`}
+        >
+          {cartCount}
+        </span>
+      )}
+    </span>
+  );
+}
+
 const MenuToggle = ({ isOpen, onClick }: MenuToggleProps) => {
   return (
     <button
@@ -149,21 +181,11 @@ const Header = () => {
                   href={isShopPage ? "/checkout" : "/shop"}
                   className={`relative inline-flex ${isShopPage ? "items-center" : "items-baseline"}`}
                 >
-                  {isShopPage ? (
-                    <FaBasketShopping
-                      className="w-7 h-7 md:w-8 md:h-8 lg:w-9 lg:h-9 text-current transition-colors"
-                      aria-hidden
-                    />
-                  ) : (
-                    t("nav.shop")
-                  )}
-                  {cartCount > 0 && (
-                    <sup
-                      className={`font-manrope font-bold leading-none text-[#BEA791] ${isShopPage ? "absolute -top-0.5 -right-2 text-[0.5em]" : "ml-1 text-[0.55em] align-super"}`}
-                    >
-                      {cartCount}
-                    </sup>
-                  )}
+                  <CartNavContent
+                    isShopPage={isShopPage}
+                    cartCount={cartCount}
+                    shopLabel={t("nav.shop")}
+                  />
                 </NavLink>
               </div>
             </div>
@@ -301,21 +323,12 @@ const Header = () => {
                     isMobile={false}
                     className={`relative inline-flex ${isShopPage ? "items-center" : "items-baseline"}`}
                   >
-                    {isShopPage ? (
-                      <FaBasketShopping
-                        className="w-8 h-8 md:w-9 md:h-9 text-dark transition-colors"
-                        aria-hidden
-                      />
-                    ) : (
-                      t("nav.shop")
-                    )}
-                    {cartCount > 0 && (
-                      <sup
-                        className={`font-manrope font-bold leading-none text-[#BEA791] ${isShopPage ? "absolute -top-0.5 -right-2 text-[0.45em]" : "ml-1 text-[0.55em] align-super"}`}
-                      >
-                        {cartCount}
-                      </sup>
-                    )}
+                    <CartNavContent
+                      isShopPage={isShopPage}
+                      cartCount={cartCount}
+                      shopLabel={t("nav.shop")}
+                      badgeClassName="text-[11px]"
+                    />
                   </NavLink>
                 </motion.div>
               </motion.div>

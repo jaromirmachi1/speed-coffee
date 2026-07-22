@@ -7,8 +7,11 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ ok: false, error: "unavailable" }, { status: 503 });
   }
 
-  const paymentId = request.nextUrl.searchParams.get("payment_intent")?.trim();
-  if (!paymentId || !paymentId.startsWith("pi_")) {
+  const paymentIntent = request.nextUrl.searchParams.get("payment_intent")?.trim();
+  const sessionId = request.nextUrl.searchParams.get("session_id")?.trim();
+  const paymentId = sessionId || paymentIntent;
+
+  if (!paymentId) {
     return NextResponse.json({ ok: false, error: "invalid_input" }, { status: 400 });
   }
 

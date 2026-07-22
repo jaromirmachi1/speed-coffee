@@ -1,17 +1,13 @@
 "use client";
 
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { loadStripe } from "@stripe/stripe-js";
-import { Elements } from "@stripe/react-stripe-js";
 import Header from "@/components/Header/Header";
 import Footer from "@/components/Footer";
 import Container from "@/components/Container";
-import StripePaymentForm from "@/components/checkout/StripePaymentForm";
 import { useCart } from "@/contexts/CartContext";
-import { useCustomCursor } from "@/hooks/useCustomCursor";
-import { useSpeedCoffeeMotion } from "@/hooks/useSpeedCoffeeMotion";
+import { useLanguage } from "@/contexts/LanguageContext";
 import {
   typography,
   fontWeights,
@@ -24,78 +20,21 @@ import {
   orderTotalCzk,
 } from "@/lib/checkout/pricing";
 
-const stripePromise = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
-  ? loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY)
-  : null;
-
-function parsePaymentIntentId(clientSecret: string): string | null {
-  const match = clientSecret.match(/^(pi_[^_]+)_secret_/);
-  return match?.[1] ?? null;
-}
-
 export default function ShippingPage() {
   const rootRef = useRef<HTMLDivElement | null>(null);
-  const stripeConfirmRef = useRef<{ confirm: () => Promise<{ error?: { message?: string } }> } | null>(null);
   const router = useRouter();
   const { items, cartCount, clearCart } = useCart();
+  const { t } = useLanguage();
   const isStoreOpen = process.env.NEXT_PUBLIC_STORE_OPEN !== "false";
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [paymentMethod, setPaymentMethod] = useState<"stripe" | "delivery">("stripe");
-  const [stripeClientSecret, setStripeClientSecret] = useState<string | null>(null);
-  const [returnUrl, setReturnUrl] = useState("");
-  useEffect(() => {
-    if (typeof window !== "undefined") setReturnUrl(`${window.location.origin}/checkout/success`);
-  }, []);
 
   const subtotalCzk = items.reduce((sum, item) => sum + priceToCzk(item.price) * item.quantity, 0);
-  const totalCzk = orderTotalCzk(subtotalCzk, paymentMethod);
-
-  // Reset Stripe client secret when cart total changes so amount stays correct
-  useEffect(() => {
-    setStripeClientSecret(null);
-  }, [totalCzk]);
-
-  // Create PaymentIntent when user selects Stripe and we have items
-  useEffect(() => {
-    if (paymentMethod !== "stripe" || !items.length || stripeClientSecret) return;
-    let cancelled = false;
-    (async () => {
-      try {
-        const res = await fetch("/api/create-payment-intent", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            items: items.map((item) => ({
-              id: item.id,
-              title: item.title,
-              price: item.price,
-              quantity: item.quantity,
-            })),
-          }),
-        });
-        const data = await res.json();
-        if (!cancelled && res.ok && data.clientSecret) setStripeClientSecret(data.clientSecret);
-      } catch {
-        // ignore
-      }
-    })();
-    return () => {
-      cancelled = true;
-    };
-  }, [paymentMethod, items, stripeClientSecret]);
-
-  useCustomCursor({
-    size: 20,
-    hoverSize: 40,
-    color: "rgba(139, 90, 60, 0.4)",
-    transitionSpeed: 0.15,
-    smoothing: 0.15,
-  });
-  useSpeedCoffeeMotion(rootRef, true);
+  const totalCzk = orderTotalCzk(subtotalCzk, "delivery");
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (cartCount === 0) return;
+
     const formData = new FormData(e.currentTarget);
     const customer = {
       name: String(formData.get("name") || "").trim(),
@@ -108,73 +47,37 @@ export default function ShippingPage() {
     };
     const normalizedItems = items.map((item) => ({
       id: item.product_id ?? item.id,
-      title: item.selected_variant_title ? `${item.title} (${item.selected_variant_title})` : item.title,
+      product_id: item.product_id ?? item.id.split("::")[0],
+      title: item.selected_variant_title
+        ? `${item.title} (${item.selected_variant_title})`
+        : item.title,
+      variantTitle: item.selected_variant_title,
       price: item.price,
       quantity: item.quantity,
     }));
 
-    if (paymentMethod === "stripe") {
-      if (!stripeClientSecret || !stripePromise) {
-        alert("Payment form is still loading. Please wait.");
-        return;
-      }
-      const paymentIntentId = parsePaymentIntentId(stripeClientSecret);
-      if (!paymentIntentId) {
-        alert("Payment intent is invalid. Please refresh and try again.");
-        return;
-      }
-      setIsSubmitting(true);
-      try {
-        const attachRes = await fetch("/api/attach-payment-data", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            paymentIntentId,
-            customer,
-            items: normalizedItems,
-          }),
-        });
-        if (!attachRes.ok) {
-          const attachData = await attachRes.json().catch(() => ({}));
-          throw new Error(attachData.error || "Failed to prepare payment data.");
-        }
-
-        const result = await stripeConfirmRef.current?.confirm();
-        if (result?.error) {
-          setIsSubmitting(false);
-          alert(result.error.message || "Payment failed. Please try again.");
-          return;
-        }
-        // Success: Stripe redirects to return_url
-      } catch (err) {
-        console.error(err);
-        setIsSubmitting(false);
-        alert(err instanceof Error ? err.message : "Payment could not be completed. Try again.");
-      }
-      return;
-    }
-
-    // Pay on delivery: create pending order in CMS
     setIsSubmitting(true);
     try {
       const res = await fetch("/api/orders/manual", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          paymentMethod,
+          paymentMethod: "delivery",
           customer,
           items: normalizedItems,
         }),
       });
       const data = await res.json();
       if (!res.ok || !data.orderNumber) {
-        throw new Error(data?.error || "Could not create order.");
+        throw new Error(data?.error || t("checkout.shipping.orderFailed"));
       }
       clearCart();
-      router.push(`/checkout/success?manual=1&order_number=${encodeURIComponent(data.orderNumber)}`);
+      router.push(
+        `/checkout/success?manual=1&order_number=${encodeURIComponent(data.orderNumber)}`,
+      );
     } catch (error) {
       setIsSubmitting(false);
-      alert(error instanceof Error ? error.message : "Could not place order. Please try again.");
+      alert(error instanceof Error ? error.message : t("checkout.shipping.orderError"));
     }
   };
 
@@ -185,9 +88,9 @@ export default function ShippingPage() {
         <main className="flex-1 py-16 md:py-24">
           <Container className="px-4 sm:px-6 lg:px-8">
             <p className="text-dark/80 font-manrope mb-6">
-              Your basket is empty.{" "}
+              {t("checkout.cart.empty")}{" "}
               <Link href="/shop" className="text-accent underline hover:no-underline">
-                Continue shopping
+                {t("checkout.cart.continueShopping")}
               </Link>
             </p>
           </Container>
@@ -207,16 +110,16 @@ export default function ShippingPage() {
               <h1
                 className={`${typography.agright.sectionHeading} font-agright ${fontWeights.agright.normal} text-dark mb-4`}
               >
-                E-shop not open yet
+                {t("checkout.shipping.notOpenTitle")}
               </h1>
               <p className="font-manrope text-dark/80">
-                We are currently testing checkout and payments. Public ordering will open soon.
+                {t("checkout.shipping.notOpenText")}
               </p>
               <Link
                 href="/shop"
                 className={`inline-block mt-6 py-3 px-6 ${typography.manrope.button} font-manrope ${fontWeights.manrope.bold} rounded-full bg-dark text-beige hover:bg-dark/90 transition-colors`}
               >
-                Back to shop
+                {t("checkout.shipping.backToShop")}
               </Link>
             </div>
           </Container>
@@ -235,28 +138,31 @@ export default function ShippingPage() {
             href="/checkout"
             className="inline-flex items-center gap-2 font-manrope text-dark/60 hover:text-dark text-sm mb-8"
           >
-            ← Back to cart
+            {t("checkout.shipping.backToCart")}
           </Link>
 
           <h1
-            className={`${typography.agright.sectionHeading} font-agright ${fontWeights.agright.normal} text-dark mb-10 md:mb-12`}
+            className={`${typography.agright.sectionHeading} font-agright ${fontWeights.agright.normal} text-dark mb-4`}
           >
-            Payment & shipping
+            {t("checkout.shipping.deliveryTitle")}
           </h1>
+          <p className="font-manrope text-dark/70 mb-10 md:mb-12">
+            {t("checkout.shipping.deliverySubtitle")}
+          </p>
 
           <form onSubmit={handleSubmit} className="grid grid-cols-1 lg:grid-cols-3 gap-10 lg:gap-14">
-            {/* Left: Shipping + Payment */}
-            <div className="lg:col-span-2 space-y-10">
-              {/* Shipping */}
+            <div className="lg:col-span-2">
               <section className="p-6 md:p-8 bg-white/40 rounded-2xl border border-dark/10">
                 <h2
                   className={`font-manrope ${fontWeights.manrope.bold} text-dark ${typography.manrope.body} mb-6 uppercase tracking-wide`}
                 >
-                  Shipping address
+                  {t("checkout.shipping.addressTitle")}
                 </h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <label className="sm:col-span-2">
-                    <span className="block font-manrope text-sm text-dark/70 mb-1">Full name</span>
+                    <span className="block font-manrope text-sm text-dark/70 mb-1">
+                      {t("checkout.shipping.fullName")}
+                    </span>
                     <input
                       type="text"
                       name="name"
@@ -266,7 +172,9 @@ export default function ShippingPage() {
                     />
                   </label>
                   <label>
-                    <span className="block font-manrope text-sm text-dark/70 mb-1">Email</span>
+                    <span className="block font-manrope text-sm text-dark/70 mb-1">
+                      {t("checkout.shipping.email")}
+                    </span>
                     <input
                       type="email"
                       name="email"
@@ -276,16 +184,21 @@ export default function ShippingPage() {
                     />
                   </label>
                   <label>
-                    <span className="block font-manrope text-sm text-dark/70 mb-1">Phone</span>
+                    <span className="block font-manrope text-sm text-dark/70 mb-1">
+                      {t("checkout.shipping.phone")}
+                    </span>
                     <input
                       type="tel"
                       name="phone"
+                      required
                       className="w-full px-4 py-3 rounded-xl border border-dark/20 bg-white/80 font-manrope text-dark placeholder:text-dark/40 focus:outline-none focus:ring-2 focus:ring-accent/40 focus:border-transparent"
                       placeholder="+420 123 456 789"
                     />
                   </label>
                   <label className="sm:col-span-2">
-                    <span className="block font-manrope text-sm text-dark/70 mb-1">Street</span>
+                    <span className="block font-manrope text-sm text-dark/70 mb-1">
+                      {t("checkout.shipping.street")}
+                    </span>
                     <input
                       type="text"
                       name="street"
@@ -295,7 +208,9 @@ export default function ShippingPage() {
                     />
                   </label>
                   <label>
-                    <span className="block font-manrope text-sm text-dark/70 mb-1">City</span>
+                    <span className="block font-manrope text-sm text-dark/70 mb-1">
+                      {t("checkout.shipping.city")}
+                    </span>
                     <input
                       type="text"
                       name="city"
@@ -305,7 +220,9 @@ export default function ShippingPage() {
                     />
                   </label>
                   <label>
-                    <span className="block font-manrope text-sm text-dark/70 mb-1">Postal code</span>
+                    <span className="block font-manrope text-sm text-dark/70 mb-1">
+                      {t("checkout.shipping.postalCode")}
+                    </span>
                     <input
                       type="text"
                       name="postalCode"
@@ -315,77 +232,27 @@ export default function ShippingPage() {
                     />
                   </label>
                   <label className="sm:col-span-2">
-                    <span className="block font-manrope text-sm text-dark/70 mb-1">Country</span>
+                    <span className="block font-manrope text-sm text-dark/70 mb-1">
+                      {t("checkout.shipping.country")}
+                    </span>
                     <input
                       type="text"
                       name="country"
                       required
                       className="w-full px-4 py-3 rounded-xl border border-dark/20 bg-white/80 font-manrope text-dark placeholder:text-dark/40 focus:outline-none focus:ring-2 focus:ring-accent/40 focus:border-transparent"
-                      placeholder="Czech Republic"
+                      placeholder="Česká republika"
                     />
-                  </label>
-                </div>
-              </section>
-
-              {/* Payment */}
-              <section className="p-6 md:p-8 bg-white/40 rounded-2xl border border-dark/10">
-                <h2
-                  className={`font-manrope ${fontWeights.manrope.bold} text-dark ${typography.manrope.body} mb-6 uppercase tracking-wide`}
-                >
-                  Payment
-                </h2>
-                <div className="space-y-4">
-                  <label className="flex items-center gap-3 p-4 rounded-xl border-2 border-dark/20 bg-white/60 cursor-pointer hover:border-dark/30 has-[:checked]:border-dark has-[:checked]:bg-white/80">
-                    <input
-                      type="radio"
-                      name="payment"
-                      value="stripe"
-                      checked={paymentMethod === "stripe"}
-                      onChange={() => setPaymentMethod("stripe")}
-                      className="w-4 h-4 text-accent"
-                    />
-                    <span className="font-manrope font-medium text-dark">Pay with card</span>
-                  </label>
-                  {paymentMethod === "stripe" && stripePromise && stripeClientSecret && returnUrl && (
-                    <div className="rounded-xl border border-dark/20 bg-white/80 p-4 [&_.Input]:rounded-lg [&_.Input]:border-dark/20">
-                      <Elements
-                        stripe={stripePromise}
-                        options={{
-                          clientSecret: stripeClientSecret,
-                          appearance: {
-                            theme: "stripe",
-                            variables: { colorPrimary: "#8b5a3c", borderRadius: "12px" },
-                          },
-                        }}
-                      >
-                        <StripePaymentForm ref={stripeConfirmRef} returnUrl={returnUrl} />
-                      </Elements>
-                    </div>
-                  )}
-                  <label className="flex items-center gap-3 p-4 rounded-xl border-2 border-dark/20 bg-white/60 cursor-pointer hover:border-dark/30 has-[:checked]:border-dark has-[:checked]:bg-white/80">
-                    <input
-                      type="radio"
-                      name="payment"
-                      value="delivery"
-                      checked={paymentMethod === "delivery"}
-                      onChange={() => setPaymentMethod("delivery")}
-                      className="w-4 h-4 text-accent"
-                    />
-                    <span className="font-manrope font-medium text-dark">
-                      Pay on delivery (cash or card) +{formatCzk(POD_FEE_CZK)}
-                    </span>
                   </label>
                 </div>
               </section>
             </div>
 
-            {/* Right: Order summary + submit */}
             <div className="lg:col-span-1">
               <div className="sticky top-24 p-6 md:p-8 bg-white/40 rounded-2xl border border-dark/10">
                 <h2
                   className={`font-manrope ${fontWeights.manrope.bold} text-dark ${typography.manrope.body} mb-4`}
                 >
-                  Order summary
+                  {t("checkout.shipping.orderSummary")}
                 </h2>
                 <ul className="space-y-3 mb-6 max-h-48 overflow-y-auto">
                   {items.map((item) => (
@@ -399,30 +266,31 @@ export default function ShippingPage() {
                 </ul>
                 <div className="space-y-2 pt-4 border-t border-dark/10 mb-6">
                   <div className="flex justify-between font-manrope text-dark/80 text-sm">
-                    <span>Subtotal</span>
+                    <span>{t("checkout.shipping.subtotal")}</span>
                     <span>{formatCzk(subtotalCzk)}</span>
                   </div>
                   <div className="flex justify-between font-manrope text-dark/80 text-sm">
-                    <span>Shipping</span>
+                    <span>{t("checkout.shipping.shipping")}</span>
                     <span>{formatCzk(SHIPPING_CZK)}</span>
                   </div>
-                  {paymentMethod === "delivery" && (
-                    <div className="flex justify-between font-manrope text-dark/80 text-sm">
-                      <span>Pay on delivery fee</span>
-                      <span>{formatCzk(POD_FEE_CZK)}</span>
-                    </div>
-                  )}
+                  <div className="flex justify-between font-manrope text-dark/80 text-sm">
+                    <span>{t("checkout.shipping.podFee")}</span>
+                    <span>{formatCzk(POD_FEE_CZK)}</span>
+                  </div>
                   <div className="flex justify-between font-manrope font-bold text-dark pt-2">
-                    <span>Total</span>
+                    <span>{t("checkout.shipping.total")}</span>
                     <span>{formatCzk(totalCzk)}</span>
                   </div>
                 </div>
+                <p className="font-manrope text-xs text-dark/60 mb-4">
+                  {t("checkout.shipping.payDelivery")} +{formatCzk(POD_FEE_CZK)}
+                </p>
                 <button
                   type="submit"
                   disabled={isSubmitting}
                   className={`w-full py-4 px-6 ${typography.manrope.button} font-manrope ${fontWeights.manrope.bold} rounded-full bg-dark text-beige hover:bg-dark/90 disabled:opacity-60 transition-colors`}
                 >
-                  {isSubmitting ? "Processing…" : "Place order"}
+                  {isSubmitting ? t("checkout.shipping.processing") : t("checkout.shipping.placeOrder")}
                 </button>
               </div>
             </div>

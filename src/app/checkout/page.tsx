@@ -1,13 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import Header from "@/components/Header/Header";
 import Footer from "@/components/Footer";
 import Container from "@/components/Container";
 import { useCart } from "@/contexts/CartContext";
-import { useCustomCursor } from "@/hooks/useCustomCursor";
-import { useSpeedCoffeeMotion } from "@/hooks/useSpeedCoffeeMotion";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { startStripeCheckout } from "@/lib/checkout/startStripeCheckout";
 import { useRef, useState } from "react";
 import {
   typography,
@@ -29,43 +28,64 @@ function formatCzk(value: number): string {
 
 export default function CheckoutPage() {
   const rootRef = useRef<HTMLDivElement | null>(null);
-  const router = useRouter();
   const [storeNotice, setStoreNotice] = useState<string | null>(null);
+  const [isRedirecting, setIsRedirecting] = useState(false);
   const { items, cartCount, removeItem, updateQuantity } = useCart();
+  const { t, language } = useLanguage();
   const isStoreOpen = process.env.NEXT_PUBLIC_STORE_OPEN !== "false";
 
   const subtotalCzk = items.reduce((sum, item) => sum + priceToCzk(item.price) * item.quantity, 0);
   const totalCzk = subtotalCzk + SHIPPING_CZK;
 
-  useCustomCursor({
-    size: 20,
-    hoverSize: 40,
-    color: "rgba(139, 90, 60, 0.4)",
-    transitionSpeed: 0.15,
-    smoothing: 0.15,
-  });
+  const handleStripeCheckout = async () => {
+    if (!isStoreOpen) {
+      setStoreNotice(t("checkout.cart.storeClosed"));
+      return;
+    }
 
-  useSpeedCoffeeMotion(rootRef, true);
+    setStoreNotice(null);
+    setIsRedirecting(true);
+    try {
+      const url = await startStripeCheckout({
+        items,
+        locale: language === "cz" ? "cs" : "en",
+      });
+      window.location.href = url;
+    } catch (error) {
+      setIsRedirecting(false);
+      setStoreNotice(
+        error instanceof Error ? error.message : t("checkout.shipping.paymentError"),
+      );
+    }
+  };
 
   return (
     <div ref={rootRef} className="min-h-screen bg-beige">
       <Header />
       <main className="py-16 md:py-24">
         <Container className="px-4 sm:px-6 lg:px-8">
+          <Link
+            href="/shop"
+            className="inline-flex items-center gap-2 font-manrope text-dark/60 hover:text-dark text-sm mb-8"
+          >
+            {t("checkout.cart.backToShop")}
+          </Link>
+
           <h1
             className={`${typography.agright.sectionHeading} font-agright ${fontWeights.agright.normal} text-dark mb-8`}
           >
-            Your shopping cart {cartCount > 0 && `(Items: ${cartCount})`}
+            {t("checkout.cart.title")}{" "}
+            {cartCount > 0 && `(${t("checkout.cart.itemsCount")}: ${cartCount})`}
           </h1>
 
           {cartCount === 0 ? (
             <p className="text-dark/80 font-manrope mb-6">
-              Your basket is empty.{" "}
+              {t("checkout.cart.empty")}{" "}
               <Link
                 href="/shop"
                 className="text-accent underline hover:no-underline"
               >
-                Continue shopping
+                {t("checkout.cart.continueShopping")}
               </Link>
             </p>
           ) : (
@@ -109,7 +129,7 @@ export default function CheckoutPage() {
                             type="button"
                             onClick={() => updateQuantity(item.id, Math.max(1, item.quantity - 1))}
                             className="flex items-center justify-center w-10 h-10 sm:w-11 sm:h-11 text-dark hover:bg-dark/10 transition-colors font-manrope text-lg font-bold"
-                            aria-label="Decrease quantity"
+                            aria-label={t("checkout.cart.decreaseQty")}
                           >
                             −
                           </button>
@@ -128,7 +148,7 @@ export default function CheckoutPage() {
                             type="button"
                             onClick={() => updateQuantity(item.id, Math.min(99, item.quantity + 1))}
                             className="flex items-center justify-center w-10 h-10 sm:w-11 sm:h-11 text-dark hover:bg-dark/10 transition-colors font-manrope text-lg font-bold"
-                            aria-label="Increase quantity"
+                            aria-label={t("checkout.cart.increaseQty")}
                           >
                             +
                           </button>
@@ -137,7 +157,7 @@ export default function CheckoutPage() {
                           type="button"
                           onClick={() => removeItem(item.id)}
                           className="p-2 text-dark/70 hover:text-dark hover:bg-dark/5 rounded-lg transition-colors"
-                          aria-label="Remove item"
+                          aria-label={t("checkout.cart.removeItem")}
                         >
                           <FaTrashCan className="w-5 h-5" aria-hidden />
                         </button>
@@ -153,37 +173,42 @@ export default function CheckoutPage() {
                   <h2
                     className={`font-manrope ${fontWeights.manrope.bold} text-dark ${typography.manrope.body} mb-4`}
                   >
-                    Order summary
+                    {t("checkout.cart.orderSummary")}
                   </h2>
                   <div className="space-y-2 mb-6">
                     <div className="flex justify-between font-manrope text-dark/80 text-sm">
-                      <span>Subtotal ({cartCount} {cartCount === 1 ? "item" : "items"})</span>
+                      <span>
+                        {t("checkout.cart.subtotal")} ({cartCount}{" "}
+                        {cartCount === 1
+                          ? t("checkout.cart.item")
+                          : t("checkout.cart.items")}
+                        )
+                      </span>
                       <span>{formatCzk(subtotalCzk)}</span>
                     </div>
                     <div className="flex justify-between font-manrope text-dark/80 text-sm">
-                      <span>Shipping</span>
+                      <span>{t("checkout.cart.shipping")}</span>
                       <span>{formatCzk(SHIPPING_CZK)}</span>
                     </div>
                     <div className="flex justify-between font-manrope font-bold text-dark pt-2 border-t border-dark/10">
-                      <span>Total</span>
+                      <span>{t("checkout.cart.total")}</span>
                       <span>{formatCzk(totalCzk)}</span>
                     </div>
                   </div>
                   <button
                     type="button"
-                    onClick={() => {
-                      if (!isStoreOpen) {
-                        setStoreNotice(
-                          "The e-shop is currently in testing mode and not open for public orders yet."
-                        );
-                        return;
-                      }
-                      router.push("/checkout/shipping");
-                    }}
-                    className={`block w-full text-center py-3 px-6 ${typography.manrope.button} font-manrope ${fontWeights.manrope.bold} rounded-full bg-dark text-beige hover:bg-dark/90 transition-colors`}
+                    onClick={handleStripeCheckout}
+                    disabled={isRedirecting}
+                    className={`block w-full text-center py-3 px-6 ${typography.manrope.button} font-manrope ${fontWeights.manrope.bold} rounded-full bg-dark text-beige hover:bg-dark/90 disabled:opacity-60 transition-colors`}
                   >
-                    Proceed to checkout
+                    {isRedirecting ? t("checkout.shipping.processing") : t("checkout.cart.proceed")}
                   </button>
+                  <Link
+                    href="/checkout/shipping"
+                    className={`mt-3 block w-full text-center py-3 px-6 ${typography.manrope.button} font-manrope ${fontWeights.manrope.bold} rounded-full border-2 border-dark text-dark hover:bg-dark hover:text-beige transition-colors`}
+                  >
+                    {t("checkout.cart.payOnDelivery")}
+                  </Link>
                   {storeNotice ? (
                     <p className="mt-3 text-xs font-manrope text-dark/70 text-center">
                       {storeNotice}
