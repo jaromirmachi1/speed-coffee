@@ -109,6 +109,7 @@ export async function createOrderRecord(input: CreateOrderInput): Promise<{ orde
     status: input.status ?? (input.paymentMethod === "stripe" ? "paid" : "pending"),
     customerName: input.customer.name.trim(),
     customerEmail: input.customer.email.trim(),
+    customerPhone: input.customer.phone?.trim() || undefined,
     shippingAddress: addressToText(input.customer),
     items: sanityItems,
     total,
