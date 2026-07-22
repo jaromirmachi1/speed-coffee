@@ -2,6 +2,7 @@
 
 import { useState, type FormEvent } from "react";
 import Container from "@/components/Container";
+import { useLanguage } from "@/contexts/LanguageContext";
 import {
   typography,
   fontWeights,
@@ -11,6 +12,7 @@ import {
 type Variant = "trailer" | "event";
 
 export default function RentalInquiryForm() {
+  const { t } = useLanguage();
   const [variant, setVariant] = useState<Variant>("trailer");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [statusMessage, setStatusMessage] = useState<string | null>(null);
@@ -48,15 +50,17 @@ export default function RentalInquiryForm() {
 
       if (!res.ok) {
         const data = await res.json().catch(() => null);
-        throw new Error(data?.error ?? "Failed to send inquiry. Please try again.");
+        throw new Error(data?.error ?? t("form.rental.errorSend"));
       }
 
-      setStatusMessage("Your inquiry has been sent. We will get back to you shortly.");
+      setStatusMessage(t("form.rental.success"));
       form.reset();
       setVariant("trailer");
     } catch (error) {
       console.error(error);
-      setErrorMessage("Something went wrong while sending your inquiry. Please try again later.");
+      setErrorMessage(
+        error instanceof Error ? error.message : t("form.rental.error"),
+      );
     } finally {
       setIsSubmitting(false);
     }
@@ -69,13 +73,13 @@ export default function RentalInquiryForm() {
           <h2
             className={`font-agright ${fontWeights.agright.normal} text-dark ${typography.agright.sectionHeading} ${lineHeights.custom.sectionHeading}`}
           >
-            Rental & services inquiry
+            {t("form.rental.title")}
           </h2>
           <p
             className={`mt-3 md:mt-4 font-manrope ${fontWeights.manrope.normal} text-dark/70 ${typography.manrope.body} ${lineHeights.custom.bodyCompact} uppercase`}
             style={{ fontFamily: "Manrope, sans-serif" }}
           >
-            Tell us a bit about your event and we&apos;ll get back to you.
+            {t("form.rental.subtitle")}
           </p>
         </div>
 
@@ -87,26 +91,26 @@ export default function RentalInquiryForm() {
           <div className="grid gap-4 md:gap-6 md:grid-cols-2">
             <div className="flex flex-col gap-1.5">
               <label className="text-xs sm:text-sm font-semibold tracking-[0.16em] uppercase text-dark/70">
-                Name &amp; surname
+                {t("form.rental.name")}
               </label>
               <input
                 type="text"
                 required
                 name="name"
                 className="w-full rounded-xl border border-dark/20 bg-beige px-3 py-2.5 text-sm sm:text-base text-dark placeholder:text-dark/30 focus:outline-none focus:ring-2 focus:ring-dark/30 focus:border-dark"
-                placeholder="Jane Doe"
+                placeholder="Jan Novák"
               />
             </div>
             <div className="flex flex-col gap-1.5">
               <label className="text-xs sm:text-sm font-semibold tracking-[0.16em] uppercase text-dark/70">
-                Email
+                {t("form.rental.email")}
               </label>
               <input
                 type="email"
                 required
                 name="email"
                 className="w-full rounded-xl border border-dark/20 bg-beige px-3 py-2.5 text-sm sm:text-base text-dark placeholder:text-dark/30 focus:outline-none focus:ring-2 focus:ring-dark/30 focus:border-dark"
-                placeholder="you@example.com"
+                placeholder="jan@example.com"
               />
             </div>
           </div>
@@ -114,7 +118,7 @@ export default function RentalInquiryForm() {
           <div className="grid gap-4 md:gap-6 md:grid-cols-2">
             <div className="flex flex-col gap-1.5">
               <label className="text-xs sm:text-sm font-semibold tracking-[0.16em] uppercase text-dark/70">
-                Company (optional)
+                {t("form.rental.company")}
               </label>
               <input
                 type="text"
@@ -126,7 +130,7 @@ export default function RentalInquiryForm() {
 
             <div className="flex flex-col gap-1.5">
               <label className="text-xs sm:text-sm font-semibold tracking-[0.16em] uppercase text-dark/70">
-                What are you interested in?
+                {t("form.rental.interested")}
               </label>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                 <button
@@ -138,7 +142,7 @@ export default function RentalInquiryForm() {
                       : "bg-beige text-dark border-dark/40 hover:bg-dark hover:text-beige hover:border-dark"
                   }`}
                 >
-                  Rent coffee trailer with service
+                  {t("form.rental.variantTrailer")}
                 </button>
                 <button
                   type="button"
@@ -149,7 +153,7 @@ export default function RentalInquiryForm() {
                       : "bg-beige text-dark border-dark/40 hover:bg-dark hover:text-beige hover:border-dark"
                   }`}
                 >
-                  Event in Speed Coffee House
+                  {t("form.rental.variantEvent")}
                 </button>
               </div>
             </div>
@@ -159,24 +163,24 @@ export default function RentalInquiryForm() {
             <div className="grid gap-4 md:gap-6 md:grid-cols-2">
               <div className="flex flex-col gap-1.5">
                 <label className="text-xs sm:text-sm font-semibold tracking-[0.16em] uppercase text-dark/70">
-                  Country
+                  {t("form.rental.country")}
                 </label>
                 <input
                   type="text"
                   name="country"
                   className="w-full rounded-xl border border-dark/20 bg-beige px-3 py-2.5 text-sm sm:text-base text-dark placeholder:text-dark/30 focus:outline-none focus:ring-2 focus:ring-dark/30 focus:border-dark"
-                  placeholder="Czech Republic"
+                  placeholder="Česká republika"
                 />
               </div>
               <div className="flex flex-col gap-1.5">
                 <label className="text-xs sm:text-sm font-semibold tracking-[0.16em] uppercase text-dark/70">
-                  City
+                  {t("form.rental.city")}
                 </label>
                 <input
                   type="text"
                   name="city"
                   className="w-full rounded-xl border border-dark/20 bg-beige px-3 py-2.5 text-sm sm:text-base text-dark placeholder:text-dark/30 focus:outline-none focus:ring-2 focus:ring-dark/30 focus:border-dark"
-                  placeholder="Prague"
+                  placeholder="Praha"
                 />
               </div>
             </div>
@@ -185,7 +189,7 @@ export default function RentalInquiryForm() {
           <div className="grid gap-4 md:gap-6 md:grid-cols-2">
             <div className="flex flex-col gap-1.5">
               <label className="text-xs sm:text-sm font-semibold tracking-[0.16em] uppercase text-dark/70">
-                Date from
+                {t("form.rental.dateFrom")}
               </label>
               <input
                 type="date"
@@ -195,7 +199,7 @@ export default function RentalInquiryForm() {
             </div>
             <div className="flex flex-col gap-1.5">
               <label className="text-xs sm:text-sm font-semibold tracking-[0.16em] uppercase text-dark/70">
-                Date to
+                {t("form.rental.dateTo")}
               </label>
               <input
                 type="date"
@@ -207,13 +211,12 @@ export default function RentalInquiryForm() {
 
           <div className="flex flex-col gap-1.5">
             <label className="text-xs sm:text-sm font-semibold tracking-[0.16em] uppercase text-dark/70">
-              Note
+              {t("form.rental.note")}
             </label>
             <textarea
               rows={4}
               name="note"
               className="w-full rounded-xl border border-dark/20 bg-beige px-3 py-2.5 text-sm sm:text-base text-dark placeholder:text-dark/30 focus:outline-none focus:ring-2 focus:ring-dark/30 focus:border-dark resize-none"
-              placeholder="Tell us more about your event, timing, and anything important for us to know."
             />
           </div>
 
@@ -226,7 +229,7 @@ export default function RentalInquiryForm() {
               }`}
               style={{ fontFamily: "Manrope, sans-serif" }}
             >
-              {isSubmitting ? "Sending..." : "Send inquiry"}
+              {isSubmitting ? t("form.rental.submitting") : t("form.rental.submit")}
             </button>
             {statusMessage && (
               <p className="text-xs sm:text-sm text-green-700 text-center md:text-right">

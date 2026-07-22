@@ -15,7 +15,7 @@ import {
 
 const Home = () => {
   return (
-    <div className="min-h-screen bg-beige">
+    <div className="min-h-screen bg-beige overflow-x-hidden">
       <Header />
       <main>
         <Hero />
@@ -26,7 +26,7 @@ const Home = () => {
         <MatchaSection />
         <ProductsSection />
         <section
-          className="bg-beige w-full mt-16 md:mt-24"
+          className="bg-beige w-full mt-16 md:mt-24 overflow-x-hidden"
           style={{
             height: "50vh",
             display: "flex",
@@ -49,7 +49,9 @@ const Home = () => {
           />
         </section>
       </main>
-      <Footer />
+      <div className="-mx-4 sm:-mx-6 lg:-mx-8">
+        <Footer />
+      </div>
     </div>
   );
 };

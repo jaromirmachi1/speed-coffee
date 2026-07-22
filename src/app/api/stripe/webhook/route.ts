@@ -4,6 +4,7 @@ import {
   orderExistsByPaymentId,
   sendOrderEmail,
   type CheckoutItem,
+  type CheckoutCustomer,
 } from "@/lib/orders/createOrder";
 import { orderTotalCzk, priceToCzk } from "@/lib/checkout/pricing";
 
@@ -11,6 +12,75 @@ function getStripe(): Stripe | null {
   const key = process.env.STRIPE_SECRET_KEY;
   if (!key) return null;
   return new Stripe(key);
+}
+
+function parseItems(raw: string | undefined): CheckoutItem[] {
+  if (!raw) return [];
+  try {
+    const parsed = JSON.parse(raw) as unknown;
+    return Array.isArray(parsed) ? (parsed as CheckoutItem[]) : [];
+  } catch {
+    return [];
+  }
+}
+
+type CheckoutSessionWithShipping = Stripe.Checkout.Session & {
+  shipping_details?: {
+    name?: string | null;
+    address?: Stripe.Address | null;
+  } | null;
+};
+
+function customerFromSession(session: CheckoutSessionWithShipping): CheckoutCustomer {
+  const shippingAddress = session.shipping_details?.address;
+  const billingAddress = session.customer_details?.address;
+  const address = shippingAddress ?? billingAddress;
+
+  return {
+    name:
+      session.shipping_details?.name ??
+      session.customer_details?.name ??
+      "",
+    email: session.customer_details?.email ?? "",
+    phone: session.customer_details?.phone ?? undefined,
+    street: [address?.line1, address?.line2].filter(Boolean).join(", "),
+    city: address?.city ?? "",
+    postalCode: address?.postal_code ?? "",
+    country: address?.country ?? "",
+  };
+}
+
+async function fulfillStripeOrder(params: {
+  paymentId: string;
+  items: CheckoutItem[];
+  customer: CheckoutCustomer;
+}): Promise<void> {
+  if (await orderExistsByPaymentId(params.paymentId)) return;
+
+  const created = await createOrderRecord({
+    items: params.items,
+    customer: params.customer,
+    paymentMethod: "stripe",
+    stripePaymentId: params.paymentId,
+    status: "paid",
+  });
+
+  if (!created) {
+    throw new Error("Order creation failed");
+  }
+
+  const subtotalCzk = params.items.reduce(
+    (sum, item) => sum + priceToCzk(item.price) * item.quantity,
+    0,
+  );
+  const totalCzk = orderTotalCzk(subtotalCzk, "stripe");
+
+  await sendOrderEmail({
+    to: params.customer.email,
+    orderNumber: created.orderNumber,
+    paymentMethod: "stripe",
+    totalCzk,
+  });
 }
 
 export async function POST(request: Request) {
@@ -32,50 +102,44 @@ export async function POST(request: Request) {
     return new Response(message, { status: 400 });
   }
 
-  if (event.type !== "payment_intent.succeeded") {
-    return new Response("ok", { status: 200 });
-  }
-
-  const paymentIntent = event.data.object as Stripe.PaymentIntent;
-  const paymentId = paymentIntent.id;
-
-  if (await orderExistsByPaymentId(paymentId)) {
-    return new Response("ok", { status: 200 });
-  }
-
   try {
-    const metadata = paymentIntent.metadata ?? {};
-    const rawItems = metadata.sc_items_json ? JSON.parse(metadata.sc_items_json) : [];
-    const items: CheckoutItem[] = Array.isArray(rawItems) ? rawItems : [];
+    if (event.type === "checkout.session.completed") {
+      const sessionEvent = event.data.object as Stripe.Checkout.Session;
+      const session = (await stripe.checkout.sessions.retrieve(
+        sessionEvent.id,
+      )) as CheckoutSessionWithShipping;
 
-    const customer = {
-      name: metadata.sc_customer_name ?? "",
-      email: metadata.sc_customer_email ?? "",
-      phone: metadata.sc_customer_phone ?? "",
-      street: metadata.sc_shipping_street ?? "",
-      city: metadata.sc_shipping_city ?? "",
-      postalCode: metadata.sc_shipping_postal_code ?? "",
-      country: metadata.sc_shipping_country ?? "",
-    };
+      if (session.payment_status !== "paid") {
+        return new Response("ok", { status: 200 });
+      }
 
-    const created = await createOrderRecord({
-      items,
-      customer,
-      paymentMethod: "stripe",
-      stripePaymentId: paymentId,
-      status: "paid",
-    });
+      const items = parseItems(session.metadata?.sc_items_json);
+      const customer = customerFromSession(session);
+      const paymentId = session.id;
 
-    if (!created) return new Response("Order creation failed", { status: 500 });
+      await fulfillStripeOrder({ paymentId, items, customer });
+      return new Response("ok", { status: 200 });
+    }
 
-    const subtotalCzk = items.reduce((sum, item) => sum + priceToCzk(item.price) * item.quantity, 0);
-    const totalCzk = orderTotalCzk(subtotalCzk, "stripe");
-    await sendOrderEmail({
-      to: customer.email,
-      orderNumber: created.orderNumber,
-      paymentMethod: "stripe",
-      totalCzk,
-    });
+    if (event.type === "payment_intent.succeeded") {
+      const paymentIntent = event.data.object as Stripe.PaymentIntent;
+      const paymentId = paymentIntent.id;
+      const metadata = paymentIntent.metadata ?? {};
+      const items = parseItems(metadata.sc_items_json);
+
+      const customer: CheckoutCustomer = {
+        name: metadata.sc_customer_name ?? "",
+        email: metadata.sc_customer_email ?? "",
+        phone: metadata.sc_customer_phone ?? undefined,
+        street: metadata.sc_shipping_street ?? "",
+        city: metadata.sc_shipping_city ?? "",
+        postalCode: metadata.sc_shipping_postal_code ?? "",
+        country: metadata.sc_shipping_country ?? "",
+      };
+
+      await fulfillStripeOrder({ paymentId, items, customer });
+      return new Response("ok", { status: 200 });
+    }
   } catch (error) {
     console.error("Stripe webhook handler failed:", error);
     return new Response("Webhook processing failed", { status: 500 });

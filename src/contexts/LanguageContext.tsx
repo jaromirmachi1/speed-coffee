@@ -124,6 +124,96 @@ export const LanguageProvider = ({ children }: LanguageProviderProps) => {
       "cart.goToCheckout": "Go to checkout",
       "cart.keepShopping": "Keep shopping",
 
+      // Checkout cart
+      "checkout.cart.title": "Your shopping cart",
+      "checkout.cart.backToShop": "← Back to shop",
+      "checkout.cart.itemsCount": "Items",
+      "checkout.cart.empty": "Your basket is empty.",
+      "checkout.cart.continueShopping": "Continue shopping",
+      "checkout.cart.orderSummary": "Order summary",
+      "checkout.cart.subtotal": "Subtotal",
+      "checkout.cart.item": "item",
+      "checkout.cart.items": "items",
+      "checkout.cart.shipping": "Shipping",
+      "checkout.cart.total": "Total",
+      "checkout.cart.proceed": "Proceed to checkout",
+      "checkout.cart.payOnDelivery": "Pay on delivery instead",
+      "checkout.cart.storeClosed":
+        "The e-shop is currently in testing mode and not open for public orders yet.",
+      "checkout.cart.decreaseQty": "Decrease quantity",
+      "checkout.cart.increaseQty": "Increase quantity",
+      "checkout.cart.removeItem": "Remove item",
+
+      // Checkout shipping
+      "checkout.shipping.backToCart": "← Back to cart",
+      "checkout.shipping.deliveryTitle": "Pay on delivery",
+      "checkout.shipping.deliverySubtitle":
+        "Fill in your delivery details. You can pay in cash or by card when your order arrives (+20 Kč fee).",
+      "checkout.shipping.title": "Payment & shipping",
+      "checkout.shipping.addressTitle": "Shipping address",
+      "checkout.shipping.fullName": "Full name",
+      "checkout.shipping.email": "Email",
+      "checkout.shipping.phone": "Phone",
+      "checkout.shipping.street": "Street",
+      "checkout.shipping.city": "City",
+      "checkout.shipping.postalCode": "Postal code",
+      "checkout.shipping.country": "Country",
+      "checkout.shipping.paymentTitle": "Payment",
+      "checkout.shipping.payCard": "Pay with card",
+      "checkout.shipping.payDelivery": "Pay on delivery (cash or card)",
+      "checkout.shipping.orderSummary": "Order summary",
+      "checkout.shipping.subtotal": "Subtotal",
+      "checkout.shipping.shipping": "Shipping",
+      "checkout.shipping.podFee": "Pay on delivery fee",
+      "checkout.shipping.total": "Total",
+      "checkout.shipping.placeOrder": "Place order",
+      "checkout.shipping.processing": "Processing…",
+      "checkout.shipping.notOpenTitle": "E-shop not open yet",
+      "checkout.shipping.notOpenText":
+        "We are currently testing checkout and payments. Public ordering will open soon.",
+      "checkout.shipping.backToShop": "Back to shop",
+      "checkout.shipping.paymentLoading":
+        "Payment form is still loading. Please wait.",
+      "checkout.shipping.paymentInvalid":
+        "Payment intent is invalid. Please refresh and try again.",
+      "checkout.shipping.paymentFailed": "Payment failed. Please try again.",
+      "checkout.shipping.paymentError":
+        "Payment could not be completed. Try again.",
+      "checkout.shipping.orderFailed": "Could not create order.",
+      "checkout.shipping.orderError":
+        "Could not place order. Please try again.",
+      "checkout.shipping.prepareFailed": "Failed to prepare payment data.",
+      "checkout.shipping.stripeLoadError":
+        "The card form could not load. Privacy browser extensions (e.g. Avast AntiTrack) often block payment iframes — disable them for this site, use incognito, or pay on the secure Stripe page below.",
+      "checkout.shipping.stripeRedirect": "Pay on secure Stripe page",
+
+      // Rental inquiry form
+      "form.rental.title": "Rental & services inquiry",
+      "form.rental.subtitle":
+        "Tell us a bit about your event and we'll get back to you.",
+      "form.rental.name": "Name & surname",
+      "form.rental.email": "Email",
+      "form.rental.company": "Company (optional)",
+      "form.rental.interested": "What are you interested in?",
+      "form.rental.variantTrailer": "Rent coffee trailer with service",
+      "form.rental.variantEvent": "Event in Speed Coffee House",
+      "form.rental.country": "Country",
+      "form.rental.city": "City",
+      "form.rental.dateFrom": "Date from",
+      "form.rental.dateTo": "Date to",
+      "form.rental.note": "Note",
+      "form.rental.submit": "Send inquiry",
+      "form.rental.submitting": "Sending...",
+      "form.rental.success":
+        "Your inquiry has been sent. We will get back to you shortly.",
+      "form.rental.error":
+        "Something went wrong while sending your inquiry. Please try again later.",
+      "form.rental.errorSend": "Failed to send inquiry. Please try again.",
+
+      // Shop
+      "shop.loading": "Loading products...",
+      "shop.empty": "No products available at the moment.",
+
       // Locations
       "locations.title": "WHERE CAN YOU FIND US?",
       "locations.openingHours": "OPENING HOURS",
@@ -281,6 +371,96 @@ export const LanguageProvider = ({ children }: LanguageProviderProps) => {
       "cart.modalMessage": "Pokračovat v nákupu nebo přejít k platbě?",
       "cart.goToCheckout": "Přejít k platbě",
       "cart.keepShopping": "Pokračovat v nákupu",
+
+      // Checkout cart
+      "checkout.cart.title": "Váš nákupní košík",
+      "checkout.cart.backToShop": "← Zpět do obchodu",
+      "checkout.cart.itemsCount": "Položky",
+      "checkout.cart.empty": "Váš košík je prázdný.",
+      "checkout.cart.continueShopping": "Pokračovat v nákupu",
+      "checkout.cart.orderSummary": "Souhrn objednávky",
+      "checkout.cart.subtotal": "Mezisoučet",
+      "checkout.cart.item": "položka",
+      "checkout.cart.items": "položek",
+      "checkout.cart.shipping": "Doprava",
+      "checkout.cart.total": "Celkem",
+      "checkout.cart.proceed": "Přejít k platbě",
+      "checkout.cart.payOnDelivery": "Raději platba při doručení",
+      "checkout.cart.storeClosed":
+        "E-shop je momentálně v testovacím režimu a zatím nepřijímá veřejné objednávky.",
+      "checkout.cart.decreaseQty": "Snížit množství",
+      "checkout.cart.increaseQty": "Zvýšit množství",
+      "checkout.cart.removeItem": "Odebrat položku",
+
+      // Checkout shipping
+      "checkout.shipping.backToCart": "← Zpět do košíku",
+      "checkout.shipping.deliveryTitle": "Platba při doručení",
+      "checkout.shipping.deliverySubtitle":
+        "Vyplňte doručovací údaje. Zaplatíte hotově nebo kartou při doručení (+20 Kč poplatek).",
+      "checkout.shipping.title": "Platba a doručení",
+      "checkout.shipping.addressTitle": "Doručovací adresa",
+      "checkout.shipping.fullName": "Jméno a příjmení",
+      "checkout.shipping.email": "E-mail",
+      "checkout.shipping.phone": "Telefon",
+      "checkout.shipping.street": "Ulice",
+      "checkout.shipping.city": "Město",
+      "checkout.shipping.postalCode": "PSČ",
+      "checkout.shipping.country": "Země",
+      "checkout.shipping.paymentTitle": "Platba",
+      "checkout.shipping.payCard": "Platba kartou",
+      "checkout.shipping.payDelivery": "Platba při doručení (hotově nebo kartou)",
+      "checkout.shipping.orderSummary": "Souhrn objednávky",
+      "checkout.shipping.subtotal": "Mezisoučet",
+      "checkout.shipping.shipping": "Doprava",
+      "checkout.shipping.podFee": "Poplatek za platbu při doručení",
+      "checkout.shipping.total": "Celkem",
+      "checkout.shipping.placeOrder": "Odeslat objednávku",
+      "checkout.shipping.processing": "Zpracovává se…",
+      "checkout.shipping.notOpenTitle": "E-shop zatím není otevřen",
+      "checkout.shipping.notOpenText":
+        "Momentálně testujeme objednávky a platby. Veřejné objednávání brzy spustíme.",
+      "checkout.shipping.backToShop": "Zpět do obchodu",
+      "checkout.shipping.paymentLoading":
+        "Platební formulář se stále načítá. Počkejte prosím.",
+      "checkout.shipping.paymentInvalid":
+        "Platební údaje jsou neplatné. Obnovte stránku a zkuste to znovu.",
+      "checkout.shipping.paymentFailed": "Platba se nezdařila. Zkuste to znovu.",
+      "checkout.shipping.paymentError":
+        "Platbu se nepodařilo dokončit. Zkuste to znovu.",
+      "checkout.shipping.orderFailed": "Objednávku se nepodařilo vytvořit.",
+      "checkout.shipping.orderError":
+        "Objednávku se nepodařilo odeslat. Zkuste to prosím znovu.",
+      "checkout.shipping.prepareFailed": "Nepodařilo se připravit platební údaje.",
+      "checkout.shipping.stripeLoadError":
+        "Platební formulář se nepodařilo načíst. Rozšíření prohlížeče na ochranu soukromí (např. Avast AntiTrack) často blokují platební iframe — vypněte je pro tento web, zkuste anonymní okno, nebo zaplaťte na zabezpečené stránce Stripe níže.",
+      "checkout.shipping.stripeRedirect": "Zaplatit na zabezpečené stránce Stripe",
+
+      // Rental inquiry form
+      "form.rental.title": "Poptávka pronájmu a služeb",
+      "form.rental.subtitle":
+        "Napište nám o vaší akci a co nejdříve se ozveme.",
+      "form.rental.name": "Jméno a příjmení",
+      "form.rental.email": "E-mail",
+      "form.rental.company": "Firma (volitelné)",
+      "form.rental.interested": "O co máte zájem?",
+      "form.rental.variantTrailer": "Pronájem kávového přívěsu se servisem",
+      "form.rental.variantEvent": "Akce v Speed Coffee House",
+      "form.rental.country": "Země",
+      "form.rental.city": "Město",
+      "form.rental.dateFrom": "Datum od",
+      "form.rental.dateTo": "Datum do",
+      "form.rental.note": "Poznámka",
+      "form.rental.submit": "Odeslat poptávku",
+      "form.rental.submitting": "Odesílání...",
+      "form.rental.success":
+        "Vaše poptávka byla odeslána. Brzy se vám ozveme.",
+      "form.rental.error":
+        "Při odesílání poptávky se něco pokazilo. Zkuste to prosím později.",
+      "form.rental.errorSend": "Poptávku se nepodařilo odeslat. Zkuste to znovu.",
+
+      // Shop
+      "shop.loading": "Načítání produktů...",
+      "shop.empty": "Momentálně nejsou k dispozici žádné produkty.",
 
       // Locations
       "locations.title": "KDE NÁS MŮŽETE NAJÍT?",

@@ -14,8 +14,10 @@ const ORDER_BY_NUMBER_GROQ = `*[_type == "order" && orderNumber == $orderNumber]
     quantity,
     unitPrice,
     currency,
-    "title_en": product->title_en,
-    "title_cz": product->title_cz
+    productTitle,
+    variantTitle,
+    "title_en": coalesce(productTitle, product->title_en),
+    "title_cz": coalesce(productTitle, product->title_cz)
   }
 }`;
 
@@ -35,6 +37,8 @@ type SanityOrderDoc = {
     currency?: string;
     title_en?: string;
     title_cz?: string;
+    productTitle?: string;
+    variantTitle?: string;
   }[];
 };
 
@@ -92,13 +96,20 @@ export async function lookupOrderForTracking(
       currency: doc.currency ?? "EUR",
       createdAt: doc._createdAt,
       items:
-        doc.items?.map((row) => ({
-          quantity: row.quantity,
-          unitPrice: typeof row.unitPrice === "number" ? row.unitPrice : null,
-          currency: row.currency ?? doc.currency ?? "EUR",
-          title_en: row.title_en ?? "Product",
-          title_cz: row.title_cz ?? "Produkt",
-        })) ?? [],
+        doc.items?.map((row) => {
+          const baseTitle = row.productTitle ?? row.title_en ?? "Product";
+          const withVariant = row.variantTitle
+            ? `${baseTitle} (${row.variantTitle})`
+            : baseTitle;
+
+          return {
+            quantity: row.quantity,
+            unitPrice: typeof row.unitPrice === "number" ? row.unitPrice : null,
+            currency: row.currency ?? doc.currency ?? "EUR",
+            title_en: withVariant,
+            title_cz: withVariant,
+          };
+        }) ?? [],
     };
   } catch (e) {
     console.error("Sanity order lookup failed:", e);

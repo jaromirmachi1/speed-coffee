@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { useCart } from "@/contexts/CartContext";
+import { useLanguage } from "@/contexts/LanguageContext";
 import {
   typography,
   fontWeights,
@@ -10,6 +11,7 @@ import {
 
 export default function CartModal() {
   const router = useRouter();
+  const { t } = useLanguage();
   const {
     isCartModalOpen,
     closeCartModal,
@@ -21,8 +23,13 @@ export default function CartModal() {
     router.push("/checkout");
   };
 
+  const handleClose = () => {
+    closeCartModal();
+  };
+
   const handleKeepShopping = () => {
     closeCartModal();
+    router.push("/shop");
   };
 
   return (
@@ -35,7 +42,7 @@ export default function CartModal() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
-            onClick={handleKeepShopping}
+            onClick={handleClose}
             aria-hidden
           />
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4 pointer-events-none">
@@ -55,7 +62,7 @@ export default function CartModal() {
                   id="cart-modal-title"
                   className={`${typography.manrope.body} font-manrope ${fontWeights.manrope.bold} text-dark mb-4`}
                 >
-                  Added to your basket
+                  {t("cart.addedToBasket")}
                 </h2>
 
                 {/* Product in basket */}
@@ -85,7 +92,7 @@ export default function CartModal() {
 
                 {/* Message + actions */}
                 <p className="text-dark/80 font-manrope text-sm mb-4">
-                  Keep shopping or go to checkout?
+                  {t("cart.modalMessage")}
                 </p>
                 <div className="flex flex-col sm:flex-row gap-3">
                   <button
@@ -93,14 +100,14 @@ export default function CartModal() {
                     onClick={handleKeepShopping}
                     className={`flex-1 px-6 py-3 ${typography.manrope.button} font-manrope ${fontWeights.manrope.bold} rounded-full border-2 border-dark text-dark hover:bg-dark hover:text-beige transition-colors`}
                   >
-                    Keep shopping
+                    {t("cart.keepShopping")}
                   </button>
                   <button
                     type="button"
                     onClick={handleGoToCheckout}
                     className={`flex-1 px-6 py-3 ${typography.manrope.button} font-manrope ${fontWeights.manrope.bold} rounded-full bg-dark text-beige hover:bg-dark/90 transition-colors`}
                   >
-                    Go to checkout
+                    {t("cart.goToCheckout")}
                   </button>
                 </div>
               </div>

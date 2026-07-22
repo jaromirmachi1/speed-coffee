@@ -62,6 +62,18 @@ export const orderSchema = defineType({
               to: [{ type: "product" }],
             },
             {
+              name: "productTitle",
+              title: "Product name",
+              type: "string",
+              description: "Snapshot of the product name at the time of order.",
+            },
+            {
+              name: "variantTitle",
+              title: "Variant",
+              type: "string",
+              description: "Variant label, if applicable.",
+            },
+            {
               name: "quantity",
               title: "Quantity",
               type: "number",
@@ -77,9 +89,44 @@ export const orderSchema = defineType({
               name: "currency",
               title: "Currency",
               type: "string",
-              initialValue: "EUR",
+              initialValue: "CZK",
             },
           ],
+          preview: {
+            select: {
+              productTitle: "productTitle",
+              variantTitle: "variantTitle",
+              refTitleEn: "product.title_en",
+              refTitleCz: "product.title_cz",
+              quantity: "quantity",
+              unitPrice: "unitPrice",
+              currency: "currency",
+            },
+            prepare({
+              productTitle,
+              variantTitle,
+              refTitleEn,
+              refTitleCz,
+              quantity,
+              unitPrice,
+              currency,
+            }) {
+              const baseName =
+                productTitle || refTitleEn || refTitleCz || "Unknown product";
+              const variant = variantTitle ? ` (${variantTitle})` : "";
+              const qty =
+                typeof quantity === "number" ? ` × ${quantity}` : "";
+              const price =
+                typeof unitPrice === "number"
+                  ? `${unitPrice} ${currency || "CZK"} each`
+                  : undefined;
+
+              return {
+                title: `${baseName}${variant}${qty}`,
+                subtitle: price,
+              };
+            },
+          },
         }),
       ],
     }),
@@ -93,7 +140,7 @@ export const orderSchema = defineType({
       name: "currency",
       title: "Currency",
       type: "string",
-      initialValue: "EUR",
+      initialValue: "CZK",
     }),
     defineField({
       name: "stripeSessionId",

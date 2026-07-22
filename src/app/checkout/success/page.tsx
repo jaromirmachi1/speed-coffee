@@ -43,7 +43,9 @@ function CheckoutSuccessContent() {
   }, [shouldClearCart, clearCart]);
 
   useEffect(() => {
-    if (!paymentIntent || redirectStatus !== "succeeded" || manualOrderNumber) return;
+    if (manualOrderNumber) return;
+    const paymentId = sessionId || (redirectStatus === "succeeded" ? paymentIntent : null);
+    if (!paymentId) return;
 
     let cancelled = false;
     let attempts = 0;
@@ -53,9 +55,10 @@ function CheckoutSuccessContent() {
       if (cancelled || attempts >= maxAttempts) return;
       attempts += 1;
       try {
-        const res = await fetch(
-          `/api/orders/by-payment?payment_intent=${encodeURIComponent(paymentIntent)}`
-        );
+        const query = sessionId
+          ? `session_id=${encodeURIComponent(sessionId)}`
+          : `payment_intent=${encodeURIComponent(paymentIntent!)}`;
+        const res = await fetch(`/api/orders/by-payment?${query}`);
         const data = await res.json();
         if (!cancelled && res.ok && data.orderNumber) {
           setResolvedOrderNumber(data.orderNumber);
@@ -73,7 +76,7 @@ function CheckoutSuccessContent() {
     return () => {
       cancelled = true;
     };
-  }, [paymentIntent, redirectStatus, manualOrderNumber]);
+  }, [sessionId, paymentIntent, redirectStatus, manualOrderNumber]);
 
   const orderNumber = resolvedOrderNumber ?? manualOrderNumber;
 
