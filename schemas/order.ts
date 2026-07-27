@@ -1,4 +1,4 @@
-import { defineType, defineField } from "sanity";
+import { defineType, defineField, defineArrayMember } from "sanity";
 
 export const orderSchema = defineType({
   name: "order",
@@ -55,47 +55,47 @@ export const orderSchema = defineType({
       title: "Items",
       type: "array",
       of: [
-        defineField({
+        defineArrayMember({
           name: "item",
           title: "Item",
           type: "object",
           fields: [
-            {
+            defineField({
               name: "product",
               title: "Product",
               type: "reference",
               to: [{ type: "product" }],
-            },
-            {
+            }),
+            defineField({
               name: "productTitle",
               title: "Product name",
               type: "string",
               description: "Snapshot of the product name at the time of order.",
-            },
-            {
+            }),
+            defineField({
               name: "variantTitle",
               title: "Variant",
               type: "string",
               description: "Variant label, if applicable.",
-            },
-            {
+            }),
+            defineField({
               name: "quantity",
               title: "Quantity",
               type: "number",
               validation: (Rule) => Rule.required().min(1),
-            },
-            {
+            }),
+            defineField({
               name: "unitPrice",
               title: "Unit price",
               type: "number",
               description: "Price per unit at the time of order.",
-            },
-            {
+            }),
+            defineField({
               name: "currency",
               title: "Currency",
               type: "string",
               initialValue: "CZK",
-            },
+            }),
           ],
           preview: {
             select: {
@@ -171,9 +171,9 @@ export const orderSchema = defineType({
       currency: "currency",
     },
     prepare({ title, subtitle, customerName, customerPhone, total, currency }) {
-      const status = subtitle ? subtitle.toUpperCase() : "UNKNOWN";
+      const status = typeof subtitle === "string" ? subtitle.toUpperCase() : "UNKNOWN";
       const amount =
-        typeof total === "number" ? `${(currency || "CZK")} ${total}` : "";
+        typeof total === "number" ? `${currency || "CZK"} ${total}` : "";
       return {
         title: title || "Order",
         subtitle: [status, customerName, customerPhone, amount]
@@ -183,4 +183,3 @@ export const orderSchema = defineType({
     },
   },
 });
-

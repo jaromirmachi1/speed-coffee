@@ -59,28 +59,29 @@ const Footer = () => {
               >
                 © {new Date().getFullYear()}
               </p>
-              <Link
-                href="/orders"
-                className={`${typography.manrope.footerSmall} font-manrope ${fontWeights.manrope.light} text-white/90 underline underline-offset-2 hover:text-white inline-block`}
+              <nav
+                className={`flex flex-wrap items-center gap-x-4 gap-y-1 ${typography.manrope.footerSmall} font-manrope ${fontWeights.manrope.light}`}
+                aria-label="Footer"
               >
-                {t("footer.trackOrder")}
-              </Link>
-              <div className="mt-2">
+                <Link
+                  href="/orders"
+                  className="text-white/90 underline underline-offset-2 hover:text-white"
+                >
+                  {t("footer.trackOrder")}
+                </Link>
                 <Link
                   href="/cookies"
-                  className={`${typography.manrope.footerSmall} font-manrope ${fontWeights.manrope.light} text-white/90 underline underline-offset-2 hover:text-white inline-block`}
+                  className="text-white/90 underline underline-offset-2 hover:text-white"
                 >
                   {t("footer.gdpr")}
                 </Link>
-              </div>
-              <div className="mt-1">
                 <Link
                   href="/cookies"
-                  className={`${typography.manrope.footerSmall} font-manrope ${fontWeights.manrope.light} text-white/90 underline underline-offset-2 hover:text-white inline-block`}
+                  className="text-white/90 underline underline-offset-2 hover:text-white"
                 >
                   {t("footer.cookies")}
                 </Link>
-              </div>
+              </nav>
             </div>
           </motion.div>
 
