@@ -36,7 +36,7 @@ const Footer = () => {
             }}
           >
             <div
-              className={`text-5xl sm:text-6xl md:text-5xl lg:text-[164px] font-agright ${fontWeights.agright.normal} text-white tracking-tight ${lineHeights.tight}`}
+              className={`text-5xl sm:text-7xl md:text-6xl lg:text-[180px] font-agright ${fontWeights.agright.normal} text-white tracking-tight ${lineHeights.tight}`}
             >
               <div>SPEED</div>
               <div>COFFEE</div>

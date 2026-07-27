@@ -26,7 +26,7 @@ export default {
         manuka: ['"Manuka Condensed"', "sans-serif"],
         display: ['"Manuka Condensed"', "sans-serif"],
         sans: ['"Manuka Condensed"', "sans-serif"],
-        agright: ['"Agright"', "sans-serif"],
+        agright: ['"AntPolt Condensed"', "sans-serif"],
         manrope: ['"Manrope"', "sans-serif"],
       },
       spacing: {

@@ -209,9 +209,9 @@ const MatchaSection = () => {
         >
           <span
             style={{
-              fontFamily: "Agright, sans-serif",
+              fontFamily: '"AntPolt Condensed", sans-serif',
               fontWeight: 400,
-              fontSize: "min(6vw, 60px)",
+              fontSize: "min(7.5vw, 76px)",
               lineHeight: 1,
               marginBottom: "-0.45em",
             }}
@@ -231,9 +231,9 @@ const MatchaSection = () => {
           </span>
           <span
             style={{
-              fontFamily: "Agright, sans-serif",
+              fontFamily: '"AntPolt Condensed", sans-serif',
               fontWeight: 400,
-              fontSize: "min(6vw, 60px)",
+              fontSize: "min(7.5vw, 76px)",
               lineHeight: 1,
               marginTop: "-0.25em",
             }}

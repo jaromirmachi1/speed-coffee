@@ -63,11 +63,21 @@
   font-display: swap;
 }
 
-/* Agright */
+/* AntPolt Condensed — display headings (replaces Agright) */
+@font-face {
+  font-family: "AntPolt Condensed";
+  src: url("../assets/AntPoltCond-Regular/antpoltcond-regular.ttf")
+    format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Agright kept as fallback alias for older class names */
 @font-face {
   font-family: "Agright";
-  src: url("../assets/agright/agright regular.otf") format("opentype"),
-    url("../assets/agright/agright regular.ttf") format("truetype");
+  src: url("../assets/AntPoltCond-Regular/antpoltcond-regular.ttf")
+    format("truetype");
   font-weight: 400;
   font-style: normal;
   font-display: swap;

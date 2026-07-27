@@ -31,19 +31,19 @@ export const typography = {
     languageLabel: "text-xl",
   },
 
-  // Agright Font - Used for section headings and product titles
+  // AntPolt Condensed (was Agright) — section headings and product titles
   agright: {
     // Section Headings (About, Locations, Event Booking)
-    sectionHeading: "text-2xl sm:text-3xl md:text-4xl lg:text-[64px]",
+    sectionHeading: "text-3xl sm:text-4xl md:text-5xl lg:text-[76px]",
 
     // Products Section Main Heading
-    productsMain: "text-3xl sm:text-4xl md:text-6xl lg:text-7xl",
+    productsMain: "text-4xl sm:text-5xl md:text-7xl lg:text-8xl",
 
     // Product Titles (Apple & Ginger, Matcha, Speed Coffee)
-    productTitle: "text-2xl sm:text-3xl md:text-5xl lg:text-6xl",
+    productTitle: "text-3xl sm:text-4xl md:text-6xl lg:text-7xl",
 
     // Footer Brand Name
-    footerBrand: "text-4xl sm:text-6xl md:text-5xl lg:text-[164px]",
+    footerBrand: "text-5xl sm:text-7xl md:text-6xl lg:text-[180px]",
   },
 
   // Manrope Font - Used for body text, descriptions, buttons

@@ -42,7 +42,7 @@ function EventCard({
           />
         ) : (
           <div className="flex h-full w-full items-center justify-center bg-[#BEA791]/30">
-            <span className="font-agright text-4xl text-dark/20">SC</span>
+            <span className="font-agright text-5xl text-dark/20">SC</span>
           </div>
         )}
         <div className="absolute inset-0 bg-gradient-to-t from-dark/85 via-dark/25 to-transparent" />
@@ -62,8 +62,8 @@ function EventCard({
           <h3
             className={`font-agright ${fontWeights.agright.normal} text-beige ${
               event.featured
-                ? "text-3xl md:text-5xl lg:text-6xl"
-                : "text-2xl md:text-3xl"
+                ? "text-4xl md:text-6xl lg:text-7xl"
+                : "text-3xl md:text-4xl"
             }`}
           >
             {event.title}

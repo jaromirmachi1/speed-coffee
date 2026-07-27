@@ -203,8 +203,8 @@ const CoffeeSection = forwardRef<CoffeeSectionHandle>((_, ref) => {
         <span
           ref={prefixRef}
           style={{
-            fontFamily: "Agright, sans-serif",
-            fontSize: "min(6vw, 60px)",
+            fontFamily: '"AntPolt Condensed", sans-serif',
+            fontSize: "min(7.5vw, 76px)",
             color: "#EAE1CF",
             display: "block",
             marginBottom: "-0.2em",
