@@ -116,7 +116,6 @@ const Header = () => {
     pathname.startsWith("/contact") ||
     pathname.startsWith("/cookies") ||
     pathname.startsWith("/events");
-  const isHomepage = pathname === "/";
 
   const toggleMenu = () => {
     setIsMenuOpen((prev) => !prev);
@@ -177,7 +176,6 @@ const Header = () => {
                   {t("nav.events")}
                 </NavLink>
                 <NavLink href="/form">{t("nav.reserve")}</NavLink>
-                {!isHomepage && <NavLink href="/contact">{t("nav.contact")}</NavLink>}
                 <NavLink
                   href={isShopPage ? "/checkout" : "/shop"}
                   className={`relative inline-flex ${isShopPage ? "items-center" : "items-baseline"}`}
@@ -267,7 +265,7 @@ const Header = () => {
                   <Link
                     href="/"
                     onClick={closeMenu}
-                    className={`text-center mb-[100px] -mt-24 sm:-mt-32 text-3xl sm:text-4xl md:text-5xl font-agright ${fontWeights.agright.normal} text-dark tracking-tight ${lineHeights.tight} block`}
+                    className={`text-center mb-[100px] -mt-24 sm:-mt-32 text-4xl sm:text-5xl md:text-6xl font-agright ${fontWeights.agright.normal} text-dark tracking-tight ${lineHeights.tight} block`}
                   >
                     <div>SPEED</div>
                     <div>COFFEE</div>
@@ -339,7 +337,7 @@ const Header = () => {
                 href="https://www.instagram.com/speedcoffeehouse?igsh=MTQ1MmN1dG4yajkzaQ=="
                 target="_blank"
                 rel="noopener noreferrer"
-                className={`absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 font-agright ${fontWeights.agright.normal} text-dark tracking-tight ${lineHeights.tight} text-xl sm:text-2xl hover:text-accent transition-colors`}
+                className={`absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 font-agright ${fontWeights.agright.normal} text-dark tracking-tight ${lineHeights.tight} text-2xl sm:text-3xl hover:text-accent transition-colors`}
               >
                 <span className="w-px h-6 bg-dark/10" aria-hidden />
                 <span>INSTAGRAM</span>

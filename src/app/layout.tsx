@@ -3,11 +3,9 @@ import "./globals.css";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import { CartProvider } from "@/contexts/CartContext";
 import CartModal from "@/components/CartModal";
+import { rootMetadata } from "@/lib/seo/metadata";
 
-export const metadata: Metadata = {
-  title: "Speed Coffee - Mobile Coffee Van",
-  description: "Speed Coffee - Mobile Coffee Van",
-};
+export const metadata: Metadata = rootMetadata;
 
 export default function RootLayout({
   children,
