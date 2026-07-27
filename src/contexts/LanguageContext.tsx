@@ -214,13 +214,25 @@ export const LanguageProvider = ({ children }: LanguageProviderProps) => {
       "shop.loading": "Loading products...",
       "shop.empty": "No products available at the moment.",
 
+      // Events page
+      "events.title": "EVENTS",
+      "events.subtitle":
+        "Festivals, markets, pop-ups and special appearances — find out where Speed Coffee is heading next.",
+      "events.loading": "Loading events...",
+      "events.empty": "No events scheduled right now. Check back soon or book us for your own.",
+      "events.upcoming": "Upcoming",
+      "events.past": "Past events",
+      "events.pastBadge": "Past",
+      "events.learnMore": "Learn more",
+      "events.cta": "Want us at your event? Get in touch and we'll bring the coffee.",
+
       // Locations
       "locations.title": "WHERE CAN YOU FIND US?",
       "locations.openingHours": "OPENING HOURS",
       "locations.weekdays": "WEEKDAYS",
-      "locations.weekdaysHours": "7:30 - 19:00",
+      "locations.weekdaysHours": "8:00 - 19:00",
       "locations.weekends": "WEEKENDS",
-      "locations.weekendsHours": "9:00 - 19:00",
+      "locations.weekendsHours": "10:00 - 19:00",
 
       // Event Booking
       "event.title": "ANY EVENT YOU WANT US TO BE AT?",
@@ -304,7 +316,7 @@ export const LanguageProvider = ({ children }: LanguageProviderProps) => {
     },
     cz: {
       // Navigation
-      "nav.events": "AKCE",
+      "nav.events": "EVENTY",
       "nav.reserve": "REZERVACE",
       "nav.contact": "KONTAKT",
       "nav.cookies": "COOKIES",
@@ -462,13 +474,26 @@ export const LanguageProvider = ({ children }: LanguageProviderProps) => {
       "shop.loading": "Načítání produktů...",
       "shop.empty": "Momentálně nejsou k dispozici žádné produkty.",
 
+      // Events page
+      "events.title": "AKCE",
+      "events.subtitle":
+        "Festivaly, trhy, pop-up akce a speciální události — zjistěte, kde se Speed Coffee objeví.",
+      "events.loading": "Načítání akcí...",
+      "events.empty":
+        "Momentálně nemáme naplánované žádné akce. Zkuste to brzy znovu, nebo nás rezervujte na vlastní událost.",
+      "events.upcoming": "Nadcházející",
+      "events.past": "Proběhlé akce",
+      "events.pastBadge": "Proběhlo",
+      "events.learnMore": "Více informací",
+      "events.cta": "Chcete nás na své akci? Ozvěte se a přivezeme kávu.",
+
       // Locations
       "locations.title": "KDE NÁS MŮŽETE NAJÍT?",
       "locations.openingHours": "OTEVÍRACÍ DOBA",
       "locations.weekdays": "VŠEDNÍ DNY",
-      "locations.weekdaysHours": "8:00 - 18:00",
+      "locations.weekdaysHours": "8:00 - 19:00",
       "locations.weekends": "VÍKENDY",
-      "locations.weekendsHours": "9:00 - 19:00",
+      "locations.weekendsHours": "10:00 - 19:00",
 
       // Event Booking
       "event.title": "MÁTE AKCI, KDE BYSTE NÁS CHTĚLI VIDĚT?",

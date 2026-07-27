@@ -114,7 +114,8 @@ const Header = () => {
     pathname === "/form" ||
     pathname.startsWith("/orders") ||
     pathname.startsWith("/contact") ||
-    pathname.startsWith("/cookies");
+    pathname.startsWith("/cookies") ||
+    pathname.startsWith("/events");
   const isHomepage = pathname === "/";
 
   const toggleMenu = () => {
@@ -172,7 +173,7 @@ const Header = () => {
               )}
               <div className="flex-1" />
               <div className="flex items-center gap-4 md:gap-6">
-                <NavLink href={isShopPage ? "/#events" : "#events"}>
+                <NavLink href="/events">
                   {t("nav.events")}
                 </NavLink>
                 <NavLink href="/form">{t("nav.reserve")}</NavLink>
@@ -281,7 +282,7 @@ const Header = () => {
                   transition={{ duration: 0.4, ease: "easeOut" }}
                 >
                   <NavLink
-                    href={isShopPage ? "/#events" : "#events"}
+                    href="/events"
                     onClick={closeMenu}
                     isMobile={false}
                   >

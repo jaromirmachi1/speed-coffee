@@ -1,4 +1,4 @@
-import { PackageIcon, TrolleyIcon } from "@sanity/icons";
+import { CalendarIcon, PackageIcon, TrolleyIcon } from "@sanity/icons";
 import type { StructureResolver } from "sanity/structure";
 
 /**
@@ -23,5 +23,13 @@ export const adminStructure: StructureResolver = (S) =>
           S.documentTypeList("order")
             .title("Orders")
             .defaultOrdering([{ field: "_createdAt", direction: "desc" }]),
+        ),
+      S.listItem()
+        .title("Events")
+        .icon(CalendarIcon)
+        .child(
+          S.documentTypeList("event")
+            .title("Events")
+            .defaultOrdering([{ field: "startDate", direction: "desc" }]),
         ),
     ]);
